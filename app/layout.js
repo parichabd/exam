@@ -1,5 +1,6 @@
 import Header from "@/Components/Layout/Header";
 import Footer from "@/Components/Layout/Footer";
+import ReactQueryProvider from "@/Provider/ReactQueryProvider";
 
 import "./globals.css";
 
@@ -25,13 +26,16 @@ export const metadata = {
   themeColor: "#28A745",
 };
 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">
       <body>
-        <Header />
-        {children}
-        <Footer />
+        <ReactQueryProvider>
+          <Header />
+          {children}
+          <Footer />
+        </ReactQueryProvider>
       </body>
     </html>
   );
