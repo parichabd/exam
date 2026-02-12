@@ -50,8 +50,8 @@ export default function Header() {
               <Image
                 src="/icon/Group 46.png"
                 alt="menu"
-                width={24}
-                height={24}
+                width={35}
+                height={35}
               />
             </button>
           </div>
@@ -83,8 +83,8 @@ export default function Header() {
               <Image
                 src="/icon/sign in buttom.png"
                 alt="sign in"
-                width={24}
-                height={24}
+                width={40}
+                height={40}
               />
             </button>
           </div>

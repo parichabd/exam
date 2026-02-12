@@ -5,6 +5,10 @@ body {
   padding: 0;
   overflow-x: hidden; /* جلوگیری از اسکرول افقی */
 }
+.dividerer_menu{
+  border: 1px solid #00000029;
+  margin-top: 19px;
+}
 
 
 .layout {
@@ -34,7 +38,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .left_side, .right_side {
@@ -275,8 +279,8 @@ body {
   }
 
   .login_icon img {
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
   }
 
   .login_desktop span {
@@ -319,6 +323,10 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     gap: 60px;
+  }
+  .mobile_buttom img{
+    width: 45px;
+    height: 45px;
   }
 }
 
