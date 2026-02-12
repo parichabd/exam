@@ -1,9 +1,8 @@
-/* ──────────────────────────────── Base / Mobile ──────────────────────────────── */
 body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* جلوگیری از اسکرول افقی */
+  overflow-x: hidden; 
 }
 .dividerer_menu{
   border: 1px solid #00000029;
@@ -93,7 +92,7 @@ body {
 .footer_links {
   display: flex;
   justify-content: space-between;
-  gap: 20px; /* فاصله بین دو ستون لینک‌ها در موبایل */
+  gap: 20px; 
 }
 
 .main {
@@ -228,14 +227,13 @@ body {
   }
 }
 
-/* ──────────────────────────────── Tablet ──────────────────────────────── */
+
 @media (min-width: 768px) {
   .container {
     max-width: 720px;
   }
 }
 
-/* ──────────────────────────────── Desktop ──────────────────────────────── */
 @media (min-width: 1024px) {
   .container {
     max-width: 1200px;
@@ -291,7 +289,7 @@ body {
   }
 
   .footer_links {
-    gap: 100px; /* فاصله بیشتر بین تورینو و خدمات مشتریان */
+    gap: 100px;
   }
 
   .footer_icons {
@@ -330,7 +328,7 @@ body {
   }
 }
 
-/* ──────────────────────────────── Mobile adjustments ──────────────────────────────── */
+
 @media (max-width: 1023px) {
   .footer_icons {
     flex-direction: row-reverse;
