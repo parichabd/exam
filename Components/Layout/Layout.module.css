@@ -47,7 +47,6 @@
 
 .footer_links {
   display: flex;
-  justify-content: space-between;
   gap: 30px;
 }
 
@@ -223,88 +222,251 @@
 
 /* ──────────────────────────────── Media Queries ──────────────────────────────── */
 
+
 @media (min-width: 768px) {
   .container {
     max-width: 720px;
   }
 }
 
+
 @media (min-width: 1024px) {
   .container {
     max-width: 1200px;
   }
-
-  .mobile_menu {
+  .mobile_menu{
     display: none;
   }
 
-  .desktop_menu {
-    display: flex;
+.desktop_menu{
+  display: flex;
     align-items: center;
-    gap: 32px;
-  }
+    gap: 32px;        
 
-  .desktop_menu a {
-    text-decoration: none;
-    color: #282828;
-    font-size: 16px;
-  }
+}
+.desktop_menu a{
+  text-decoration: none;
+  color: #282828;
+}
+.desktop_menu a:hover{
+  color: #28A745;
+}
+.login_desktop {
+  display: flex;
+  width: 166px;
+  height: 44px;
+  padding: 8px;
+  border: 2px solid #28A745 ;
+  border-radius: 8px;
+}
+.login_icon{
+  display: flex;
+}
+.login_icon img{
+  width: 24px;
+  height: 24px;
+}
+.login_desktop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-  .desktop_menu a:hover {
-    color: #28A745;
-  }
+  padding: 8px 16px;          
+  height: 44px;
 
-  .login_desktop {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 16px;
-    height: 44px;
-    border: 2px solid #28A745;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+  border: 2px solid #28A745;
+  border-radius: 8px;
 
-  .login_icon {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  cursor: pointer;
 
-  .login_icon img {
-    width: 24px;
-    height: 24px;
-  }
+  height: 28px;
+}
 
-  .login_desktop span {
-    font-size: 18px;
-    font-weight: 500;
-    color: #28A745;
-  }
+.login_icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;                 
+}
 
-  /* Footer desktop */
-  .footer_desktop {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 60px;
+.login_icon img {
+  width: 24px;
+  height: 24px;
+}
+
+.login_desktop span {
+  font-size: 18px;
+  font-weight: 500;
+  color: #28A745;
+  margin-right: 5px;
+}
+.dividerer_menu{
+  border: 1px solid #00000029;
+  margin-top: 19px;
+}
+
+.footer_desktop{
+  display: flex;
+  justify-content: space-between;
+}
+.footer_icons{
+  display: grid;
+  grid-template-columns: repeat(1,1fr);
+}
+.footer_icons {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.footer_icons_logo {
+  order: 1;   
+}
+
+.footer_icons_img {
+  order: 2;   
+}
+.footer_icons_img {
+  display: flex;
+  gap: 12px;               
+  align-items: flex-end;   
+}
+
+.images img{
+  width: 78px;
+  height: 75px;
+}
+.footer_links{
+  display: flex;
+  gap: 120px;
+}
+  .mobile_drawer{
+    display: none;
+  }
+}
+
+
+/* پایه و موبایل اول */
+.layout {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "BYekan", sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.divider {
+  border-top: 1px dashed #00000040;
+  margin: 20px 0 28px;
+}
+
+.footer_links {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;           /* فاصله بین دو ستون لینک‌ها در موبایل */
+}
+
+.torino_info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.torino_info h1 {
+  font-weight: 600;
+  font-size: 20px;
+  color: #282828;
+}
+
+.torino_info a {
+  color: #282828;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.torino_info a:hover {
+  color: #28A745;
+}
+
+.main {
+  flex: 1;
+}
+
+.footer_icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 32px;
+  gap: 16px;
+}
+
+.footer_icons_logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;     /* راست‌چین لوگو و تلفن – اگر چپ می‌خوای → flex-start */
+}
+
+.footer_icons_logo p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.images img {
+  width: 36px;
+  height: 36px;
+}
+
+.center {
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.divider_two {
+  border: 1px solid #00000040;
+  margin: 20px 0 12px;
+}
+
+.paragraph {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-top: 12px;
+}
+
+/* دسکتاپ */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+    padding: 0 32px;
   }
 
   .footer_links {
-    flex: 1;
-    gap: 120px;
+    gap: 100px;            /* فاصله بیشتر بین تورینو و خدمات مشتریان */
   }
 
   .footer_icons {
     flex-direction: column;
     align-items: flex-end;
-    gap: 24px;
+    gap: 28px;
     margin-top: 0;
   }
 
   .footer_icons_img {
     display: flex;
-    gap: 16px;
+    gap: 20px;
     align-items: flex-end;
   }
 
@@ -313,7 +475,74 @@
     height: auto;
   }
 
-  .mobile_drawer {
-    display: none;
+  .footer_desktop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 60px;
+  }
+}
+
+/* اگر در موبایل می‌خوای لوگو و تلفن چپ‌چین بشه (هم‌تراز خدمات مشتریان) */
+@media (max-width: 1023px) {
+  .footer_icons_logo {
+    align-items: flex-start;   /* ← چپ‌چین کردن لوگو + تلفن */
+  }
+}
+
+
+
+
+
+/* داخل فایل Layout.module.css */
+
+/* موبایل پیش‌فرض */
+.footer_icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 28px;
+  gap: 12px;
+}
+
+/* دسکتاپ */
+@media (min-width: 1024px) {
+  .footer_icons {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 24px;
+    margin-top: 0;
+  }
+
+  .footer_icons_logo {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .images img {
+    width: 70px;
+    height: auto;
+  }
+}
+
+/* موبایل → جابه‌جایی */
+@media (max-width: 1023px) {
+  .footer_icons {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+
+  .footer_icons_logo {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .footer_icons_logo p {
+    text-align: left;
+  }
+
+  .images,
+  .center {
+    justify-content: flex-end;
   }
 }
