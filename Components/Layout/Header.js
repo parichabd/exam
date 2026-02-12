@@ -1,15 +1,16 @@
-// Components/Layout/Header.js
-"use client"; // فراموش نشه برای useState و تعامل کاربر
+"use client";
 import { useState } from "react";
 import Link from "next/link";
 import AuthToast from "@/Components/Auth/AuthToast";
+import Image from "next/image";
 
 import styles from "./Layout.module.css";
 
 import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineAirplaneTicket, MdOutlinePermPhoneMsg } from "react-icons/md";
 import { PiUserSoundDuotone } from "react-icons/pi";
-import Image from "next/image";
+
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);

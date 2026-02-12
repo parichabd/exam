@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import styles from "./Layout.module.css";
+import styles from "./Footer.module.css";
 
 function Footer() {
   return (
@@ -28,6 +28,15 @@ function Footer() {
           </div>
 
           <div className={styles.footer_icons}>
+            <div className={styles.footer_icons_logo}>
+              <Image
+                src="/image/Torino (4) 1.png"
+                width={145}
+                height={40}
+                alt="Picture of the author"
+              />
+              <p>تلفن پشتیبانی:۸۵۷۴-۰۲۱</p>
+            </div>
             <div className={styles.footer_icons_img}>
               <div className={styles.images}>
                 <Image
@@ -63,16 +72,6 @@ function Footer() {
                   alt="Picture of the author"
                 />
               </div>
-            </div>
-
-            <div className={styles.footer_icons_logo}>
-              <Image
-                src="/image/Torino (4) 1.png"
-                width={145}
-                height={40}
-                alt="Picture of the author"
-              />
-              <p>تلفن پشتیبانی:۸۵۷۴-۰۲۱</p>
             </div>
           </div>
         </div>
