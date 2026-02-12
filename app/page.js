@@ -1,8 +1,9 @@
 import React from 'react'
+import "./globals.css"
 
 function MainPage() {
   return (
-    <div>MainPage</div>
+    <div>سلام</div>
   )
 }
 
