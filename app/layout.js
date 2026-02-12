@@ -1,4 +1,6 @@
+import Header from "@/Components/Layout/Header";
 import "./globals.css";
+import Footer from "@/Components/Layout/Footer";
 
 export const metadata = {
   title: "تورینو",
@@ -11,7 +13,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">
+      <Header></Header>
       <body>{children}</body>
+      <Footer></Footer>
     </html>
   );
 }
