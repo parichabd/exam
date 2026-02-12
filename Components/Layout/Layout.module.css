@@ -332,7 +332,8 @@
 
   .images,
   .center {
-    justify-content: flex-end;
+    justify-content: center;
   }
+  
 }
 
