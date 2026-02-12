@@ -19,3 +19,23 @@ body {
   background: rgba(255, 255, 255, 0.85);
   z-index: 9999;
 }
+/* globals.css */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* جلوگیری از اسکرول افقی */
+  font-family: "BYekan", sans-serif;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+a, p, span {
+  word-break: break-word;
+}
