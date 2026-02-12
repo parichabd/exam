@@ -3,6 +3,7 @@ import Footer from "@/Components/Layout/Footer";
 import ReactQueryProvider from "@/Provider/ReactQueryProvider";
 
 import "./globals.css";
+import styles from "../Components/Layout/Layout.module.css"
 
 export const metadata = {
   title: "تورینو",
@@ -26,15 +27,19 @@ export const metadata = {
   themeColor: "#28A745",
 };
 
-
 export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">
       <body>
         <ReactQueryProvider>
-          <Header />
-          {children}
-          <Footer />
+          <div className={styles.layout}>
+            <Header />
+            <div className={styles.dividerer_menu}></div>
+            <main className={`${styles.container} ${styles.main}`}>
+              {children}
+            </main>
+            <Footer />
+          </div>
         </ReactQueryProvider>
       </body>
     </html>
