@@ -1,10 +1,12 @@
 /* ──────────────────────────────── Base / Mobile ──────────────────────────────── */
+
 .layout {
   width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: "BYekan", sans-serif;
+  padding: 0 12px;
 }
 
 .container {
@@ -301,6 +303,7 @@
   .images img {
     width: 70px;
     height: auto;
+    display: flex;
   }
 
   .footer_desktop {
@@ -332,3 +335,4 @@
     justify-content: flex-end;
   }
 }
+
