@@ -1,4 +1,5 @@
 import styles from "./AboutUs.module.css";
+import Image from "next/image";
 
 function AboutUs() {
   return (
@@ -41,22 +42,42 @@ function AboutUs() {
       {/* Features */}
       <div className={styles.features}>
         <div className={styles.card}>
-          <img src="/SVG/support.png" />
+          <Image
+            src="/SVG/support.png"
+            alt="پشتیبانی ۲۴ ساعته"
+            width={64}
+            height={64}
+          />
           <p>پشتیبانی ۲۴ ساعته</p>
         </div>
 
         <div className={styles.card}>
-          <img src="/SVG/airplane.png" />
+          <Image
+            src="/SVG/airplane.png"
+            alt="ساخت تورهای متنوع"
+            width={64}
+            height={64}
+          />
           <p>ساخت تورهای متنوع</p>
         </div>
 
         <div className={styles.card}>
-          <img src="/SVG/quality-assurance.png" />
+          <Image
+            src="/SVG/quality-assurance.png"
+            alt="تضمین بهترین کیفیت"
+            width={64}
+            height={64}
+          />
           <p>تضمین بهترین کیفیت</p>
         </div>
 
         <div className={styles.card}>
-          <img src="/SVG/global-shipping.png" />
+          <Image
+            src="/SVG/global-shipping.png"
+            alt="اجرای تورهای متنوع"
+            width={64}
+            height={64}
+          />
           <p>اجرای تورهای متنوع</p>
         </div>
       </div>

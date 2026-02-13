@@ -1,4 +1,44 @@
 import styles from "./TourismSer.module.css";
+import Image from "next/image";
+
+const services = [
+  {
+    src: "/SVG/Tour/man.png",
+    title: "تور لیدر رسمی",
+    desc: "راهنمایان رسمی و باتجربه برای سفرهای شهری، تاریخی و طبیعت‌گردی.",
+    extra: "نمونه: آقای قلانی – راهنمای تور شهری و فرهنگی",
+  },
+  {
+    src: "/SVG/Tour/translate.png",
+    title: "مترجمان گردشگری",
+    desc: "مترجمان مسلط به زبان‌های خارجی برای مسافران بین‌المللی.",
+    extra: "زبان‌ها: انگلیسی، آلمانی، عربی، ترکی",
+  },
+  {
+    src: "/SVG/Tour/tour-guide.png",
+    title: "راهنمای فرهنگی و تاریخی",
+    desc: "توضیحات تخصصی درباره تاریخ، معماری و فرهنگ مناطق.",
+    extra: "مناسب موزه‌ها و اماکن تاریخی",
+  },
+  {
+    src: "/SVG/Tour/google-maps.png",
+    title: "کارشناس محلی مقصد",
+    desc: "افراد بومی با اطلاعات دقیق و کاربردی از مقصد.",
+    extra: "آشنایی با آداب، غذاها و مسیرهای محلی",
+  },
+  {
+    src: "/SVG/Tour/handshake.png",
+    title: "همراه گردشگران خارجی",
+    desc: "همراهی کامل گردشگران خارجی در طول سفر.",
+    extra: "مناسب سفرهای کاری و توریستی",
+  },
+  {
+    src: "/SVG/Tour/planner.png",
+    title: "مشاوره برنامه‌ریزی سفر",
+    desc: "مشاوره تخصصی برای انتخاب مسیر و زمان‌بندی سفر.",
+    extra: "بدون فروش یا رزرو مستقیم",
+  },
+];
 
 export default function TourismSer() {
   return (
@@ -14,59 +54,21 @@ export default function TourismSer() {
 
       {/* Services */}
       <div className={styles.grid}>
-        <div className={styles.service}>
-          <img src="/SVG/Tour/man.png" alt="" />
-          <ServiceCard
-            title="تور لیدر رسمی"
-            desc="راهنمایان رسمی و باتجربه برای سفرهای شهری، تاریخی و طبیعت‌گردی."
-            extra="نمونه: آقای قلانی – راهنمای تور شهری و فرهنگی"
-          />
-        </div>
-
-        <div className={styles.service}>
-          <img src="/SVG/Tour/translate.png" alt="" />
-          <ServiceCard
-            title="مترجمان گردشگری"
-            desc="مترجمان مسلط به زبان‌های خارجی برای مسافران بین‌المللی."
-            extra="زبان‌ها: انگلیسی، آلمانی، عربی، ترکی"
-          />
-        </div>
-
-        <div className={styles.service}>
-          <img src="/SVG/Tour/tour-guide.png" alt="" />
-          <ServiceCard
-            title="راهنمای فرهنگی و تاریخی"
-            desc="توضیحات تخصصی درباره تاریخ، معماری و فرهنگ مناطق."
-            extra="مناسب موزه‌ها و اماکن تاریخی"
-          />
-        </div>
-
-        <div className={styles.service}>
-          <img src="/SVG/Tour/google-maps.png" alt="" />
-          <ServiceCard
-            title="کارشناس محلی مقصد"
-            desc="افراد بومی با اطلاعات دقیق و کاربردی از مقصد."
-            extra="آشنایی با آداب، غذاها و مسیرهای محلی"
-          />
-        </div>
-
-        <div className={styles.service}>
-          <img src="/SVG/Tour/handshake.png" alt="" />
-          <ServiceCard
-            title="همراه گردشگران خارجی"
-            desc="همراهی کامل گردشگران خارجی در طول سفر."
-            extra="مناسب سفرهای کاری و توریستی"
-          />
-        </div>
-
-        <div className={styles.service}>
-          <img src="/SVG/Tour/planner.png" alt="" />
-          <ServiceCard
-            title="مشاوره برنامه‌ریزی سفر"
-            desc="مشاوره تخصصی برای انتخاب مسیر و زمان‌بندی سفر."
-            extra="بدون فروش یا رزرو مستقیم"
-          />
-        </div>
+        {services.map((service, index) => (
+          <div className={styles.service} key={index}>
+            <Image
+              src={service.src}
+              alt={service.title}
+              width={64} // اندازه تقریبی یا اندازه واقعی
+              height={64} // اندازه تقریبی یا اندازه واقعی
+            />
+            <ServiceCard
+              title={service.title}
+              desc={service.desc}
+              extra={service.extra}
+            />
+          </div>
+        ))}
       </div>
     </section>
   );

@@ -9,11 +9,11 @@ import TourismSer from "@/Components/Template/Links/TourismSer";
 export const dynamicParams = false;
 
 const pages = {
-  "whyUs": WhyTorino,
-  "support": OnlineSup,
-  "purchase": BuyingGuide,
-  "refund": ReturnMoney,
-  "TourismServices": TourismSer,
+  whyUs: WhyTorino,
+  support: OnlineSup,
+  purchase: BuyingGuide,
+  refund: ReturnMoney,
+  TourismServices: TourismSer,
 };
 
 export async function generateStaticParams() {

@@ -1,4 +1,16 @@
 import styles from "./SafeTravel.module.css";
+import Image from "next/image";
+
+const features = [
+  { src: "/SVG/root-canal.png", alt: "دندان‌پزشکی", text: "دندان‌پزشکی" },
+  { src: "/SVG/documentation.png", alt: "فوریت‌ پزشکی", text: "فوریت‌ پزشکی" },
+  { src: "/SVG/security-official.png", alt: "بیمه اموال", text: "بیمه اموال" },
+  { src: "/SVG/suitcase.png", alt: "مفقودی چمدان", text: "مفقودی چمدان" },
+  { src: "/SVG/equality.png", alt: "مشاور حقوقی", text: "مشاور حقوقی" },
+  { src: "/SVG/airplane.png", alt: "اورژانس هوایی", text: "اورژانس هوایی" },
+  { src: "/SVG/chronometer.png", alt: "وقفه سفر", text: "وقفه سفر" },
+  { src: "/SVG/tickets.png", alt: "کنسلی سفر", text: "کنسلی سفر" },
+];
 
 function SafeTravel() {
   return (
@@ -30,46 +42,24 @@ function SafeTravel() {
           است که حتما باید آن بیمه را از یک شرکت معتبر بیمه مسافرتی دریافت کرده
           باشید. برای خرید بیمه مسافرتی، لازم است که قبل از سفر به یک شرکت بیمه
           که خدمات بیمه مسافرتی ارائه می‌کند مراجعه کنید یا با تورینو ارتباط
-          بگیرید. اگر همسفر تورینو باشید، خرید بیمه مسافرتی سامان از تورینو
-          کار به‌صرفه‌تر و سریع‌تری است؛ چرا که بدون دردسر و با پشتیبانی 24
-          ساعته تورینو در هفت روز هفته، می‌توانید به‌سرعت بیمه متناسب با
-          شرایطتان را پیدا و خریداری کنید.
+          بگیرید. اگر همسفر تورینو باشید، خرید بیمه مسافرتی سامان از تورینو کار
+          به‌صرفه‌تر و سریع‌تری است؛ چرا که بدون دردسر و با پشتیبانی 24 ساعته
+          تورینو در هفت روز هفته، می‌توانید به‌سرعت بیمه متناسب با شرایطتان را
+          پیدا و خریداری کنید.
         </p>
       </div>
-
       <div className={styles.features}>
-        <div className={styles.card}>
-          <img src="/SVG/root-canal.png" alt="دندان‌پزشکی" />
-          <p>دندان‌پزشکی</p>
-        </div>
-        <div className={styles.card}>
-          <img src="/SVG/documentation.png" alt="فوریت‌ پزشکی" />
-          <p>فوریت‌ پزشکی</p>
-        </div>
-        <div className={styles.card}>
-          <img src="/SVG/security-official.png" alt="بیمه اموال" />
-          <p>بیمه اموال</p>
-        </div>
-        <div className={styles.card}>
-          <img src="/SVG/suitcase.png" alt="مفقودی چمدان" />
-          <p>مفقودی چمدان</p>
-        </div>
-        <div className={styles.card}>
-          <img src="/SVG/equality.png" alt="مشاور حقوقی" />
-          <p>مشاور حقوقی</p>
-        </div>
-        <div className={styles.card}>
-          <img src="/SVG/airplane.png" alt="اورژانس هوایی" />
-          <p>اورژانس هوایی</p>
-        </div>
-        <div className={styles.card}>
-          <img src="/SVG/chronometer.png" alt="وقفه سفر" />
-          <p>وقفه سفر</p>
-        </div>
-        <div className={styles.card}>
-          <img src="/SVG/tickets.png" alt="کنسلی سفر" />
-          <p>کنسلی سفر</p>
-        </div>
+        {features.map((item, index) => (
+          <div className={styles.card} key={index}>
+            <Image
+              src={item.src}
+              alt={item.alt}
+              width={64} // اندازه تقریبی، طبق CSS
+              height={64} // اندازه تقریبی، طبق CSS
+            />
+            <p>{item.text}</p>
+          </div>
+        ))}
       </div>
 
       <div className={styles.buy}>
@@ -78,7 +68,13 @@ function SafeTravel() {
           target="_blank"
           rel="noreferrer"
         >
-          <img src="/image/main/images.png" alt="خرید بیمه مسافرتی" />
+          <Image
+            src="/image/main/images.png"
+            alt="خرید بیمه مسافرتی"
+            width={300} // اندازه تقریبی یا اندازه واقعی تصویر
+            height={100} // اندازه تقریبی یا اندازه واقعی تصویر
+            style={{ width: "100%", height: "auto" }} // ریسپانسیو
+          />
         </a>
       </div>
     </section>

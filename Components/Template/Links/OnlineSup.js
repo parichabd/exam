@@ -1,4 +1,5 @@
 import styles from "./OnlineSup.module.css";
+import Image from "next/image";
 
 export default function OnlineSup() {
   return (
@@ -84,9 +85,13 @@ export default function OnlineSup() {
 
           {/* تصویر */}
           <div className={styles.ticketImage}>
-            <img
+            <Image
               src="/image/main/woman-having-video-call-home-laptop-device.jpg"
               alt="پشتیبانی آنلاین"
+              width={800} // اندازه تقریبی یا اندازه واقعی تصویر
+              height={500} // اندازه تقریبی یا اندازه واقعی تصویر
+              style={{ width: "100%", height: "auto" }} // ریسپانسیو
+              priority // چون احتمالاً تصویر Hero یا بالای صفحه است
             />
           </div>
         </div>

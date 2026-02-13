@@ -1,16 +1,25 @@
 import { IoLocationOutline } from "react-icons/io5";
-import styles from "./ContactUs.module.css";
 import { MdOutlinePhoneEnabled } from "react-icons/md";
 import { TfiEmail } from "react-icons/tfi";
+
+import styles from "./ContactUs.module.css";
+import Image from "next/image";
+
 function ContactUs() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
         {/* Image */}
-        <div className={styles.imageBox}>
-          <img src="/image/main/2477332.jpg" alt="Contact Tourino" />
-        </div>
 
+        <div className={styles.imageBox}>
+          <Image
+            src="/image/main/2477332.jpg"
+            alt="Contact Tourino"
+            width={600} // اندازه تقریبی یا اندازه واقعی تصویرت
+            height={400} // اندازه تقریبی یا اندازه واقعی تصویرت
+            style={{ width: "100%", height: "auto" }} // ریسپانسیو
+          />
+        </div>
         {/* Info */}
         <div className={styles.info}>
           <h1>تماس با تورینو</h1>
