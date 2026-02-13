@@ -38,7 +38,7 @@ export default function Header() {
             />
             <Link href="/">صفحه اصلی</Link>
             <Link href="/Guide/TourismServices">خدمات گردشگری</Link>
-            <Link href="/Info/about">درباره ما</Link>
+            <Link href="/Info/about-us">درباره ما</Link>
             <Link href="/Info/contact">تماس با ما</Link>
           </div>
 

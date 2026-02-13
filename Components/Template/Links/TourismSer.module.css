@@ -1,0 +1,119 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.header h1 {
+  font-size: 34px;
+  margin-bottom: 12px;
+}
+
+.header p {
+  color: #666;
+  font-size: 16px;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.desc {
+  font-size: 14px;
+  color: #555;
+}
+
+.extra {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #777;
+}
+
+/* Info Section */
+.info {
+  margin-top: 56px;
+}
+
+.info h2 {
+  margin-bottom: 16px;
+}
+
+.info details {
+  background: #f9f9f9;
+  padding: 16px 20px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.info summary {
+  font-weight: 500;
+}
+
+.info p {
+  margin-top: 10px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* Service wrapper */
+.service {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Service image */
+.service img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .service {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .service img {
+    width: 64px;
+    height: 64px;
+  }
+}

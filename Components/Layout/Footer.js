@@ -11,7 +11,7 @@ export default function Footer() {
         <div className={styles.footer_links}>
           <div className={styles.torino_info}>
             <h1>تورینو</h1>
-            <Link href="/Info/about">درباره ما</Link>
+            <Link href="/Info/about-us">درباره ما</Link>
             <Link href="/Info/contact">تماس با ما</Link>
             <Link href="/Guide/whyUs">چرا تورینو</Link>
             <Link href="/Info/insurance">بیمه مسافرتی</Link>

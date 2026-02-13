@@ -3,7 +3,7 @@ import Footer from "@/Components/Layout/Footer";
 import ReactQueryProvider from "@/Provider/ReactQueryProvider";
 
 import "./globals.css";
-import styles from "../Components/Layout/Layout.module.css"
+import styles from "../Components/Layout/Layout.module.css";
 
 export const metadata = {
   title: "تورینو",
@@ -24,7 +24,9 @@ export const metadata = {
     description: "سفر به راحتی چند کلیک!",
     images: ["/images/cover.png"],
   },
-  themeColor: "#28A745",
+  viewport: {
+    themeColor: "#fff",
+  },
 };
 
 export default function RootLayout({ children }) {

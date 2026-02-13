@@ -1,0 +1,65 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  direction: rtl;
+}
+
+.title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 48px;
+}
+
+/* FAQ */
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.item {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.item[open] {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Summary */
+.item summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Arrow */
+.item summary::after {
+  content: "＋";
+  font-size: 22px;
+  transition: transform 0.3s ease;
+}
+
+.item[open] summary::after {
+  content: "−";
+}
+
+/* Answer */
+.item p {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: #555;
+}

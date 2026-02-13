@@ -1,0 +1,148 @@
+.support {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 16px;
+}
+
+/* Header */
+.header {
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: #666;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.card {
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card span {
+  font-size: 28px;
+}
+
+.card h3 {
+  margin: 12px 0 6px;
+}
+
+/* FAQ */
+.faq {
+  margin-bottom: 56px;
+}
+
+.faq h2 {
+  margin-bottom: 16px;
+}
+
+.faq details {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.faq summary {
+  font-weight: 600;
+}
+
+.faq p {
+  margin-top: 10px;
+  color: #555;
+}
+
+/* Ticket */
+.ticket h2 {
+  margin-bottom: 8px;
+}
+
+.ticket p {
+  margin-bottom: 16px;
+  color: #666;
+}
+
+.form {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form input,
+.form select,
+.form textarea {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  outline: none;
+  border-color: #28a745;
+}
+
+.form button {
+  padding: 12px;
+  border-radius: 12px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.form button:hover {
+  background: #218838;
+}
+
+.ticketWrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+/* Image */
+.ticketImage img {
+  width: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ticketWrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .ticketImage {
+    order: -1;
+  }
+}
