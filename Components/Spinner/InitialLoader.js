@@ -8,7 +8,7 @@ export default function InitialLoader({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000); // 2 ثانیه
+    const timer = setTimeout(() => setLoading(false), 1 * 1000 ); 
     return () => clearTimeout(timer);
   }, []);
 
@@ -20,5 +20,5 @@ export default function InitialLoader({ children }) {
     );
   }
 
-  return <>{children}</>; // children حتما wrap شوند
+  return <>{children}</>;
 }
