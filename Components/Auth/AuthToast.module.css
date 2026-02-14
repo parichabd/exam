@@ -9,10 +9,20 @@
   z-index: 2000;
 }
 
-.toast_box {
+/* .toast_box {
   width: 335px;
   height: 378px;
   max-width: 95%;
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  position: relative;
+  animation: fadeUp 0.3s ease;
+} */
+.toast_box {
+  width: 335px;
+  max-width: 95%;
+  min-height: 378px;   /* به جای height */
   background: #fff;
   border-radius: 20px;
   padding: 24px;
