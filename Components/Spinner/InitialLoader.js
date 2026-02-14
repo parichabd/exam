@@ -1,12 +1,14 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { HashLoader } from "react-spinners";
 import styles from "./InitialLoader.module.css";
+
 export default function InitialLoader({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
+    const timer = setTimeout(() => setLoading(false), 2000); // 2 ثانیه
     return () => clearTimeout(timer);
   }, []);
 
@@ -15,8 +17,8 @@ export default function InitialLoader({ children }) {
       <div className={styles.spinnerOverlay}>
         <HashLoader color="#20c975" size={90} />
       </div>
-    );بده
+    );
   }
 
-  return children;
+  return <>{children}</>; // children حتما wrap شوند
 }

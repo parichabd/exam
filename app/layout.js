@@ -1,17 +1,15 @@
 import Header from "@/Components/Layout/Header";
 import Footer from "@/Components/Layout/Footer";
 import ReactQueryProvider from "@/Provider/ReactQueryProvider";
+import InitialLoader from "@/Components/Spinner/InitialLoader";
 
 import "./globals.css";
 import styles from "../Components/Layout/Layout.module.css";
-import InitialLoader from "@/Components/Spinner/InitialLoader";
 
 export const metadata = {
   title: "تورینو",
-  description: "سفر به راحتی چند کلیلک!",
-  icons: {
-    icon: "/image/cover.svg",
-  },
+  description: "سفر به راحتی چند کلیک!",
+  icons: { icon: "/image/cover.svg" },
   openGraph: {
     title: "تورینو",
     description: "سفر به راحتی چند کلیک!",
@@ -25,9 +23,7 @@ export const metadata = {
     description: "سفر به راحتی چند کلیک!",
     images: ["/images/cover.png"],
   },
-  viewport: {
-    themeColor: "#fff",
-  },
+  viewport: { themeColor: "#fff" },
 };
 
 export default function RootLayout({ children }) {
@@ -35,6 +31,7 @@ export default function RootLayout({ children }) {
     <html lang="fa" dir="rtl">
       <body>
         <ReactQueryProvider>
+          {/* Loader wrapper */}
           <InitialLoader>
             <div className={styles.layout}>
               <Header />
