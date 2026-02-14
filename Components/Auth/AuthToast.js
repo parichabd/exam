@@ -1,23 +1,26 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSendOtp } from "@/Hooks/useSendOtp";
+import { useVerifyOtp } from "@/Hooks/useVerifyOtp";
+import { registerUser } from "@/Services/Auth";
+import Cookies from "js-cookie";
 
 import styles from "./AuthToast.module.css";
-
 import { FaArrowLeftLong } from "react-icons/fa6";
 
 export default function AuthToast({ onClose, mode = "login" }) {
-  const [step, setStep] = useState("PHONE"); // PHONE | OTP
+  const [step, setStep] = useState("PHONE");
   const [isRegister, setIsRegister] = useState(mode === "register");
   const [mobile, setMobile] = useState("");
   const [timeLeft, setTimeLeft] = useState(120);
-
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [otpError, setOtpError] = useState("");
   const [shake, setShake] = useState(false);
+  const [registerData, setRegisterData] = useState({});
 
   const otpRefs = useRef([]);
-
   const {
     register,
     handleSubmit,
@@ -26,31 +29,32 @@ export default function AuthToast({ onClose, mode = "login" }) {
   } = useForm();
 
   const sendOtpMutation = useSendOtp();
+  const verifyOtpMutation = useVerifyOtp();
 
-  /* ⏱ تایمر OTP */
   useEffect(() => {
     if (step !== "OTP" || timeLeft <= 0) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((t) => t - 1);
-    }, 1000);
-
+    const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timer);
   }, [step, timeLeft]);
 
-  /* ارسال شماره */
-  const submitPhone = (data) => {
+  const submitPhone = async (data) => {
     setMobile(data.mobile);
+
+    if (isRegister) {
+      setRegisterData(data);
+      await registerUser(data); // مسیر send-otp در Services/Auth اصلاح شده
+    }
 
     sendOtpMutation.mutate(data.mobile, {
       onSuccess: () => {
         setStep("OTP");
         setTimeLeft(120);
       },
+      onError: (err) =>
+        alert("خطا در ارسال کد: " + err.response?.data?.message || err.message),
     });
   };
 
-  /* ارسال مجدد کد */
   const resendHandler = () => {
     sendOtpMutation.mutate(mobile);
     setTimeLeft(120);
@@ -62,24 +66,18 @@ export default function AuthToast({ onClose, mode = "login" }) {
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
-  /* OTP */
   const handleOtpChange = (index, value) => {
     if (!/^\d?$/.test(value)) return;
-
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
     setOtpError("");
-
-    if (value && index < 4) {
-      otpRefs.current[index + 1].focus();
-    }
+    if (value && index < 4) otpRefs.current[index + 1].focus();
   };
 
   const handleOtpKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0)
       otpRefs.current[index - 1].focus();
-    }
   };
 
   const submitOtp = () => {
@@ -91,14 +89,32 @@ export default function AuthToast({ onClose, mode = "login" }) {
     }
 
     const code = otp.join("");
-    console.log("OTP:", code);
-    // TODO: verifyOtp API
+
+    verifyOtpMutation.mutate(
+      { mobile, otp: code },
+      {
+        onSuccess: (res) => {
+          // بک‌اند شما برمی‌گرداند: res.accessToken و res.user.firstName
+          const token = res.accessToken;
+          const name = res.user?.firstName || "";
+          Cookies.set("token", token);
+          localStorage.setItem("userName", name);
+          onClose();
+          router.push("/");
+        },
+        onError: () => {
+          setOtpError("کد اشتباه است");
+          setShake(true);
+          setTimeout(() => setShake(false), 400);
+        },
+      },
+    );
   };
 
   return (
     <div className={styles.toast_overlay}>
       <div className={styles.toast_box}>
-        {/* دکمه بالا */}
+        {/* UI همان قبلی است */}
         {step === "PHONE" ? (
           isRegister ? (
             <button
@@ -130,7 +146,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
           </button>
         )}
 
-        {/* PHONE */}
         {step === "PHONE" && (
           <>
             <h2 className={styles.title}>
@@ -144,7 +159,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
               >
                 <div className={styles.field}>
                   <label>شماره موبایل خود را وارد کنید</label>
-
                   <input
                     type="tel"
                     placeholder="۰۹۱۲***۶۶۰۶"
@@ -153,10 +167,8 @@ export default function AuthToast({ onClose, mode = "login" }) {
                       required: "شماره موبایل الزامی است",
                     })}
                   />
-
                   <span className={styles.error}>{errors.mobile?.message}</span>
                 </div>
-
                 <p className={styles.loginPage}>
                   <button
                     type="button"
@@ -166,7 +178,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
                     ثبت نام!
                   </button>
                 </p>
-
                 <button className={styles.submit}>ارسال کد تایید</button>
               </form>
             ) : (
@@ -176,12 +187,9 @@ export default function AuthToast({ onClose, mode = "login" }) {
               >
                 <input
                   placeholder="نام"
-                  {...register("name", {
-                    required: "نام الزامی است",
-                  })}
+                  {...register("name", { required: "نام الزامی است" })}
                 />
                 <span className={styles.error}>{errors.name?.message}</span>
-
                 <input
                   placeholder="شماره موبایل"
                   {...register("mobile", {
@@ -189,26 +197,20 @@ export default function AuthToast({ onClose, mode = "login" }) {
                   })}
                 />
                 <span className={styles.error}>{errors.mobile?.message}</span>
-
                 <button className={styles.submit}>ثبت‌نام و ارسال کد</button>
               </form>
             )}
           </>
         )}
 
-        {/* OTP */}
         {step === "OTP" && (
           <>
             <h2 className={styles.title}>کد تایید را وارد کنید</h2>
-
             <p className={styles.mobileHint}>
               کد به شماره <span>{mobile}</span> ارسال شد
             </p>
-
             <div
-              className={`${styles.otp} ${otpError ? styles.otpError : ""} ${
-                shake ? styles.shake : ""
-              }`}
+              className={`${styles.otp} ${otpError ? styles.otpError : ""} ${shake ? styles.shake : ""}`}
               dir="ltr"
             >
               {otp.map((value, index) => (
@@ -222,9 +224,7 @@ export default function AuthToast({ onClose, mode = "login" }) {
                 />
               ))}
             </div>
-
             <div className={styles.errorBox}>{otpError}</div>
-
             {timeLeft > 0 ? (
               <p className={styles.timer}>
                 {formatTime(timeLeft)} تا ارسال مجدد کد
@@ -234,7 +234,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
                 ارسال مجدد کد
               </button>
             )}
-
             <button className={styles.submit} onClick={submitOtp}>
               ورود به تورینو
             </button>
