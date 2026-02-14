@@ -10,15 +10,7 @@ body {
   font-family: "BYekan";
 }
 
-.spinner-overlay {
-  position: fixed;
-  inset: 0; /* top, right, bottom, left = 0 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.85);
-  z-index: 9999;
-}
+
 /* globals.css */
 * {
   box-sizing: border-box;

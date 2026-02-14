@@ -4,6 +4,7 @@ import ReactQueryProvider from "@/Provider/ReactQueryProvider";
 
 import "./globals.css";
 import styles from "../Components/Layout/Layout.module.css";
+import InitialLoader from "@/Components/Spinner/InitialLoader";
 
 export const metadata = {
   title: "تورینو",
@@ -34,14 +35,16 @@ export default function RootLayout({ children }) {
     <html lang="fa" dir="rtl">
       <body>
         <ReactQueryProvider>
-          <div className={styles.layout}>
-            <Header />
-            <div className={styles.dividerer_menu}></div>
-            <main className={`${styles.container} ${styles.main}`}>
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <InitialLoader>
+            <div className={styles.layout}>
+              <Header />
+              <div className={styles.dividerer_menu}></div>
+              <main className={`${styles.container} ${styles.main}`}>
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </InitialLoader>
         </ReactQueryProvider>
       </body>
     </html>
