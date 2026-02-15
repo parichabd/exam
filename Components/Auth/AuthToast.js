@@ -124,7 +124,7 @@ export default function AuthToast({ onClose, mode = "login" }) {
           Cookies.set("token", token);
           localStorage.setItem("userName", name);
           onClose();
-          router.push("/");
+          router.push("/new");
         },
         onError: (err) => {
           // اگر err.response.data موجود باشد استفاده کن
