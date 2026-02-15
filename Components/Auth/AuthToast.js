@@ -35,6 +35,16 @@ export default function AuthToast({ onClose, mode = "login" }) {
   const sendOtpMutation = useSendOtp();
   const verifyOtpMutation = useVerifyOtp();
 
+  // نمایش هشدار وقتی ثبت‌نام با نام فعال شد
+  useEffect(() => {
+    if (isRegister) {
+      toast.error(
+        "ثبت نام با نام فعلاً در دسترس نیست. لطفاً با شماره تلفن وارد شوید.",
+        { position: "top-center", duration: 4000 },
+      );
+    }
+  }, [isRegister]);
+
   useEffect(() => {
     if (step !== "OTP" || timeLeft <= 0) return;
     const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
@@ -211,7 +221,7 @@ export default function AuthToast({ onClose, mode = "login" }) {
                   {errors.mobile?.message || mobileError}
                 </span>
 
-                {/* 👇 لینک ثبت نام / ورود اینجا قرار گرفت */}
+                {/* لینک ثبت نام / ورود */}
                 {!isRegister && (
                   <div className={styles.loginPage}>
                     حساب کاربری ندارید؟
