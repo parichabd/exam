@@ -10,9 +10,9 @@
 }
 
 .toast_box {
-  width: 335px;
+  width: 440px;
   max-width: 95%;
-  min-height: 378px;
+  min-height: 420px;
   background: #fff;
   border-radius: 20px;
   padding: 24px;
@@ -20,15 +20,18 @@
   animation: fadeUp 0.3s ease;
 }
 
-.close_btn {
+.close_btn, .back_btn {
   position: absolute;
   top: 12px;
   left: 12px;
-  border: none;
   background: none;
-  font-size: 18px;
+  border: none;
   cursor: pointer;
 }
+
+.close_btn { font-size: 18px; }
+.back_btn { font-size: 22px; color: #282828; }
+.back_btn:hover { color: #28a745; }
 
 .title {
   text-align: center;
@@ -73,26 +76,7 @@
   font-family: "BYekan", sans-serif;
 }
 
-.back_btn {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 22px;
-  color: #282828;
-}
-
-.back_btn:hover {
-  color: #28a745;
-}
-
-.loginPage {
-  all: unset;
-  color: #28a745;
-  cursor: pointer;
-}
+.loginPage { all: unset; color: #28a745; cursor: pointer; }
 
 .mobileHint {
   text-align: center;
@@ -102,26 +86,23 @@
   margin-bottom: 12px;
 }
 
-.mobileHint span {
-  color: red;
-  direction: ltr;
-  font-weight: 500;
-}
+.mobileHint span { color: red; direction: ltr; font-weight: 500; }
 
 .otpWrapper {
   display: flex;
   justify-content: center;
+  gap: 12px;
   margin: 40px 0;
   direction: ltr;
 }
 
 .otpInput {
-  width: 50px;
+  width: 55px;
   height: 45px;
-  border-radius: 6px;
+  font-size: 26px;
+  border-radius: 8px;
   border: 1px solid #00000040;
   text-align: center;
-  font-size: 24px;
   font-family: inherit;
   transition: 0.2s ease;
 }
@@ -131,16 +112,9 @@
   outline: none;
 }
 
-.otpErrorInput {
-  border-color: #e63946 !important;
-}
+.otpErrorInput { border-color: #e63946 !important; }
 
-.timer {
-  text-align: center;
-  font-size: 12px;
-  color: #282828;
-  margin-top: 8px;
-}
+.timer { text-align: center; font-size: 12px; color: #282828; margin-top: 8px; }
 
 .resend {
   background: none;
@@ -153,10 +127,7 @@
   font-family: "BYekan";
 }
 
-.shake {
-  animation: shake 0.35s;
-}
-
+.shake { animation: shake 0.35s; }
 .errorBox {
   min-height: 18px;
   font-size: 12px;
@@ -174,18 +145,10 @@
 }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (min-width: 1024px) {
-  .loginPage {
-    display: none;
-  }
+  .loginPage { display: none; }
 }
