@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { useSendOtp } from "@/Hooks/useSendOtp";
 import { useVerifyOtp } from "@/Hooks/useVerifyOtp";
 import { registerUser } from "@/Services/Auth";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import OtpInput from "react-otp-input";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import OtpInput from "react-otp-input";
 import toast, { Toaster } from "react-hot-toast";
+import Cookies from "js-cookie";
 import styles from "./AuthToast.module.css";
 
 export default function AuthToast({ onClose, mode = "login" }) {
@@ -20,10 +20,10 @@ export default function AuthToast({ onClose, mode = "login" }) {
   const [mobile, setMobile] = useState("");
   const [timeLeft, setTimeLeft] = useState(120);
   const [otp, setOtp] = useState("");
-  const [otpError, setOtpError] = useState("");
-  const [shake, setShake] = useState(false);
   const [mobileError, setMobileError] = useState("");
-  const [mobileShake, setMobileShake] = useState(false); // shake برای موبایل
+  const [otpError, setOtpError] = useState("");
+  const [mobileShake, setMobileShake] = useState(false);
+  const [otpShake, setOtpShake] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const {
@@ -66,14 +66,14 @@ export default function AuthToast({ onClose, mode = "login" }) {
         return;
       }
     }
-//کد فاقد
+
     sendOtpMutation.mutate(cleanedMobile, {
       onSuccess: () => {
         setStep("OTP");
         setTimeLeft(120);
         setOtp("");
         toast.success("کد تایید ارسال شد و تا ۲ دقیقه معتبر است", {
-          position: "top-right",
+          position: "top-left",
           duration: 4000,
         });
       },
@@ -99,8 +99,8 @@ export default function AuthToast({ onClose, mode = "login" }) {
   const submitOtp = () => {
     if (otp.length !== 6) {
       setOtpError("کد تایید را کامل وارد کنید");
-      setShake(true);
-      setTimeout(() => setShake(false), 400);
+      setOtpShake(true);
+      setTimeout(() => setOtpShake(false), 400);
       return;
     }
 
@@ -124,16 +124,15 @@ export default function AuthToast({ onClose, mode = "login" }) {
           }, 1000);
         },
         onError: () => {
-          setOtpError("کد وارد شده اشتباه است"); // تغییر پیام خطا
-          setShake(true);
-          setTimeout(() => setShake(false), 400);
+          setOtpError("کد وارد شده اشتباه است!");
+          setOtpShake(true);
+          setTimeout(() => setOtpShake(false), 400);
           setIsLoggingIn(false);
         },
       },
     );
   };
 
-  // برای اینتر در input های OTP
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       submitOtp();
@@ -196,17 +195,40 @@ export default function AuthToast({ onClose, mode = "login" }) {
                     <span className={styles.error}>{errors.name?.message}</span>
                   </>
                 )}
+
                 <input
                   type="tel"
                   placeholder="۰۹۱۲***۶۶۰۶"
                   {...register("mobile", {
                     required: "شماره موبایل الزامی است",
                   })}
-                  className={mobileShake ? styles.shake : ""}
+                  className={`${mobileShake ? styles.shake : ""} ${
+                    mobileError ? styles.errorInput : ""
+                  }`}
                 />
+
                 <span className={styles.error}>
                   {errors.mobile?.message || mobileError}
                 </span>
+
+                {/* 👇 لینک ثبت نام / ورود اینجا قرار گرفت */}
+                {!isRegister && (
+                  <div className={styles.loginPage}>
+                    حساب کاربری ندارید؟
+                    <button type="button" onClick={() => setIsRegister(true)}>
+                      ثبت نام
+                    </button>
+                  </div>
+                )}
+
+                {isRegister && (
+                  <div className={styles.loginPage}>
+                    قبلاً ثبت نام کرده‌اید؟
+                    <button type="button" onClick={() => setIsRegister(false)}>
+                      ورود
+                    </button>
+                  </div>
+                )}
 
                 <button
                   className={styles.submit}
@@ -218,14 +240,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
                       ? "ثبت‌نام و ارسال کد"
                       : "ارسال کد تایید"}
                 </button>
-
-                {!isRegister && (
-                  <p className={styles.loginPage}>
-                    <button type="button" onClick={() => setIsRegister(true)}>
-                      ثبت نام!
-                    </button>
-                  </p>
-                )}
               </form>
             </>
           )}
@@ -239,7 +253,7 @@ export default function AuthToast({ onClose, mode = "login" }) {
               </p>
 
               <div
-                className={`${styles.otpWrapper} ${shake ? styles.shake : ""}`}
+                className={`${styles.otpWrapper} ${otpShake ? styles.shake : ""}`}
                 onKeyDown={handleKeyDown}
               >
                 <OtpInput
@@ -263,6 +277,7 @@ export default function AuthToast({ onClose, mode = "login" }) {
                     <input
                       {...props}
                       maxLength={1}
+                      className={otpError ? styles.errorInput : ""}
                       style={{
                         width: "55px",
                         height: "45px",
