@@ -38,10 +38,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
     return () => clearInterval(timer);
   }, [step, timeLeft]);
 
-  // تبدیل اعداد فارسی به انگلیسی
-  const persianToEnglish = (str) =>
-    str.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
-
   const submitPhone = async (data) => {
     setMobile(data.mobile);
     if (isRegister) {
@@ -195,34 +191,40 @@ export default function AuthToast({ onClose, mode = "login" }) {
               <OtpInput
                 value={otp}
                 onChange={(v) => {
-                  const clean = persianToEnglish(v.replace(/[^0-9۰-۹]/g, ""));
+                  // فارسی -> انگلیسی و حذف غیرعدد
+                  const clean = v
+                    .split("")
+                    .map((c) =>
+                      "۰۱۲۳۴۵۶۷۸۹".includes(c) ? "۰۱۲۳۴۵۶۷۸۹".indexOf(c) : c,
+                    )
+                    .join("")
+                    .replace(/[^0-9]/g, "");
+
                   setOtp(clean);
-                  setOtpError("");
+                  setOtpError(clean.length === 0 ? "فقط عدد مجاز است" : "");
                 }}
                 numInputs={6}
                 shouldAutoFocus
-                inputType="tel"
+                inputType="text" // مهم: text نه tel
                 renderSeparator={<span style={{ width: "16px" }} />}
                 renderInput={(props) => (
                   <input
                     {...props}
                     maxLength={1}
                     style={{
-                      width: "55px", // عرض مربع
-                      height: "45px", // ارتفاع مربع
-                      fontSize: "26px", // اندازه فونت
+                      width: "55px",
+                      height: "45px",
+                      fontSize: "26px",
                       textAlign: "center",
                       borderRadius: "8px",
                       border: "1px solid #00000040",
                     }}
-                    className={`${styles.otpInput} ${
-                      otpError ? styles.otpErrorInput : ""
-                    }`}
                   />
                 )}
               />
             </div>
 
+            {/* خطای زیر input */}
             <div className={styles.errorBox}>{otpError}</div>
 
             {timeLeft > 0 ? (
