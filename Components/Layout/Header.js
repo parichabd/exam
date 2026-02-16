@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import AuthToast from "@/Components/Auth/AuthToast";
+import UserMenu from "@/Components/UserMenu/UserMenu"; // اضافه شد
 
 import styles from "./Layout.module.css";
 
@@ -15,6 +16,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const pathname = usePathname();
 
   // state شماره موبایل
@@ -30,11 +32,14 @@ export default function Header() {
     setIsToastOpen(true);
   };
 
-  // خواندن شماره موبایل از localStorage هنگام mount
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen((prev) => !prev);
+  };
+
+  // خواندن شماره موبایل از localStorage هنگام mount و هر بار مسیر تغییر کرد
   useEffect(() => {
     const storedMobile = localStorage.getItem("mobile");
     if (storedMobile) {
-      // حالت async برای جلوگیری از رندر همزمان
       setTimeout(() => {
         setMobile(storedMobile);
       }, 0);
@@ -77,10 +82,14 @@ export default function Header() {
           <div className={styles.desktop_menu}>
             <div className={styles.login_desktop}>
               {mobile ? (
-                // اگر شماره موبایل موجود بود، نمایشش بده
-                <span className={styles.user_mobile}>{mobile}</span>
+                // شماره موبایل کلیک‌شدنی با آدمک و فلش
+                <div className={styles.userSection} onClick={toggleUserMenu}>
+                  <span className={styles.userIcon}>👤</span>
+                  <span className={styles.user_mobile}>{mobile}</span>
+                  <span className={styles.arrow}>▼</span>
+                </div>
               ) : (
-                // اگر نبود، دکمه‌های ورود/ثبت نام
+                // دکمه‌های ورود/ثبت نام
                 <>
                   <div className={styles.login_icon}>
                     <Image
@@ -110,7 +119,11 @@ export default function Header() {
 
           <div className={styles.mobile_menu}>
             {mobile ? (
-              <span className={styles.user_mobile}>{mobile}</span>
+              <div className={styles.userSection} onClick={toggleUserMenu}>
+                <span className={styles.userIcon}>👤</span>
+                <span className={styles.user_mobile}>{mobile}</span>
+                <span className={styles.arrow}>▼</span>
+              </div>
             ) : (
               <button className={styles.mobile_buttom} onClick={openLogin}>
                 <Image
@@ -143,6 +156,12 @@ export default function Header() {
           <MdOutlinePermPhoneMsg /> تماس با ما
         </Link>
       </nav>
+
+      {/* کامپوننت منوی کاربری */}
+      <UserMenu
+        isOpen={isUserMenuOpen}
+        onClose={() => setIsUserMenuOpen(false)}
+      />
 
       {isToastOpen && (
         <AuthToast mode={authMode} onClose={() => setIsToastOpen(false)} />
