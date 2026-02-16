@@ -123,6 +123,9 @@ export default function AuthToast({ onClose, mode = "login" }) {
           Cookies.set("token", res.accessToken);
           localStorage.setItem("userName", res.user?.firstName || "");
 
+          // **این خط رو اضافه کن برای ذخیره شماره موبایل**
+          localStorage.setItem("mobile", mobile);
+
           setTimeout(() => {
             setIsLoggingIn(false);
             toast.success("ورود موفق بود! خوش آمدید 🎉", {
