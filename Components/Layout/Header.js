@@ -93,7 +93,14 @@ export default function Header() {
                     />
                   </span>
                   <span className={styles.user_mobile}>{mobile}</span>
-                  <span className={styles.arrow}>▼</span>
+                  <span className={styles.arrow}>
+                    <Image
+                      src="/icon/profile.png"
+                      alt="profile"
+                      width={24}
+                      height={24}
+                    />
+                  </span>
                 </div>
               ) : (
                 // دکمه‌های ورود/ثبت نام
@@ -136,7 +143,14 @@ export default function Header() {
                   />
                 </span>
                 <span className={styles.user_mobile}>{mobile}</span>
-                <span className={styles.arrow}>▼</span>
+                <span className={styles.arrow}>
+                  <Image
+                    src="/SVG/arrow-down.svg"
+                    alt="profile"
+                    width={24}
+                    height={24}
+                  />
+                </span>
               </div>
             ) : (
               <button className={styles.mobile_buttom} onClick={openLogin}>
