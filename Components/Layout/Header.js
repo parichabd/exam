@@ -9,11 +9,13 @@ import styles from "./Layout.module.css";
 import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineAirplaneTicket, MdOutlinePermPhoneMsg } from "react-icons/md";
 import { PiUserSoundDuotone } from "react-icons/pi";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
+  const pathname = usePathname();
 
   // state شماره موبایل
   const [mobile, setMobile] = useState(null);
@@ -37,7 +39,7 @@ export default function Header() {
         setMobile(storedMobile);
       }, 0);
     }
-  }, []);
+  }, [pathname]);
 
   return (
     <>
