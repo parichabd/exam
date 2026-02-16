@@ -10,6 +10,7 @@ body {
 }
 
 
+
 .layout {
   width: 100%;
   min-height: 100vh;
@@ -203,7 +204,7 @@ body {
   border-radius: 16px;
   padding: 24px;
   position: relative;
-  animation: fadeUp 0.3s ease;
+  
 }
 
 .close_btn {
@@ -258,8 +259,39 @@ body {
   .desktop_menu a:hover {
     color: #28A745;
   }
+  /* ===== User Section ===== */
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.user_mobile {
+  color: #28A745;
+  font-weight: 500;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* فلش چرخشی */
+.rotateArrow {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+/* وقتی لاگین شده بردر حذف شود */
+.noBorder {
+  border: none !important;
+  padding: 0 !important;
+}
 
   .login_desktop {
+    all: unset;
+    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -269,7 +301,7 @@ body {
     border-radius: 8px;
     cursor: pointer;
   }
-
+  
   .login_icon {
     display: flex;
     align-items: center;
@@ -286,6 +318,7 @@ body {
     font-weight: 500;
     color: #28A745;
     margin-right: 5px;
+    margin-top: 10px;
   }
 
   .footer_links {
@@ -348,6 +381,54 @@ body {
   .center {
     justify-content: center;
   }
+
+  .user_mobile{
+    color: #28A745;
+    font-weight: 500;
+    font-size: 19px;
+    margin-top: 9px;
+    
+  }
   
 }
 
+
+
+
+
+/* ================= USER SECTION ================= */
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.profile_icon,
+.profile_arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user_mobile {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #28A745;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.rotateArrow {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+.noBorder {
+  border: none !important;
+  padding: 0 !important;
+}
