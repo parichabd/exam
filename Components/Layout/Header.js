@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import AuthToast from "@/Components/Auth/AuthToast";
@@ -15,6 +15,9 @@ export default function Header() {
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
 
+  // state شماره موبایل
+  const [mobile, setMobile] = useState(null);
+
   const menuHandler = () => setIsOpen((prev) => !prev);
   const openLogin = () => {
     setAuthMode("login");
@@ -24,6 +27,17 @@ export default function Header() {
     setAuthMode("register");
     setIsToastOpen(true);
   };
+
+  // خواندن شماره موبایل از localStorage هنگام mount
+  useEffect(() => {
+    const storedMobile = localStorage.getItem("mobile");
+    if (storedMobile) {
+      // حالت async برای جلوگیری از رندر همزمان
+      setTimeout(() => {
+        setMobile(storedMobile);
+      }, 0);
+    }
+  }, []);
 
   return (
     <>
@@ -60,33 +74,51 @@ export default function Header() {
         <div className={styles.right_side}>
           <div className={styles.desktop_menu}>
             <div className={styles.login_desktop}>
-              <div className={styles.login_icon}>
-                <Image
-                  src="/icon/profile.png"
-                  alt="profile"
-                  width={24}
-                  height={24}
-                />
-                <button className={styles.mobile_buttom} onClick={openLogin}>
-                  <span>ورود</span>
-                </button>
-                <span>|</span>
-              </div>
-              <button className={styles.mobile_buttom} onClick={openRegister}>
-                <span className={styles.signup}>ثبت نام</span>
-              </button>
+              {mobile ? (
+                // اگر شماره موبایل موجود بود، نمایشش بده
+                <span className={styles.user_mobile}>{mobile}</span>
+              ) : (
+                // اگر نبود، دکمه‌های ورود/ثبت نام
+                <>
+                  <div className={styles.login_icon}>
+                    <Image
+                      src="/icon/profile.png"
+                      alt="profile"
+                      width={24}
+                      height={24}
+                    />
+                    <button
+                      className={styles.mobile_buttom}
+                      onClick={openLogin}
+                    >
+                      <span>ورود</span>
+                    </button>
+                    <span>|</span>
+                  </div>
+                  <button
+                    className={styles.mobile_buttom}
+                    onClick={openRegister}
+                  >
+                    <span className={styles.signup}>ثبت نام</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
           <div className={styles.mobile_menu}>
-            <button className={styles.mobile_buttom} onClick={openLogin}>
-              <Image
-                src="/icon/sign in buttom.png"
-                alt="sign in"
-                width={40}
-                height={40}
-              />
-            </button>
+            {mobile ? (
+              <span className={styles.user_mobile}>{mobile}</span>
+            ) : (
+              <button className={styles.mobile_buttom} onClick={openLogin}>
+                <Image
+                  src="/icon/sign in buttom.png"
+                  alt="sign in"
+                  width={40}
+                  height={40}
+                />
+              </button>
+            )}
           </div>
         </div>
       </header>
