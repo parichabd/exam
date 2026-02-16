@@ -84,7 +84,14 @@ export default function Header() {
               {mobile ? (
                 // شماره موبایل کلیک‌شدنی با آدمک و فلش
                 <div className={styles.userSection} onClick={toggleUserMenu}>
-                  <span className={styles.userIcon}>👤</span>
+                  <span className={styles.userIcon}>
+                    <Image
+                      src="/icon/profile.png"
+                      alt="profile"
+                      width={24}
+                      height={24}
+                    />
+                  </span>
                   <span className={styles.user_mobile}>{mobile}</span>
                   <span className={styles.arrow}>▼</span>
                 </div>
@@ -120,7 +127,14 @@ export default function Header() {
           <div className={styles.mobile_menu}>
             {mobile ? (
               <div className={styles.userSection} onClick={toggleUserMenu}>
-                <span className={styles.userIcon}>👤</span>
+                <span className={styles.userIcon}>
+                  <Image
+                    src="/icon/profile.png"
+                    alt="profile"
+                    width={24}
+                    height={24}
+                  />
+                </span>
                 <span className={styles.user_mobile}>{mobile}</span>
                 <span className={styles.arrow}>▼</span>
               </div>
