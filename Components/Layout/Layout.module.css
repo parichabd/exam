@@ -220,6 +220,8 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+
+
 /* ===== MEDIA QUERIES ===== */
 @media (min-width: 768px) { .container { max-width: 720px; } }
 @media (min-width: 1024px) {
@@ -262,3 +264,133 @@ body {
 .rotateArrow { transform: rotate(180deg); transition: transform 0.3s ease; }
 .noBorder { border: none !important; padding: 0 !important; }
 .userWrapper { position: relative; display: inline-block; }
+
+
+.userWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.userMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  min-width: 180px;
+  z-index: 100;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.userMenu .item {
+  padding: 10px 16px;
+  font-size: 15px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.userMenu .item:hover {
+  background: #f8f9fa;
+}
+
+.userMenu .item:first-child {
+  font-weight: bold;
+  color: #28a745;
+  border-bottom: 1px solid #eee;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* برای موبایل گاهی می‌خوایم آیتم اول (شماره) نمایش داده نشه یا متفاوت باشه */
+.mobileDisplay {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .mobileDisplay {
+    display: none; /* در دسکتاپ شماره رو توی منو تکرار نکنیم */
+  }
+  .userMenu {
+    right: 0; /* یا می‌تونی center کنی: left: 50%; transform: translateX(-50%); */
+  }
+}
+
+.userWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.userMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  min-width: 190px;
+  z-index: 100;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.userMenu .item {
+  padding: 10px 16px;
+  font-size: 15px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.userMenu .item:hover {
+  background: #f8f9fa;
+}
+
+.userMenu .item:first-child {
+  font-weight: bold;
+  color: #28a745;
+  border-bottom: 1px solid #eee;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* فقط در موبایل نمایش داده شود */
+.mobileOnly {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  
+
+  .userMenu {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 200px;
+  }
+
+  .userSection {
+    gap: 8px;
+  }
+}
