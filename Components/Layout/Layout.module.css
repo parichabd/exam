@@ -4,12 +4,11 @@ body {
   padding: 0;
   overflow-x: hidden; 
 }
+
 .dividerer_menu{
   border: 1px solid #00000029;
   margin-top: 19px;
 }
-
-
 
 .layout {
   width: 100%;
@@ -18,7 +17,7 @@ body {
   flex-direction: column;
   font-family: "BYekan", sans-serif;
   padding: 0;
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 .container {
@@ -204,7 +203,6 @@ body {
   border-radius: 16px;
   padding: 24px;
   position: relative;
-  
 }
 
 .close_btn {
@@ -218,217 +216,49 @@ body {
 }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-  }
-}
-
+/* ===== MEDIA QUERIES ===== */
+@media (min-width: 768px) { .container { max-width: 720px; } }
 @media (min-width: 1024px) {
-  .container {
-    max-width: 1200px;
-    padding: 0 32px;
-  }
-
-  .mobile_menu, .mobile_drawer {
-    display: none;
-  }
-
-  .desktop_menu {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-  }
-
-  .desktop_menu a {
-    text-decoration: none;
-    color: #282828;
-  }
-
-  .desktop_menu a:hover {
-    color: #28A745;
-  }
-  /* ===== User Section ===== */
-
-.userSection {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
-.user_mobile {
-  color: #28A745;
-  font-weight: 500;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-/* فلش چرخشی */
-.rotateArrow {
-  transform: rotate(180deg);
-  transition: transform 0.3s ease;
-}
-
-/* وقتی لاگین شده بردر حذف شود */
-.noBorder {
-  border: none !important;
-  padding: 0 !important;
-}
-
-  .login_desktop {
-    all: unset;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 16px;
-    height: 44px;
-    border: 2px solid #28A745;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+  .container { max-width: 1200px; padding: 0 32px; }
+  .mobile_menu, .mobile_drawer { display: none; }
+  .desktop_menu { display: flex; align-items: center; gap: 32px; }
+  .desktop_menu a { text-decoration: none; color: #282828; }
+  .desktop_menu a:hover { color: #28A745; }
   
-  .login_icon {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .login_icon img {
-    width: 24px;
-    height: 24px;
-  }
-
-  .login_desktop span {
-    font-size: 18px;
-    font-weight: 500;
-    color: #28A745;
-    margin-right: 5px;
-    margin-top: 10px;
-  }
-
-  .footer_links {
-    gap: 100px;
-  }
-
-  .footer_icons {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 28px;
-    margin-top: 0;
-  }
-
-  .footer_icons_logo {
-    align-items: flex-end;
-    text-align: right;
-  }
-
-  .footer_icons_img {
-    display: flex;
-    gap: 20px;
-    align-items: flex-end;
-  }
-
-  .images img {
-    width: 70px;
-    height: auto;
-    display: flex;
-  }
-
-  .footer_desktop {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 60px;
-  }
-  .mobile_buttom img{
-    width: 45px;
-    height: 45px;
-  }
+  /* User Section */
+  .userSection { display: flex; align-items: center; gap: 6px; cursor: pointer; position: relative; }
+  .user_mobile { color: #28A745; font-weight: 500; font-size: 18px; display: flex; align-items: center; white-space: nowrap; }
+  .rotateArrow { transform: rotate(180deg); transition: transform 0.3s ease; }
+  .noBorder { border: none !important; padding: 0 !important; }
+  .login_desktop { all: unset; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 8px 16px; height: 44px; border: 2px solid #28A745; border-radius: 8px; }
+  .login_icon { display: flex; align-items: center; gap: 6px; }
+  .login_icon img { width: 24px; height: 24px; }
+  .login_desktop span { font-size: 18px; font-weight: 500; color: #28A745; margin-right: 5px; margin-top: 10px; }
+  .footer_links { gap: 100px; }
+  .footer_icons { flex-direction: column; align-items: flex-end; gap: 28px; margin-top: 0; }
+  .footer_icons_logo { align-items: flex-end; text-align: right; }
+  .footer_icons_img { display: flex; gap: 20px; align-items: flex-end; }
+  .images img { width: 70px; height: auto; display: flex; }
+  .footer_desktop { display: flex; justify-content: space-between; align-items: flex-start; gap: 60px; }
+  .mobile_buttom img { width: 45px; height: 45px; }
 }
-
 
 @media (max-width: 1023px) {
-  .footer_icons {
-    flex-direction: row-reverse;
-    justify-content: space-between;
-  }
-
-  .footer_icons_logo {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .footer_icons_logo p {
-    text-align: left;
-  }
-
-  .images,
-  .center {
-    justify-content: center;
-  }
-
-  .user_mobile{
-    color: #28A745;
-    font-weight: 500;
-    font-size: 19px;
-    margin-top: 9px;
-    
-  }
-  
+  .footer_icons { flex-direction: row-reverse; justify-content: space-between; }
+  .footer_icons_logo { align-items: flex-start; text-align: left; }
+  .footer_icons_logo p { text-align: left; }
+  .images, .center { justify-content: center; }
+  .user_mobile { color: #28A745; font-weight: 500; font-size: 19px; margin-top: 9px; }
 }
 
-
-
-
-
-/* ================= USER SECTION ================= */
-
-.userSection {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 44px;
-  cursor: pointer;
-}
-
-.profile_icon,
-.profile_arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.user_mobile {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  font-weight: 500;
-  color: #28A745;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.rotateArrow {
-  transform: rotate(180deg);
-  transition: transform 0.3s ease;
-}
-
-.noBorder {
-  border: none !important;
-  padding: 0 !important;
-}
+/* ================= FINAL USER SECTION ================= */
+.userSection { display: flex; align-items: center; gap: 8px; height: 44px; cursor: pointer; }
+.profile_icon, .profile_arrow { display: flex; align-items: center; justify-content: center; }
+.user_mobile { display: flex; align-items: center; font-size: 18px; font-weight: 500; color: #28A745; line-height: 1; white-space: nowrap; }
+.rotateArrow { transform: rotate(180deg); transition: transform 0.3s ease; }
+.noBorder { border: none !important; padding: 0 !important; }
+.userWrapper { position: relative; display: inline-block; }

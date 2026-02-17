@@ -1,0 +1,24 @@
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+
+  width: 160px;
+  background: #fff;
+  border: 1px solid #0000001F;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+
+  z-index: 1000;
+}
+
+.item {
+  padding: 10px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: #f5f5f5;
+}

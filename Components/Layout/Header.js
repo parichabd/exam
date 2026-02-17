@@ -181,6 +181,7 @@ export default function Header() {
 
       <UserMenu
         isOpen={isUserMenuOpen}
+        mobile={mobile}
         onClose={() => setIsUserMenuOpen(false)}
       />
 
