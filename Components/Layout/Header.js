@@ -72,7 +72,7 @@ export default function Header() {
     setMobile(null);
     setIsUserMenuOpen(false);
   };
-
+  //ثبت نام
   const userMenuContent = (
     <div className={styles.userMenu}>
       {mobile && (
@@ -160,9 +160,9 @@ export default function Header() {
                     <button onClick={openLogin}>ورود</button>
                     <span>|</span>
                   </div>
-                  <button onClick={openRegister}>
-                    <span className={styles.signup}>ثبت نام</span>
-                  </button>
+                  <div className={styles.login_icon}>
+                    <button onClick={openRegister}>ثبت نام</button>
+                  </div>
                 </>
               )}
             </div>
@@ -199,8 +199,8 @@ export default function Header() {
                 <Image
                   src="/icon/sign in buttom.png"
                   alt="sign in"
-                  width={40}
-                  height={40}
+                  width={47}
+                  height={47}
                 />
               </button>
             )}
