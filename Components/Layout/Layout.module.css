@@ -404,4 +404,5 @@ body {
 
 .mobile_menu button {
   all: unset;
+  cursor: pointer;
 }

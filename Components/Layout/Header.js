@@ -10,13 +10,13 @@ import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineAirplaneTicket, MdOutlinePermPhoneMsg } from "react-icons/md";
 import { PiUserSoundDuotone } from "react-icons/pi";
 import { usePathname } from "next/navigation";
+import { toPersianNumber } from "@/utils/number";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [mobile, setMobile] = useState(null);
 
   const pathname = usePathname();
   const desktopRef = useRef(null);
@@ -39,7 +39,6 @@ export default function Header() {
     setIsUserMenuOpen((prev) => !prev);
   };
 
-  // بستن منو با کلیک بیرون (با توجه به دسکتاپ یا موبایل)
   useEffect(() => {
     const handleClickOutside = (event) => {
       const isDesktop = window.innerWidth >= 1024;
@@ -60,23 +59,25 @@ export default function Header() {
   }, [isUserMenuOpen]);
 
   // خواندن شماره موبایل
-  useEffect(() => {
-    const storedMobile = localStorage.getItem("mobile");
-    if (storedMobile) {
-      setTimeout(() => setMobile(storedMobile), 0);
+  const [mobile, setMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("mobile");
     }
-  }, [pathname]);
+    return null;
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("mobile");
     setMobile(null);
     setIsUserMenuOpen(false);
   };
-  //ثبت نام
+
   const userMenuContent = (
     <div className={styles.userMenu}>
       {mobile && (
-        <div className={`${styles.item} ${styles.mobileOnly}`}>{mobile}</div>
+        <div className={`${styles.item} ${styles.mobileOnly}`}>
+          {toPersianNumber(mobile)}
+        </div>
       )}
       <div className={styles.item}>اطلاعات حساب کاربری</div>
       <div className={styles.item} onClick={handleLogout}>
@@ -117,7 +118,7 @@ export default function Header() {
 
         {/* RIGHT SIDE */}
         <div className={styles.right_side}>
-          {/* DESKTOP USER SECTION */}
+          {/* DESKTOP */}
           <div className={styles.desktop_menu}>
             <div
               className={`${styles.login_desktop} ${
@@ -128,21 +129,20 @@ export default function Header() {
                 <div className={styles.userWrapper} ref={desktopRef}>
                   <div className={styles.userSection} onClick={toggleUserMenu}>
                     <Image
-                      className={styles.profile_icon}
                       src="/icon/profile.png"
                       alt="profile"
                       width={19}
                       height={14}
                     />
-                    <span className={styles.user_mobile}>{mobile}</span>
+                    <span className={styles.user_mobile}>
+                      {toPersianNumber(mobile)}
+                    </span>
                     <Image
                       src="/SVG/arrow-down.svg"
                       alt="arrow"
                       width={18}
                       height={18}
-                      className={`${styles.profile_arrow} ${
-                        isUserMenuOpen ? styles.rotateArrow : ""
-                      }`}
+                      className={isUserMenuOpen ? styles.rotateArrow : ""}
                     />
                   </div>
 
@@ -168,27 +168,26 @@ export default function Header() {
             </div>
           </div>
 
-          {/* MOBILE USER SECTION */}
+          {/* MOBILE */}
           <div className={styles.mobile_menu}>
             {mobile ? (
               <div className={styles.userWrapper} ref={mobileRef}>
                 <div className={styles.userSection} onClick={toggleUserMenu}>
                   <Image
-                    className={styles.profile_icon}
                     src="/icon/profile.png"
                     alt="profile"
-                    width={20}
-                    height={20}
+                    width={22}
+                    height={22}
                   />
-                  <span className={styles.user_mobile}>{mobile}</span>
+                  <span className={styles.user_mobile}>
+                    {toPersianNumber(mobile)}
+                  </span>
                   <Image
                     src="/SVG/arrow-down.svg"
                     alt="arrow"
-                    width={18}
-                    height={18}
-                    className={`${styles.profile_arrow} ${
-                      isUserMenuOpen ? styles.rotateArrow : ""
-                    }`}
+                    width={24}
+                    height={24}
+                    className={isUserMenuOpen ? styles.rotateArrow : ""}
                   />
                 </div>
 
@@ -208,7 +207,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* MOBILE OVERLAY & DRAWER */}
+      {/* MOBILE DRAWER */}
       {isOpen && (
         <div className={styles.mobile_overlay} onClick={menuHandler} />
       )}
@@ -228,7 +227,6 @@ export default function Header() {
         </Link>
       </nav>
 
-      {/* AUTH TOAST */}
       {isToastOpen && (
         <AuthToast mode={authMode} onClose={() => setIsToastOpen(false)} />
       )}
