@@ -342,7 +342,8 @@ body {
 }
 
 .userMenu {
-  width: 246px;
+  /* width: 246px; */
+  width: 157px;
   height: auto;
   position: absolute;
   top: 100%;
@@ -398,6 +399,7 @@ body {
   
 
   .userMenu {
+    width: 246px;
     right: auto;
     left: 50%;
     transform: translateX(-50%);
