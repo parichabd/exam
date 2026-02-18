@@ -75,6 +75,7 @@ export default function Header() {
     <div className={styles.userMenu}>
       {mobile && (
         <div className={`${styles.item} ${styles.mobileOnly}`}>
+
           {toPersianNumber(mobile)}
         </div>
       )}
@@ -83,17 +84,18 @@ export default function Header() {
         <Image
           src="/SVG/profile/profile.svg"
           alt="Torino Logo"
-          width={40}
-          height={40}
+          width={20}
+          height={20}
         />
       </div>
+      <div className={styles.divider_profile}></div>
       <div className={styles.item} onClick={handleLogout}>
         <h1>خروج از حساب کاربری </h1>
         <Image
           src="/SVG/profile/logout.svg"
           alt="Torino Logo"
-          width={40}
-          height={40}
+          width={20}
+          height={20}
         />
       </div>
     </div>
