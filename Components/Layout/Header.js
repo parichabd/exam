@@ -5,11 +5,11 @@ import Image from "next/image";
 import AuthToast from "@/Components/Auth/AuthToast";
 
 import styles from "./Layout.module.css";
+import { GiCaptainHatProfile } from "react-icons/gi";
 
 import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineAirplaneTicket, MdOutlinePermPhoneMsg } from "react-icons/md";
 import { PiUserSoundDuotone } from "react-icons/pi";
-import { usePathname } from "next/navigation";
 import { toPersianNumber } from "@/utils/number";
 
 export default function Header() {
@@ -74,29 +74,49 @@ export default function Header() {
   const userMenuContent = (
     <div className={styles.userMenu}>
       {mobile && (
-        <div className={`${styles.item} ${styles.mobileOnly}`}>
+        <div
+          className={`${styles.item} ${styles.mobileOnly} ${styles.profileRow}`}
+        >
+          <div className={styles.DP_profile}>
+            <div className={styles.DP_profile_base}>
+              <Image
+                src="/SVG/profile/DP/Ellipse 2.svg"
+                alt="Torino Logo"
+                width={22}
+                height={22}
+              />
+            </div>
 
-          {toPersianNumber(mobile)}
+            <div className={styles.DP_profile_icon}>
+              <Image
+                src="/SVG/profile/DP/frame.svg"
+                alt="Torino Logo"
+                width={22}
+                height={22}
+              />
+            </div>
+          </div>
+          <div className={styles.numberPD}>{toPersianNumber(mobile)}</div>
         </div>
       )}
       <div className={styles.item}>
-        <h1>اطلاعات حساب کاربری</h1>
         <Image
           src="/SVG/profile/profile.svg"
           alt="Torino Logo"
           width={20}
           height={20}
         />
+        <h1>اطلاعات حساب کاربری</h1>
       </div>
       <div className={styles.divider_profile}></div>
-      <div className={styles.item} onClick={handleLogout}>
-        <h1>خروج از حساب کاربری </h1>
+      <div className={`${styles.item} ${styles.exit}`} onClick={handleLogout}>
         <Image
           src="/SVG/profile/logout.svg"
           alt="Torino Logo"
           width={20}
           height={20}
         />
+        <h1>خروج از حساب کاربری </h1>
       </div>
     </div>
   );
