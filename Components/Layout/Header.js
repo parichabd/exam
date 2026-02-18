@@ -18,7 +18,6 @@ export default function Header() {
   const [authMode, setAuthMode] = useState("login");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-  const pathname = usePathname();
   const desktopRef = useRef(null);
   const mobileRef = useRef(null);
 
@@ -79,9 +78,23 @@ export default function Header() {
           {toPersianNumber(mobile)}
         </div>
       )}
-      <div className={styles.item}>اطلاعات حساب کاربری</div>
+      <div className={styles.item}>
+        <h1>اطلاعات حساب کاربری</h1>
+        <Image
+          src="/SVG/profile/profile.svg"
+          alt="Torino Logo"
+          width={40}
+          height={40}
+        />
+      </div>
       <div className={styles.item} onClick={handleLogout}>
-        خروج از حساب کاربری
+        <h1>خروج از حساب کاربری </h1>
+        <Image
+          src="/SVG/profile/logout.svg"
+          alt="Torino Logo"
+          width={40}
+          height={40}
+        />
       </div>
     </div>
   );
