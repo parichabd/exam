@@ -25,6 +25,7 @@
     "react-spinners": "^0.17.0",
     "swiper": "^12.1.0",
     "yup": "^1.7.1",
+    "zaman": "^2.1.1",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

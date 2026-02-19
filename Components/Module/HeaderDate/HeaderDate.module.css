@@ -1,0 +1,21 @@
+.wrapper {
+  position: relative;
+  width: 100vw;      /* کل عرض صفحه */
+  height: 119px;     /* ارتفاع دلخواه */
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    height: 199px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .wrapper {
+    height: 350px;
+  }
+}

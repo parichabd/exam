@@ -144,7 +144,7 @@ export default function Header() {
               <Image
                 src="/icon/Group 46.png"
                 alt="menu"
-                width={35}
+                width={30}
                 height={35}
               />
             </button>

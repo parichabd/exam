@@ -14,16 +14,8 @@ export default function ServerConectionError({ error, reset }) {
         style={{ width: "100%", height: "auto" }}
       />
       <div className={styles.errordetails_prograph}>
-        <p className={styles.footer_text}>
-          اتصال با سرور برقرار نیست!
-        </p>
-        <p className={styles.footer_subtext}>
-          لطفا بعدا دوباره امتحان کنید.
-        </p>
-
-        <button onClick={() => reset()}>
-          تلاش مجدد
-        </button>
+        <p className={styles.footer_text}>اتصال با سرور برقرار نیست!</p>
+        <p className={styles.footer_subtext}>لطفا بعدا دوباره امتحان کنید.</p>
       </div>
     </div>
   );

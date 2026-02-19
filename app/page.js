@@ -5,7 +5,7 @@ import "./globals.css";
 function Page() {
   return (
     <>
-    <MainPage/>
+      <MainPage />
     </>
   );
 }
