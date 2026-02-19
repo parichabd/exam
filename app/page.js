@@ -1,15 +1,16 @@
-import React from "react";
+import MainPage from "@/Components/Template/Main/MainPage";
+
 import "./globals.css";
 
-function MainPage() {
+function Page() {
   return (
-    <div>
-      <h1>main page</h1>
-    </div>
+    <>
+    <MainPage/>
+    </>
   );
 }
 
-export default MainPage;
+export default Page;
 
 // =>   error 500 simulator
 // export default async function Page() {
