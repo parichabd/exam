@@ -30,6 +30,57 @@
   font-weight: 400;
 }
 
+/* / */
+.dropdown {
+  position: relative;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  width: 160px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 100;
+}
+
+.dropdownMenu li {
+  padding: 8px;
+  cursor: pointer;
+}
+.frequentHeader {
+  background: #e0e0e0;  /* رنگ طوسی */
+  cursor: not-allowed;   /* غیر قابل کلیک */
+  font-weight: 600;
+}
+
+.dropdownMenu li:not(.frequentHeader):hover {
+  background: #f0f0f0;  /* هاور فقط برای آیتم‌های واقعی */
+}
+/* ۱ */
+
+/* هدر ستون پر پرتردد */
+.frequentHeader {
+  font-weight: bold;
+  background-color: #e0e0e0; /* طوسی روشن */
+  padding: 8px;
+  cursor: default;
+  border-bottom: 1px solid #ccc;
+}
+
+/* هدر ستون پر پرتردد */
+.frequentHeader {
+  font-weight: bold;
+  background-color: #e0e0e0; /* طوسی روشن */
+  padding: 8px;
+  cursor: not-allowed; /* غیرقابل کلیک */
+  border-bottom: 1px solid #ccc;
+}
 
 @media (min-width: 768px) {
   .date_info h1{
@@ -47,3 +98,5 @@
     font-size: 28px
   }
 }
+
+
