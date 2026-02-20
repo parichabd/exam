@@ -122,8 +122,15 @@ function BookDate() {
                     setEndLoc(loc);
                     setEndOpen(false);
                   }}
+                  className={styles.dropdownItem}
                 >
-                  {loc}
+                  <Image
+                    src="/SVG/location/global-search.svg"
+                    alt="location"
+                    width={18}
+                    height={18}
+                  />
+                  <span>{loc}</span>
                 </li>
               ))}
             </ul>
