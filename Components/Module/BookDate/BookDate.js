@@ -75,6 +75,8 @@ function BookDate() {
               <li className={styles.frequentHeader}>پر پرتردد</li>
 
               {/* لیست مبداها */}
+
+              {/* لیست مبداها با آیکون */}
               {origins.map((loc, i) => (
                 <li
                   key={i}
@@ -82,8 +84,15 @@ function BookDate() {
                     setStartLoc(loc);
                     setStartOpen(false);
                   }}
+                  className={styles.dropdownItem} // می‌تونیم برای استایل جداگانه اضافه کنیم
                 >
-                  {loc}
+                  <Image
+                    src="/SVG/location/location.svg"
+                    alt="location"
+                    width={18}
+                    height={18}
+                  />
+                  <span>{loc}</span>
                 </li>
               ))}
             </ul>
