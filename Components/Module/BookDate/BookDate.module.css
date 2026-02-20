@@ -1,0 +1,49 @@
+.date_info h1{
+    width: 333px;
+    height: 25px;
+    font-weight: 800;
+    font-size: 17px;
+    color: #595959;
+    word-spacing: 3px;
+    margin: 30px auto;
+}
+
+.booktour{
+  display: flex;
+  justify-content: space-between;
+}
+
+.locations{
+  all: unset;
+  display: flex;
+  margin: 0 3px 6px 3px;
+  justify-content: center;
+  align-items: center;
+  width: 160px;
+  height: 38px;
+  padding: 8px;
+  border:1px solid  #00000026;
+  border-radius: 16px;
+  gap: 8px;
+  color: #00000080;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+
+@media (min-width: 768px) {
+  .date_info h1{
+    width: 482px;
+    height: 33px;
+    font-size: 21px
+  }
+  
+}
+
+@media (min-width: 1024px) {
+  .date_info h1{
+    width: 582px;
+    height: 43px;
+    font-size: 28px
+  }
+}

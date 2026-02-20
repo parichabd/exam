@@ -1,11 +1,11 @@
 import BookDate from "@/Components/Module/BookDate/BookDate";
-import HeaderDate from "@/Components/Module/HeaderDate/HeaderDate";
+import Header from "@/Components/Module/HeaderDate/Header";
 import React from "react";
 
 function MainPage() {
   return (
     <div>
-      <HeaderDate />
+      <Header />
       <BookDate />
     </div>
   );

@@ -1,7 +1,7 @@
 .wrapper {
   position: relative;
-  width: 100vw;      /* کل عرض صفحه */
-  height: 119px;     /* ارتفاع دلخواه */
+  width: 100vw;      
+  height: 119px;    
   left: 50%;
   right: 50%;
   margin-left: -50vw;

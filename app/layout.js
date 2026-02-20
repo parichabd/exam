@@ -9,6 +9,7 @@ import styles from "../Components/Layout/Layout.module.css";
 export const metadata = {
   title: "تورینو",
   description: "سفر به راحتی چند کلیک!",
+  metadataBase: new URL("https://torino.ir"), 
   icons: { icon: "/image/cover.svg" },
   openGraph: {
     title: "تورینو",
@@ -23,7 +24,10 @@ export const metadata = {
     description: "سفر به راحتی چند کلیک!",
     images: ["/images/cover.png"],
   },
-  viewport: { themeColor: "#fff" },
+};
+
+export const viewport = {
+  themeColor: "#fff",
 };
 
 export default function RootLayout({ children }) {

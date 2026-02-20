@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styles from "./HeaderDate.module.css";
 
-function HeaderDate() {
+function Header() {
   return (
     <div className={styles.wrapper}>
       <Image
@@ -15,4 +15,4 @@ function HeaderDate() {
   );
 }
 
-export default HeaderDate;
+export default Header;
