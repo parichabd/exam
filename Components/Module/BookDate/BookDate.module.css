@@ -13,6 +13,8 @@
   justify-content: space-between;
 }
 
+/* ================= BUTTON ================= */
+
 .locations{
   box-sizing: border-box;
   all: unset;
@@ -29,8 +31,30 @@
   color: #00000080;
   font-size: 16px;
   font-weight: 400;
+
+  /* hover related */
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
+.locations:hover {
+  border: 1px solid #28A745;
+  color: #28A745;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+  transform: translateY(-2px);
+}
+
+.locations:hover img {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.locations:active {
+  transform: scale(0.97);
+}
+
+/* ================= DROPDOWN ================= */
 
 .dropdown {
   position: relative;
@@ -50,43 +74,22 @@
   z-index: 100;
 }
 
-.dropdownMenu li {
-  padding: 8px;
-  cursor: pointer;
-}
-
-.dropdownMenu li:not(.frequentHeader):hover {
-  background: #f0f0f0;  /* هاور فقط برای آیتم‌های واقعی */
-}
-
-
-
-.dropdownMenu li.frequentHeader {
-  background: #e0e0e0;
-  cursor: not-allowed;
-  font-weight: 600;
-}
-
-.dropdownMenu li:not(.frequentHeader):hover {
-  background: #f0f0f0;
-}
-
-
-
+/* li اصلی */
 .dropdownMenu li {
   display: flex;
   align-items: center;
-  gap: 8px; /* فاصله بین آیکون و متن */
+  gap: 8px;
   padding: 8px;
   cursor: pointer;
-  border-bottom: 1px solid #0000001F; /* خط جداکننده */
+  border-bottom: 1px solid #0000001F;
   height: 50px;
 }
 
 .dropdownMenu li:last-child {
-  border-bottom: none; /* آخرین آیتم بدون خط */
+  border-bottom: none;
 }
 
+/* header */
 .dropdownMenu li.frequentHeader {
   background: #f8f8f8;
   cursor: not-allowed;
@@ -94,59 +97,67 @@
   color: #282828B2;
   font-size: 13px;
   height: 35px;
-  border-bottom: none; 
-   border-top-right-radius: 8px;
+  border-bottom: none;
+  border-top-right-radius: 8px;
   border-top-left-radius: 8px;
 }
 
+/* hover آیتم‌ها */
 .dropdownMenu li:not(.frequentHeader):hover {
   background: #f0f0f0;
 }
 
 
-
-/* Hover حرفه‌ای برای دکمه لوکیشن */
-.locations {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
+/* date */
+/* باکس اصلی */
+.dateBox {
+  width: 363px;
+  height: 47px;
+  border: 1px solid #00000026;
+  border-radius: 12px;
+  position: relative; /* مهم برای position:absolute آیکن */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* متن تاریخ وسط */
 }
 
-/* هاور اصلی */
-.locations:hover {
-  border: 1px solid #28A745;
-  color: #28A745;
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
-  transform: translateY(-2px);
+/* input واقعی */
+.date_input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: "BYekan";
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
+  padding: 0;
+  line-height: 1;
+  cursor: pointer;
 }
 
-/* افکت نرم روی آیکون */
-.locations:hover img {
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
+/* آیکن تاریخ */
+.dateIcon {
+  position: absolute;
+  left: 56%;       /* فاصله از چپ باکس */
+  top: 50%;
+  transform: translateY(-50%); /* وسط عمودی */
+  pointer-events: none; /* کلیک روی input را مسدود نکند */
 }
 
-/* افکت کلیک */
-.locations:active {
-  transform: scale(0.97);
-}
-
+/* ================= RESPONSIVE ================= */
 
 @media (min-width: 768px) {
   .date_info h1{
     width: 482px;
     height: 33px;
-    font-size: 21px
+    font-size: 21px;
   }
-  
 }
 
 @media (min-width: 1024px) {
   .date_info h1{  
     width: 582px;
     height: 43px;
-    font-size: 28px
+    font-size: 28px;
   }
 }
-
-

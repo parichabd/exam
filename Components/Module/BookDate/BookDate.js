@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { DatePicker } from "zaman";
 import Image from "next/image";
 import styles from "./BookDate.module.css";
 
@@ -12,6 +13,7 @@ function BookDate() {
   const [endOpen, setEndOpen] = useState(false);
   const [startLoc, setStartLoc] = useState("مبدا");
   const [endLoc, setEndLoc] = useState("مقصد");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   // ✅ ساخت ref برای تشخیص کلیک بیرون
   const startRef = useRef(null);
@@ -37,12 +39,12 @@ function BookDate() {
         setTours(data);
 
         const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name))
+          new Set(data.map((t) => t.origin.name)),
         ).map((name) => translateLocations[name] || name);
         setOrigins(uniqueOrigins);
 
         const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name))
+          new Set(data.map((t) => t.destination.name)),
         ).map((name) => translateLocations[name] || name);
         setDestinations(uniqueDestinations);
       })
@@ -158,6 +160,21 @@ function BookDate() {
             </ul>
           )}
         </div>
+      </div>
+      <div className={styles.dateBox}>
+        <DatePicker
+          value={selectedDate || ""}
+          onChange={setSelectedDate}
+          inputClass={styles.date_input}
+          inputAttributes={{ placeholder: "تاریخ" }}
+        />
+        <Image
+          src="/SVG/location/calendar.svg"
+          alt="calendar"
+          width={18}
+          height={18}
+          className={styles.dateIcon}
+        />
       </div>
     </div>
   );
