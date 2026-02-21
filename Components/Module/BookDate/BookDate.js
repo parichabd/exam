@@ -167,6 +167,7 @@ function BookDate() {
           onChange={setSelectedDate}
           inputClass={styles.date_input}
           inputAttributes={{ placeholder: "تاریخ" }}
+          
         />
         <Image
           src="/SVG/location/calendar.svg"

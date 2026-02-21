@@ -144,6 +144,8 @@
   pointer-events: none; /* کلیک روی input را مسدود نکند */
 }
 
+
+
 /* ================= RESPONSIVE ================= */
 
 @media (min-width: 768px) {
