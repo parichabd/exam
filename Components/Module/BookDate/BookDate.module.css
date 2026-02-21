@@ -14,6 +14,7 @@
 }
 
 .locations{
+  box-sizing: border-box;
   all: unset;
   display: flex;
   margin: 0 3px 6px 3px;
@@ -30,18 +31,18 @@
   font-weight: 400;
 }
 
-/* / */
+
 .dropdown {
   position: relative;
 }
 
 .dropdownMenu {
   position: absolute;
-  top: 45px;
-  left: 0;
-  width: 160px;
+  top: 60px;
+  right: 11px;
+  width: 165px;
   background: white;
-  border: 1px solid #ccc;
+  border: 1px solid #00000033;
   border-radius: 8px;
   list-style: none;
   padding: 0;
@@ -53,23 +54,12 @@
   padding: 8px;
   cursor: pointer;
 }
-.frequentHeader {
-  background: #e0e0e0;  /* رنگ طوسی */
-  cursor: not-allowed;   /* غیر قابل کلیک */
-  font-weight: 600;
-}
 
 .dropdownMenu li:not(.frequentHeader):hover {
   background: #f0f0f0;  /* هاور فقط برای آیتم‌های واقعی */
 }
 
-.dropdownMenu li {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* فاصله بین آیکون و متن */
-  padding: 8px;
-  cursor: pointer;
-}
+
 
 .dropdownMenu li.frequentHeader {
   background: #e0e0e0;
@@ -80,25 +70,8 @@
 .dropdownMenu li:not(.frequentHeader):hover {
   background: #f0f0f0;
 }
-/* ۱ */
 
-/* هدر ستون پر پرتردد */
-.frequentHeader {
-  font-weight: bold;
-  background-color: #e0e0e0; /* طوسی روشن */
-  padding: 8px;
-  cursor: default;
-  border-bottom: 1px solid #ccc;
-}
 
-/* هدر ستون پر پرتردد */
-.frequentHeader {
-  font-weight: bold;
-  background-color: #e0e0e0; /* طوسی روشن */
-  padding: 8px;
-  cursor: not-allowed; /* غیرقابل کلیک */
-  border-bottom: 1px solid #ccc;
-}
 
 .dropdownMenu li {
   display: flex;
@@ -106,7 +79,8 @@
   gap: 8px; /* فاصله بین آیکون و متن */
   padding: 8px;
   cursor: pointer;
-  border-bottom: 1px solid #e0e0e0; /* خط جداکننده */
+  border-bottom: 1px solid #0000001F; /* خط جداکننده */
+  height: 50px;
 }
 
 .dropdownMenu li:last-child {
@@ -114,15 +88,49 @@
 }
 
 .dropdownMenu li.frequentHeader {
-  background: #e0e0e0;
+  background: #f8f8f8;
   cursor: not-allowed;
   font-weight: 600;
-  border-bottom: 1px solid #ccc; /* خط زیر هدر */
+  color: #282828B2;
+  font-size: 13px;
+  height: 35px;
+  border-bottom: none; 
+   border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
 .dropdownMenu li:not(.frequentHeader):hover {
   background: #f0f0f0;
 }
+
+
+
+/* Hover حرفه‌ای برای دکمه لوکیشن */
+.locations {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* هاور اصلی */
+.locations:hover {
+  border: 1px solid #28A745;
+  color: #28A745;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+  transform: translateY(-2px);
+}
+
+/* افکت نرم روی آیکون */
+.locations:hover img {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+/* افکت کلیک */
+.locations:active {
+  transform: scale(0.97);
+}
+
 
 @media (min-width: 768px) {
   .date_info h1{
@@ -134,7 +142,7 @@
 }
 
 @media (min-width: 1024px) {
-  .date_info h1{
+  .date_info h1{  
     width: 582px;
     height: 43px;
     font-size: 28px

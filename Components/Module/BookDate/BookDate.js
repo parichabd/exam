@@ -72,7 +72,7 @@ function BookDate() {
           {startOpen && (
             <ul className={styles.dropdownMenu}>
               {/* هدر پر پرتردد */}
-              <li className={styles.frequentHeader}>پر پرتردد</li>
+              <li className={styles.frequentHeader}> پرتردد</li>
 
               {/* لیست مبداها */}
 
