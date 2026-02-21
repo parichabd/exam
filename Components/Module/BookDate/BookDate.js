@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "./BookDate.module.css";
 
@@ -13,9 +13,12 @@ function BookDate() {
   const [startLoc, setStartLoc] = useState("مبدا");
   const [endLoc, setEndLoc] = useState("مقصد");
 
+  // ✅ ساخت ref برای تشخیص کلیک بیرون
+  const startRef = useRef(null);
+  const endRef = useRef(null);
+
   // fetch از بک‌اند
   useEffect(() => {
-    // Map برای فارسی کردن نام شهرها
     const translateLocations = {
       Tehran: "تهران",
       Isfahan: "اصفهان",
@@ -27,24 +30,41 @@ function BookDate() {
       "offRoad Center": "آفرود سنتر",
       sulaymaniyahTour: "سلیمانیه",
     };
+
     fetch("http://localhost:6500/tour")
       .then((res) => res.json())
       .then((data) => {
         setTours(data);
 
-        // لیست یکتا از مبداها و تبدیل به فارسی
         const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name)),
+          new Set(data.map((t) => t.origin.name))
         ).map((name) => translateLocations[name] || name);
         setOrigins(uniqueOrigins);
 
-        // لیست یکتا از مقصدها و تبدیل به فارسی
         const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name)),
+          new Set(data.map((t) => t.destination.name))
         ).map((name) => translateLocations[name] || name);
         setDestinations(uniqueDestinations);
       })
       .catch((err) => console.error("Error fetching tours:", err));
+  }, []);
+
+  // ✅ بستن مودال با کلیک بیرون
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (startRef.current && !startRef.current.contains(event.target)) {
+        setStartOpen(false);
+      }
+      if (endRef.current && !endRef.current.contains(event.target)) {
+        setEndOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   return (
@@ -56,10 +76,13 @@ function BookDate() {
 
       <div className={styles.booktour}>
         {/* مبدا */}
-        <div className={styles.dropdown}>
+        <div className={styles.dropdown} ref={startRef}>
           <button
             className={`${styles.startLoc} ${styles.locations}`}
-            onClick={() => setStartOpen(!startOpen)}
+            onClick={() => {
+              setStartOpen(!startOpen);
+              setEndOpen(false); // اگه یکی باز شد اون یکی بسته شه
+            }}
           >
             <Image
               src="/SVG/location/location.svg"
@@ -69,14 +92,11 @@ function BookDate() {
             />
             <p>{startLoc}</p>
           </button>
+
           {startOpen && (
             <ul className={styles.dropdownMenu}>
-              {/* هدر پر پرتردد */}
-              <li className={styles.frequentHeader}> پرتردد</li>
+              <li className={styles.frequentHeader}>پرتردد</li>
 
-              {/* لیست مبداها */}
-
-              {/* لیست مبداها با آیکون */}
               {origins.map((loc, i) => (
                 <li
                   key={i}
@@ -84,7 +104,6 @@ function BookDate() {
                     setStartLoc(loc);
                     setStartOpen(false);
                   }}
-                  className={styles.dropdownItem} // می‌تونیم برای استایل جداگانه اضافه کنیم
                 >
                   <Image
                     src="/SVG/location/location.svg"
@@ -100,10 +119,13 @@ function BookDate() {
         </div>
 
         {/* مقصد */}
-        <div className={styles.dropdown}>
+        <div className={styles.dropdown} ref={endRef}>
           <button
             className={`${styles.endLoc} ${styles.locations}`}
-            onClick={() => setEndOpen(!endOpen)}
+            onClick={() => {
+              setEndOpen(!endOpen);
+              setStartOpen(false);
+            }}
           >
             <Image
               src="/SVG/location/global-search.svg"
@@ -113,6 +135,7 @@ function BookDate() {
             />
             <p>{endLoc}</p>
           </button>
+
           {endOpen && (
             <ul className={styles.dropdownMenu}>
               {destinations.map((loc, i) => (
@@ -122,7 +145,6 @@ function BookDate() {
                     setEndLoc(loc);
                     setEndOpen(false);
                   }}
-                  className={styles.dropdownItem}
                 >
                   <Image
                     src="/SVG/location/global-search.svg"
