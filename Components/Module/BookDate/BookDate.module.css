@@ -144,7 +144,34 @@
   pointer-events: none; /* کلیک روی input را مسدود نکند */
 }
 
+.iconSelected {
+  position: absolute;
+  left: 61%;       /* فاصله از چپ باکس */
+  top: 50%;
+  transform: translateY(-50%); /* وسط عمودی */
+  pointer-events: none; 
+}
 
+
+.searchButton{
+  font-family: "BYekan";
+  font-size: 19.5px;
+  cursor: pointer;
+  width: 363px;
+  height: 47px;
+  padding: 8px;
+  gap: 8px;
+  border-radius: 16px;
+  color: #fff;
+  background-color: #28A745;
+  border: none;
+  margin: 12px 0;
+}
+
+.searchButton:hover {
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+  transform: translateY(2px);
+}
 
 /* ================= RESPONSIVE ================= */
 

@@ -15,11 +15,11 @@ function BookDate() {
   const [endLoc, setEndLoc] = useState("مقصد");
   const [selectedDate, setSelectedDate] = useState(null);
 
-  // ✅ ساخت ref برای تشخیص کلیک بیرون
+  const [foundTours, setFoundTours] = useState([]); // برای نگه داشتن نتیجه جست‌وجو
+
   const startRef = useRef(null);
   const endRef = useRef(null);
 
-  // fetch از بک‌اند
   useEffect(() => {
     const translateLocations = {
       Tehran: "تهران",
@@ -51,7 +51,6 @@ function BookDate() {
       .catch((err) => console.error("Error fetching tours:", err));
   }, []);
 
-  // ✅ بستن مودال با کلیک بیرون
   useEffect(() => {
     function handleClickOutside(event) {
       if (startRef.current && !startRef.current.contains(event.target)) {
@@ -63,11 +62,26 @@ function BookDate() {
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // ✅ تابع جست‌وجو
+  const handleSearch = () => {
+    if (!selectedDate || startLoc === "مبدا" || endLoc === "مقصد") {
+      alert("لطفاً مبدا، مقصد و تاریخ را انتخاب کنید!");
+      return;
+    }
+
+    // فیلتر کردن تورها طبق انتخاب کاربر
+    const results = tours.filter(
+      (t) =>
+        t.origin.name === startLoc &&
+        t.destination.name === endLoc &&
+        t.date === selectedDate // فرض می‌کنیم date دقیقاً با selectedDate برابر است
+    );
+
+    setFoundTours(results);
+  };
 
   return (
     <div className={styles.date_info}>
@@ -83,7 +97,7 @@ function BookDate() {
             className={`${styles.startLoc} ${styles.locations}`}
             onClick={() => {
               setStartOpen(!startOpen);
-              setEndOpen(false); // اگه یکی باز شد اون یکی بسته شه
+              setEndOpen(false);
             }}
           >
             <Image
@@ -94,11 +108,9 @@ function BookDate() {
             />
             <p>{startLoc}</p>
           </button>
-
           {startOpen && (
             <ul className={styles.dropdownMenu}>
               <li className={styles.frequentHeader}>پرتردد</li>
-
               {origins.map((loc, i) => (
                 <li
                   key={i}
@@ -137,7 +149,6 @@ function BookDate() {
             />
             <p>{endLoc}</p>
           </button>
-
           {endOpen && (
             <ul className={styles.dropdownMenu}>
               {destinations.map((loc, i) => (
@@ -161,22 +172,44 @@ function BookDate() {
           )}
         </div>
       </div>
+
+      {/* تاریخ */}
       <div className={styles.dateBox}>
         <DatePicker
           value={selectedDate || ""}
           onChange={setSelectedDate}
           inputClass={styles.date_input}
           inputAttributes={{ placeholder: "تاریخ" }}
-          
         />
         <Image
           src="/SVG/location/calendar.svg"
           alt="calendar"
           width={18}
           height={18}
-          className={styles.dateIcon}
+          className={`${styles.dateIcon} ${
+            selectedDate ? styles.iconSelected : ""
+          }`}
         />
       </div>
+
+      {/* دکمه جست‌وجو */}
+      <button
+        className={styles.searchButton}
+        onClick={handleSearch}
+      >
+        جست‌وجو
+      </button>
+
+      {/* نمایش نتایج */}
+      {foundTours.length > 0 && (
+        <ul className={styles.results}>
+          {foundTours.map((t, i) => (
+            <li key={i}>
+              {t.origin.name} → {t.destination.name} | {t.date}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
