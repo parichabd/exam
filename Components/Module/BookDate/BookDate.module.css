@@ -117,45 +117,33 @@
   border: 1px solid #00000026;
   border-radius: 12px;
   position: relative; /* مهم برای position:absolute آیکن */
+
   display: flex;
   align-items: center;
   justify-content: center; /* متن تاریخ وسط */
 }
 
 
+
 /* input واقعی */
-.date_input {
-  border: none;
-  outline: none;
-  background: transparent;
+.myCustomPicker input {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
   font-family: "BYekan";
   font-size: 16px;
-  width: 100%;
   text-align: center;
-  padding: 0;
-  line-height: 1;
-  cursor: pointer;
+  padding: 0 28px;   /* 👈 فضا برای آیکن سمت راست */
 }
 
-
+/* آیکن */
 .dateIcon {
   position: absolute;
-  right: 50px;   /* ← اینجا سمت راست */
+  right: calc(50% - 40px);  /* 👈 تنظیم دقیق کنار متن */
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
 }
-
-.iconSelected {
-  position: absolute;
-  left: 20%;       /* فاصله از چپ باکس */
-  top: 50%;
-  transform: translateY(-50%); /* وسط عمودی */
-  pointer-events: none; 
-}
-
-
-
 
 
 /* سرچ */
