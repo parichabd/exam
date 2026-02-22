@@ -1,8 +1,11 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
+
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+
 import Image from "next/image";
 import styles from "./BookDate.module.css";
 
@@ -41,12 +44,12 @@ function BookDate() {
       .then((data) => {
         setTours(data);
         const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name))
+          new Set(data.map((t) => t.origin.name)),
         ).map((name) => translateLocations[name] || name);
         setOrigins(uniqueOrigins);
 
         const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name))
+          new Set(data.map((t) => t.destination.name)),
         ).map((name) => translateLocations[name] || name);
         setDestinations(uniqueDestinations);
       })
@@ -62,14 +65,13 @@ function BookDate() {
         setEndOpen(false);
       }
       if (dateRef.current && !dateRef.current.contains(event.target)) {
-        setSelectedDate(selectedDate); // می‌تونی بسته بشه یا هیچ کاری نکن
+        setSelectedDate(selectedDate);
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [selectedDate]);
-  
 
   const handleSearch = () => {
     if (!selectedDate || startLoc === "مبدا" || endLoc === "مقصد") {
@@ -77,11 +79,12 @@ function BookDate() {
       return;
     }
 
-    const results = tours.filter(
-      (t) =>
-        t.origin.name === startLoc &&
-        t.destination.name === endLoc &&
-        t.date === selectedDate.format ? selectedDate.format("YYYY-MM-DD") : selectedDate
+    const results = tours.filter((t) =>
+      t.origin.name === startLoc &&
+      t.destination.name === endLoc &&
+      t.date === selectedDate.format
+        ? selectedDate.format("YYYY-MM-DD")
+        : selectedDate,
     );
 
     setFoundTours(results);
@@ -184,7 +187,7 @@ function BookDate() {
           locale={persian_fa}
           value={selectedDate}
           onChange={setSelectedDate}
-          placeholder="تاریخ" // ← اینجا
+          placeholder="تاریخ"
           calendarPosition="bottom-center"
           className={styles.myCustomPicker}
         />

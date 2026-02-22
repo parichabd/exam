@@ -149,34 +149,13 @@
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-/* حاشیه قرمز برای input های خطادار */
+
 .errorInput {
-  border: 2px solid #ff4d4f; /* قرمز جذاب */
+  border: 2px solid #ff4d4f; 
   animation: none; /* انیمیشن shake جداگانه اعمال می شود */
 }
 
-/* انیمیشن shake */
-@keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-5px); }
-  40% { transform: translateX(5px); }
-  60% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
-  100% { transform: translateX(0); }
-}
 
-.shake {
-  animation: shake 0.4s;
-}
-/* AuthToast.module.css */
-
-/* حاشیه قرمز برای input های خطادار */
-.errorInput {
-  border: 2px solid #ff4d4f !important; /* !important برای override کردن استایل داخلی OTP */
-  outline: none;
-}
-
-/* انیمیشن shake */
 @keyframes shake {
   0% { transform: translateX(0); }
   20% { transform: translateX(-5px); }
@@ -190,7 +169,24 @@
   animation: shake 0.4s;
 }
 
-/* اطمینان از اینکه input های OTP هم حاشیه قرمز بگیرند */
+
+
+
+/* انیمیشن shake */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.4s;
+}
+
+
 .otpWrapper input.errorInput {
   border: 1px solid #ff4d4f !important;
 }

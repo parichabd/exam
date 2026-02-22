@@ -1,15 +1,16 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import AuthToast from "@/Components/Auth/AuthToast";
-
-import styles from "./Layout.module.css";
-
 import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineAirplaneTicket, MdOutlinePermPhoneMsg } from "react-icons/md";
 import { PiUserSoundDuotone } from "react-icons/pi";
 import { toPersianNumber } from "@/utils/number";
+
+import Link from "next/link";
+import AuthToast from "@/Components/Auth/AuthToast";
+
+import Image from "next/image";
+import styles from "./Layout.module.css";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,10 +40,8 @@ export default function Header() {
   };
 
   useEffect(() => {
-    // خواندن mobile از localStorage بعد از mount
     const savedMobile = localStorage.getItem("mobile");
     if (savedMobile) {
-      // setState را داخل setTimeout یا microtask قرار می‌دهیم تا synchronous نباشد
       Promise.resolve().then(() => setMobile(savedMobile));
     }
 

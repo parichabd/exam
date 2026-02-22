@@ -13,7 +13,7 @@
   justify-content: space-between;
 }
 
-/* ================= BUTTON ================= */
+
 
 .locations{
   box-sizing: border-box;
@@ -54,7 +54,7 @@
   transform: scale(0.97);
 }
 
-/* ================= DROPDOWN ================= */
+
 
 .dropdown {
   position: relative;
@@ -74,7 +74,7 @@
   z-index: 100;
 }
 
-/* li اصلی */
+
 .dropdownMenu li {
   display: flex;
   align-items: center;
@@ -102,30 +102,30 @@
   border-top-left-radius: 8px;
 }
 
-/* hover آیتم‌ها */
+
 .dropdownMenu li:not(.frequentHeader):hover {
   background: #f0f0f0;
 }
 
 
 /* date */
-/* باکس اصلی */
+
 .dateBox {
   position: relative;
   width: 363px;
   height: 47px;
   border: 1px solid #00000026;
   border-radius: 12px;
-  position: relative; /* مهم برای position:absolute آیکن */
+  position: relative; 
 
   display: flex;
   align-items: center;
-  justify-content: center; /* متن تاریخ وسط */
+  justify-content: center; 
 }
 
 
 
-/* input واقعی */
+
 .myCustomPicker input {
   border: none !important;
   outline: none !important;
@@ -133,13 +133,13 @@
   font-family: "BYekan";
   font-size: 16px;
   text-align: center;
-  padding: 0 28px;   /* 👈 فضا برای آیکن سمت راست */
+  padding: 0 28px; 
 }
 
 /* آیکن */
 .dateIcon {
   position: absolute;
-  right: calc(50% - 40px);  /* 👈 تنظیم دقیق کنار متن */
+  right: calc(50% - 40px);  
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -147,12 +147,12 @@
 
 
 .iconSelected {
-  right: calc(50% - 62px);   /* 👈 میره چپ‌تر */
+  right: calc(50% - 62px);   
 }
 
 
-/* سرچ */
 
+/* سرچ */
 .searchButton{
   font-family: "BYekan";
   font-size: 19.5px;
@@ -173,7 +173,8 @@
   transform: translateY(2px);
 }
 
-/* ================= RESPONSIVE ================= */
+
+
 
 @media (min-width: 768px) {
   .date_info h1{

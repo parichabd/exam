@@ -223,7 +223,7 @@ body {
 
 
 
-/* ===== MEDIA QUERIES ===== */
+
 @media (min-width: 768px) { .container { max-width: 720px; } }
 @media (min-width: 1024px) {
   .container { max-width: 1200px; padding: 0 32px; }
@@ -232,7 +232,7 @@ body {
   .desktop_menu a { text-decoration: none; color: #282828; }
   .desktop_menu a:hover { color: #28A745; }
   
-  /* User Section */
+
   .userSection { display: flex; align-items: center; gap: 6px; cursor: pointer; position: relative; }
   .user_mobile { color: #28A745; font-weight: 500; font-size: 18px; display: flex; align-items: center; white-space: nowrap; }
   .rotateArrow { transform: rotate(180deg); transition: transform 0.3s ease; }
@@ -258,7 +258,7 @@ body {
   .user_mobile { color: #28A745; font-weight: 500; font-size: 19px; margin-top: 9px; }
 }
 
-/* ================= FINAL USER SECTION ================= */
+
 .userSection { display: flex; align-items: center; gap: 8px; height: 44px; cursor: pointer; }
 .profile_icon, .profile_arrow { display: flex; align-items: center; justify-content: center; }
 .user_mobile { display: flex; align-items: center; font-size: 18px; font-weight: 500; color: #28A745; line-height: 1; white-space: nowrap; }
@@ -315,17 +315,17 @@ body {
   pointer-events: none;
 }
 
-/* برای موبایل گاهی می‌خوایم آیتم اول (شماره) نمایش داده نشه یا متفاوت باشه */
+
 .mobileDisplay {
   display: block;
 }
 
 @media (min-width: 768px) {
   .mobileDisplay {
-    display: none; /* در دسکتاپ شماره رو توی منو تکرار نکنیم */
+    display: none; 
   }
   .userMenu {
-    right: 0; /* یا می‌تونی center کنی: left: 50%; transform: translateX(-50%); */
+    right: 0; 
   }
 }
 
@@ -390,7 +390,7 @@ body {
   pointer-events: none;
 }
 
-/* فقط در موبایل نمایش داده شود */
+
 .mobileOnly {
   display: block;
 }

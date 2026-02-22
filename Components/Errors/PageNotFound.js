@@ -1,13 +1,16 @@
 "use client"; // ⚠️ فراموش نکن، چون useRouter یک hook client-side است
+
 import { useRouter } from "next/navigation";
-import styles from "./PageNotfoundError.module.css";
+
+
 import Image from "next/image";
+import styles from "./PageNotfoundError.module.css";
 
 export default function PageNotFound() {
   const router = useRouter();
 
   const homeHandler = () => {
-    router.replace("/"); // یا router.push("/") اگر میخوای history نگه داشته بشه
+    router.replace("/"); 
   };
 
   return (

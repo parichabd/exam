@@ -7,9 +7,11 @@ import { useVerifyOtp } from "@/Hooks/useVerifyOtp";
 import { registerUser } from "@/Services/Auth";
 import { useRouter } from "next/navigation";
 import { FaArrowLeftLong } from "react-icons/fa6";
+
 import OtpInput from "react-otp-input";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+
 import styles from "./AuthToast.module.css";
 
 export default function AuthToast({ onClose, mode = "login" }) {
@@ -17,8 +19,10 @@ export default function AuthToast({ onClose, mode = "login" }) {
 
   const [step, setStep] = useState("PHONE");
   const [isRegister, setIsRegister] = useState(mode === "register");
-  const [mobile, setMobile] = useState("");
+
   const [timeLeft, setTimeLeft] = useState(120);
+
+  const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState("");
   const [mobileError, setMobileError] = useState("");
   const [otpError, setOtpError] = useState("");
@@ -47,7 +51,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
     };
   }, []);
 
-  // نمایش هشدار وقتی ثبت‌نام با نام فعال شد
   useEffect(() => {
     if (isRegister) {
       toast.error(
@@ -135,7 +138,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
           Cookies.set("token", res.accessToken);
           localStorage.setItem("userName", res.user?.firstName || "");
 
-          // **این خط رو اضافه کن برای ذخیره شماره موبایل**
           localStorage.setItem("mobile", mobile);
           window.dispatchEvent(new Event("auth:login-success"));
           toast.success("ورود موفق بود! خوش آمدید 🎉", {});

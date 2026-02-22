@@ -1,5 +1,6 @@
-// Components/Layout/Footer.js
 import Link from "next/link";
+
+
 import Image from "next/image";
 import styles from "./Layout.module.css";
 
