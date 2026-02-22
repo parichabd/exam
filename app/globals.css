@@ -53,3 +53,29 @@ a, p, span {
   border: none !important;
   outline: none !important;
 }
+
+.rmdp-top-class {
+  
+}
+
+.rmdp-calendar{
+  border-radius: 12px ;
+  border: 1px solid #00000040;
+  width: 350px ;
+  height: 269px;
+}
+
+.rmdp-wrapper{
+  border-radius: 12px !important;
+  width: 350px !important;
+  background: #fff !important; /* مطمئن بشیم لایه دیگه سفید نباشه */
+  box-shadow: none !important;  /* اگر shadow اضافی هست */
+  overflow: hidden !important;
+}
+
+
+.rmdp-day-picker {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}

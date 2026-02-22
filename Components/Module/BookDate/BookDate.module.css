@@ -148,7 +148,7 @@
 
 .iconSelected {
   position: absolute;
-  left: 61%;       /* فاصله از چپ باکس */
+  left: 20%;       /* فاصله از چپ باکس */
   top: 50%;
   transform: translateY(-50%); /* وسط عمودی */
   pointer-events: none; 
