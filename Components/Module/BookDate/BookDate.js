@@ -21,6 +21,8 @@ function BookDate() {
   const [selectedDate, setSelectedDate] = useState([null, null]); // [start, end]
 
   const [foundTours, setFoundTours] = useState([]);
+  const [toast, setToast] = useState(""); // پیام Toast
+  const [showToast, setShowToast] = useState(false); // کنترل نمایش انیمیشن
 
   const startRef = useRef(null);
   const endRef = useRef(null);
@@ -38,22 +40,26 @@ function BookDate() {
       "offRoad Center": "آفرود سنتر",
       sulaymaniyahTour: "سلیمانیه",
     };
+    const showToastMessage = (msg) => {
+      // کد نمایش Toast
+      alert(msg); // برای تست ساده
+    };
 
     fetch("http://localhost:6500/tour")
       .then((res) => res.json())
       .then((data) => {
         setTours(data);
         const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name))
+          new Set(data.map((t) => t.origin.name)),
         ).map((name) => translateLocations[name] || name);
         setOrigins(uniqueOrigins);
 
         const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name))
+          new Set(data.map((t) => t.destination.name)),
         ).map((name) => translateLocations[name] || name);
         setDestinations(uniqueDestinations);
       })
-      .catch((err) => console.error("Error fetching tours:", err));
+      .catch(() => showToastMessage("مشکل در اتصال به سرور!"));
   }, []);
 
   useEffect(() => {
@@ -73,19 +79,33 @@ function BookDate() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [selectedDate]);
 
+  const showToastMessage = (msg) => {
+    setToast(msg);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000); // 3 ثانیه بعد مخفی شود
+  };
+
   const handleSearch = () => {
     const [startSelected, endSelected] = selectedDate;
 
-    if (!startSelected || !endSelected || startLoc === "مبدا" || endLoc === "مقصد") {
-      alert("لطفاً مبدا، مقصد و تاریخ شروع و پایان را انتخاب کنید!");
+    if (!startSelected || !endSelected) {
+      showToastMessage("لطفاً تاریخ شروع و پایان را انتخاب کنید!");
       return;
     }
 
-    // تبدیل تاریخ شمسی به میلادی و فرمت YYYY-MM-DD
+    if (startLoc === "مبدا" || endLoc === "مقصد") {
+      showToastMessage("لطفاً مبدا و مقصد را انتخاب کنید!");
+      return;
+    }
+
     const formattedStart = startSelected.toDate().toISOString().split("T")[0];
     const formattedEnd = endSelected.toDate().toISOString().split("T")[0];
 
-    // ترجمه معکوس فارسی -> انگلیسی برای مقایسه با داده بک‌اند
+    if (formattedStart > formattedEnd) {
+      showToastMessage("تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد!");
+      return;
+    }
+
     const reverseTranslate = {
       تهران: "Tehran",
       اصفهان: "Isfahan",
@@ -104,7 +124,6 @@ function BookDate() {
     const results = tours.filter((t) => {
       const tourStart = t.startDate.split("T")[0];
       const tourEnd = t.endDate.split("T")[0];
-
       return (
         t.origin.name === originEng &&
         t.destination.name === destEng &&
@@ -112,6 +131,10 @@ function BookDate() {
         formattedEnd <= tourEnd
       );
     });
+
+    if (results.length === 0) {
+      showToastMessage("تور موجودی ندارد یا ورودی‌ها نامعتبر است!");
+    }
 
     setFoundTours(results);
   };
@@ -213,10 +236,10 @@ function BookDate() {
           locale={persian_fa}
           value={selectedDate}
           onChange={setSelectedDate}
-          placeholder="تاریخ  "
+          placeholder="تاریخ"
           calendarPosition="bottom-center"
           className={styles.myCustomPicker}
-          range // فعال کردن انتخاب بازه
+          range
         />
         <Image
           src="/SVG/location/calendar.svg"
@@ -245,6 +268,11 @@ function BookDate() {
           ))}
         </ul>
       )}
+
+      {/* Toast بالای صفحه */}
+      <div className={`${styles.toast} ${showToast ? styles.show : ""}`}>
+        {toast}
+      </div>
     </div>
   );
 }
