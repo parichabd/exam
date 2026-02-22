@@ -69,6 +69,7 @@ function BookDate() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [selectedDate]);
+  
 
   const handleSearch = () => {
     if (!selectedDate || startLoc === "مبدا" || endLoc === "مقصد") {

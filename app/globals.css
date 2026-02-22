@@ -54,9 +54,6 @@ a, p, span {
   outline: none !important;
 }
 
-.rmdp-top-class {
-  
-}
 
 .rmdp-calendar{
   border-radius: 12px ;
@@ -78,4 +75,60 @@ a, p, span {
   display: flex;
   text-align: center;
   justify-content: center;
+}
+
+
+
+.rmdp-arrow-container{
+  display: none !important;
+}
+
+.rmdp-week-day{
+  color: #10411B !important;
+}
+
+
+/* رنگ روزهای شنبه */
+.rmdp-week-day:nth-child(1),
+.rmdp-day:nth-child(1) {
+  color: #28A745  !important; /* رنگ دلخواه برای شنبه */
+}
+
+/* رنگ روزهای یکشنبه */
+.rmdp-week-day:nth-child(2),
+.rmdp-day:nth-child(2) {
+  color: #28A745 !important; /* رنگ دلخواه برای یکشنبه */
+}
+
+.rmdp-week-day:nth-child(7),
+.rmdp-day:nth-child(7) {
+  color: #28A745 !important; /* رنگ دلخواه برای یکشنبه */
+}
+
+
+/* رنگ بک‌گراند روز امروز */
+.rmdp-day.rmdp-selected span:not(.highlight) {
+    background-color: #28A745 !important;
+    box-shadow: 0 0 3px #8798ad;
+    color: #fff;
+}
+
+.rmdp-day:not(.rmdp-selected):hover,
+.rmdp-day:not(.rmdp-selected):hover span.sd {
+    background-color: #b2e1bdc3 !important; /* رنگ هاور دلخواه */
+    border-radius: 22px !important;
+}
+
+.rmdp-day.rmdp-today,
+.rmdp-day.rmdp-today span.sd {
+    background-color: #ffcc00 !important;
+    color: #000 !important;
+    border-radius: 22px !important;
+}
+
+.rmdp-header-values{
+  background-color: #28A745 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  color: #fff !important;
 }
