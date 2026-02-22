@@ -207,9 +207,77 @@
 }
 
 @media (min-width: 1024px) {
-  .date_info h1{  
-    width: 582px;
-    height: 43px;
-    font-size: 28px;
+  .searchBar_desktop {
+    display: flex;
+    align-items: center;
+    border: 1px solid #00000026;
+    border-radius: 12px;
+    padding: 10px 15px;
+    gap: 10px;
+    background-color: #fff;
+    max-width: 900px;
+    margin: 80px auto 0; /* مرکز صفحه */
   }
+
+  .searchItem {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  /* خطوط جداکننده عمودی */
+  .divider {
+    width: 1px;
+    height: 30px;
+    background-color: #ccc;
+    margin: 0 10px;
+  }
+
+  .locations {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 10px;
+  }
+
+  .searchButton {
+    background-color: #28A745;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  .searchButton:hover {
+    background-color: #1e7c34;
+  }
+
+  /* استایل input تاریخ */
+  .myCustomPicker {
+    color: #2C2C2C;
+    font-size: 20px;
+    padding: 5px 10px;
+  }
+    .divider {
+    width: 1px;
+    height: 38px;
+    background: #00000026;
+    margin: 0 8px;
+  }
+
+  .endLoc , .startLoc {
+    color: #2C2C2C;
+    font-size: 20px;
+  }
+
+
+.iconSelected {
+  display: none;
+}
 }

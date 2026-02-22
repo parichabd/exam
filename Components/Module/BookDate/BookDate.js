@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-
 import Image from "next/image";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./BookDate.module.css";
 
 function BookDate() {
@@ -21,13 +21,23 @@ function BookDate() {
   const [selectedDate, setSelectedDate] = useState([null, null]); // [start, end]
 
   const [foundTours, setFoundTours] = useState([]);
-  const [toast, setToast] = useState(""); // پیام Toast
-  const [showToast, setShowToast] = useState(false); // کنترل نمایش انیمیشن
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [toast, setToast] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   const startRef = useRef(null);
   const endRef = useRef(null);
   const dateRef = useRef(null);
 
+  // تابع نمایش Toast
+  const showToastMessage = (msg) => {
+    setToast(msg);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  // دریافت داده‌ها
   useEffect(() => {
     const translateLocations = {
       Tehran: "تهران",
@@ -40,10 +50,6 @@ function BookDate() {
       "offRoad Center": "آفرود سنتر",
       sulaymaniyahTour: "سلیمانیه",
     };
-    const showToastMessage = (msg) => {
-      // کد نمایش Toast
-      alert(msg); // برای تست ساده
-    };
 
     fetch("http://localhost:6500/tour")
       .then((res) => res.json())
@@ -52,16 +58,16 @@ function BookDate() {
         const uniqueOrigins = Array.from(
           new Set(data.map((t) => t.origin.name)),
         ).map((name) => translateLocations[name] || name);
-        setOrigins(uniqueOrigins);
-
         const uniqueDestinations = Array.from(
           new Set(data.map((t) => t.destination.name)),
         ).map((name) => translateLocations[name] || name);
+        setOrigins(uniqueOrigins);
         setDestinations(uniqueDestinations);
       })
       .catch(() => showToastMessage("مشکل در اتصال به سرور!"));
   }, []);
 
+  // بستن dropdown و datepicker هنگام کلیک بیرون
   useEffect(() => {
     function handleClickOutside(event) {
       if (startRef.current && !startRef.current.contains(event.target)) {
@@ -74,17 +80,11 @@ function BookDate() {
         setSelectedDate(selectedDate);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [selectedDate]);
 
-  const showToastMessage = (msg) => {
-    setToast(msg);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000); // 3 ثانیه بعد مخفی شود
-  };
-
+  // جست‌وجو با لودینگ و مدیریت ارورها
   const handleSearch = () => {
     const [startSelected, endSelected] = selectedDate;
 
@@ -121,22 +121,27 @@ function BookDate() {
     const originEng = reverseTranslate[startLoc] || startLoc;
     const destEng = reverseTranslate[endLoc] || endLoc;
 
-    const results = tours.filter((t) => {
-      const tourStart = t.startDate.split("T")[0];
-      const tourEnd = t.endDate.split("T")[0];
-      return (
-        t.origin.name === originEng &&
-        t.destination.name === destEng &&
-        formattedStart >= tourStart &&
-        formattedEnd <= tourEnd
-      );
-    });
+    setIsLoading(true);
 
-    if (results.length === 0) {
-      showToastMessage("تور موجودی ندارد یا ورودی‌ها نامعتبر است!");
-    }
+    setTimeout(() => {
+      const results = tours.filter((t) => {
+        const tourStart = t.startDate.split("T")[0];
+        const tourEnd = t.endDate.split("T")[0];
+        return (
+          t.origin.name === originEng &&
+          t.destination.name === destEng &&
+          formattedStart >= tourStart &&
+          formattedEnd <= tourEnd
+        );
+      });
 
-    setFoundTours(results);
+      if (results.length === 0) {
+        showToastMessage("تور موجودی ندارد یا ورودی‌ها نامعتبر است!");
+      }
+
+      setFoundTours(results);
+      setIsLoading(false);
+    }, 2000); // 2 ثانیه نمایش Skeleton
   };
 
   return (
@@ -146,127 +151,134 @@ function BookDate() {
         برگزار کننده بهترین تور های داخلی و خارجی
       </h1>
 
-      <div className={styles.booktour}>
-        {/* مبدا */}
-        <div className={styles.dropdown} ref={startRef}>
-          <button
-            className={`${styles.startLoc} ${styles.locations}`}
-            onClick={() => {
-              setStartOpen(!startOpen);
-              setEndOpen(false);
-            }}
-          >
-            <Image
-              src="/SVG/location/location.svg"
-              alt="location"
-              width={18}
-              height={18}
-            />
-            <p>{startLoc}</p>
-          </button>
-          {startOpen && (
-            <ul className={styles.dropdownMenu}>
-              <li className={styles.frequentHeader}>پرتردد</li>
-              {origins.map((loc, i) => (
-                <li
-                  key={i}
-                  onClick={() => {
-                    setStartLoc(loc);
-                    setStartOpen(false);
-                  }}
-                >
-                  <Image
-                    src="/SVG/location/location.svg"
-                    alt="location"
-                    width={18}
-                    height={18}
-                  />
-                  <span>{loc}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+      <div className={styles.searchBar_desktop}>
+        <div className={styles.booktour}>
+          {/* مبدا */}
+          <div className={styles.dropdown} ref={startRef}>
+            <button
+              className={`${styles.startLoc} ${styles.locations}`}
+              onClick={() => {
+                setStartOpen(!startOpen);
+                setEndOpen(false);
+              }}
+            >
+              <Image
+                src="/SVG/location/location.svg"
+                alt="location"
+                width={18}
+                height={18}
+              />
+              <p>{startLoc}</p>
+            </button>
+            {startOpen && (
+              <ul className={styles.dropdownMenu}>
+                <li className={styles.frequentHeader}>پرتردد</li>
+                {origins.map((loc, i) => (
+                  <li
+                    key={i}
+                    onClick={() => {
+                      setStartLoc(loc);
+                      setStartOpen(false);
+                    }}
+                  >
+                    <Image
+                      src="/SVG/location/location.svg"
+                      alt="location"
+                      width={18}
+                      height={18}
+                    />
+                    <span>{loc}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className={styles.divider} />
+
+          {/* مقصد */}
+          <div className={styles.dropdown} ref={endRef}>
+            <button
+              className={`${styles.endLoc} ${styles.locations}`}
+              onClick={() => {
+                setEndOpen(!endOpen);
+                setStartOpen(false);
+              }}
+            >
+              <Image
+                src="/SVG/location/global-search.svg"
+                alt="location"
+                width={18}
+                height={18}
+              />
+              <p>{endLoc}</p>
+            </button>
+            {endOpen && (
+              <ul className={styles.dropdownMenu}>
+                {destinations.map((loc, i) => (
+                  <li
+                    key={i}
+                    onClick={() => {
+                      setEndLoc(loc);
+                      setEndOpen(false);
+                    }}
+                  >
+                    <Image
+                      src="/SVG/location/global-search.svg"
+                      alt="location"
+                      width={18}
+                      height={18}
+                    />
+                    <span>{loc}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className={styles.divider} />
         </div>
 
-        {/* مقصد */}
-        <div className={styles.dropdown} ref={endRef}>
-          <button
-            className={`${styles.endLoc} ${styles.locations}`}
-            onClick={() => {
-              setEndOpen(!endOpen);
-              setStartOpen(false);
-            }}
-          >
-            <Image
-              src="/SVG/location/global-search.svg"
-              alt="location"
-              width={18}
-              height={18}
-            />
-            <p>{endLoc}</p>
-          </button>
-          {endOpen && (
-            <ul className={styles.dropdownMenu}>
-              {destinations.map((loc, i) => (
-                <li
-                  key={i}
-                  onClick={() => {
-                    setEndLoc(loc);
-                    setEndOpen(false);
-                  }}
-                >
-                  <Image
-                    src="/SVG/location/global-search.svg"
-                    alt="location"
-                    width={18}
-                    height={18}
-                  />
-                  <span>{loc}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+        {/* تاریخ */}
+        <div className={styles.dateBox} ref={dateRef}>
+          <DatePicker
+            calendar={persian}
+            locale={persian_fa}
+            value={selectedDate}
+            onChange={setSelectedDate}
+            placeholder="تاریخ"
+            calendarPosition="bottom-center"
+            className={styles.myCustomPicker}
+            range
+          />
+          <Image
+            src="/SVG/location/calendar.svg"
+            alt="calendar"
+            width={18}
+            height={18}
+            className={`${styles.dateIcon} ${selectedDate[0] ? styles.iconSelected : ""}`}
+          />
         </div>
+
+        {/* دکمه جست‌وجو */}
+        <button className={styles.searchButton} onClick={handleSearch}>
+          جست‌وجو
+        </button>
       </div>
-
-      {/* تاریخ */}
-      <div className={styles.dateBox} ref={dateRef}>
-        <DatePicker
-          calendar={persian}
-          locale={persian_fa}
-          value={selectedDate}
-          onChange={setSelectedDate}
-          placeholder="تاریخ"
-          calendarPosition="bottom-center"
-          className={styles.myCustomPicker}
-          range
-        />
-        <Image
-          src="/SVG/location/calendar.svg"
-          alt="calendar"
-          width={18}
-          height={18}
-          className={`${styles.dateIcon} ${
-            selectedDate[0] ? styles.iconSelected : ""
-          }`}
-        />
-      </div>
-
-      {/* دکمه جست‌وجو */}
-      <button className={styles.searchButton} onClick={handleSearch}>
-        جست‌وجو
-      </button>
-
-      {/* نمایش نتایج */}
-      {foundTours.length > 0 && (
-        <ul className={styles.results}>
-          {foundTours.map((t, i) => (
-            <li key={i}>
-              {t.origin.name} → {t.destination.name} |{" "}
-              {t.startDate.split("T")[0]} تا {t.endDate.split("T")[0]}
-            </li>
-          ))}
-        </ul>
+      {/* نمایش نتایج یا Skeleton */}
+      {isLoading ? (
+        <div className={styles.skeletonWrapper}>
+          <Skeleton height={50} count={3} style={{ marginBottom: 10 }} />
+        </div>
+      ) : (
+        foundTours.length > 0 && (
+          <ul className={styles.results}>
+            {foundTours.map((t, i) => (
+              <li key={i}>
+                {t.origin.name} → {t.destination.name} |{" "}
+                {t.startDate.split("T")[0]} تا {t.endDate.split("T")[0]}
+              </li>
+            ))}
+          </ul>
+        )
       )}
 
       {/* Toast بالای صفحه */}

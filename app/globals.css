@@ -164,3 +164,14 @@ a, p, span {
 
 /* desktop%tablet */
 
+
+@media (min-width: 1024px) {
+  .BookDate-module__YC7PGq__dateBox {
+    border: none !important;
+  }
+
+  .rmdp-input { 
+    font-size: 20px !important;
+    color: #2C2C2C !important;
+   }
+}

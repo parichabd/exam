@@ -110,7 +110,7 @@ export default function Header() {
           <div className={styles.numberPD}>{toPersianNumber(mobile)}</div>
         </div>
       )}
-      <div className={styles.item}>
+      <Link href="/ProfileInfo" className={`${styles.item} ${styles.noUnderline}`}>
         <Image
           src="/SVG/profile/profile.svg"
           alt="Torino Logo"
@@ -118,7 +118,7 @@ export default function Header() {
           height={20}
         />
         <h1>اطلاعات حساب کاربری</h1>
-      </div>
+      </Link>
       <div className={styles.divider_profile}></div>
       <div className={`${styles.item} ${styles.exit}`} onClick={handleLogout}>
         <Image
