@@ -111,6 +111,7 @@
 /* date */
 /* باکس اصلی */
 .dateBox {
+  position: relative;
   width: 363px;
   height: 47px;
   border: 1px solid #00000026;
@@ -120,6 +121,7 @@
   align-items: center;
   justify-content: center; /* متن تاریخ وسط */
 }
+
 
 /* input واقعی */
 .date_input {
@@ -135,13 +137,13 @@
   cursor: pointer;
 }
 
-/* آیکن تاریخ */
+
 .dateIcon {
   position: absolute;
-  left: 56%;       /* فاصله از چپ باکس */
+  right: 50px;   /* ← اینجا سمت راست */
   top: 50%;
-  transform: translateY(-50%); /* وسط عمودی */
-  pointer-events: none; /* کلیک روی input را مسدود نکند */
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .iconSelected {
@@ -152,6 +154,11 @@
   pointer-events: none; 
 }
 
+
+
+
+
+/* سرچ */
 
 .searchButton{
   font-family: "BYekan";

@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { DatePicker } from "zaman";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 import Image from "next/image";
 import styles from "./BookDate.module.css";
 
@@ -15,10 +17,11 @@ function BookDate() {
   const [endLoc, setEndLoc] = useState("مقصد");
   const [selectedDate, setSelectedDate] = useState(null);
 
-  const [foundTours, setFoundTours] = useState([]); // برای نگه داشتن نتیجه جست‌وجو
+  const [foundTours, setFoundTours] = useState([]);
 
   const startRef = useRef(null);
   const endRef = useRef(null);
+  const dateRef = useRef(null);
 
   useEffect(() => {
     const translateLocations = {
@@ -37,14 +40,13 @@ function BookDate() {
       .then((res) => res.json())
       .then((data) => {
         setTours(data);
-
         const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name)),
+          new Set(data.map((t) => t.origin.name))
         ).map((name) => translateLocations[name] || name);
         setOrigins(uniqueOrigins);
 
         const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name)),
+          new Set(data.map((t) => t.destination.name))
         ).map((name) => translateLocations[name] || name);
         setDestinations(uniqueDestinations);
       })
@@ -59,25 +61,26 @@ function BookDate() {
       if (endRef.current && !endRef.current.contains(event.target)) {
         setEndOpen(false);
       }
+      if (dateRef.current && !dateRef.current.contains(event.target)) {
+        setSelectedDate(selectedDate); // می‌تونی بسته بشه یا هیچ کاری نکن
+      }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [selectedDate]);
 
-  // ✅ تابع جست‌وجو
   const handleSearch = () => {
     if (!selectedDate || startLoc === "مبدا" || endLoc === "مقصد") {
       alert("لطفاً مبدا، مقصد و تاریخ را انتخاب کنید!");
       return;
     }
 
-    // فیلتر کردن تورها طبق انتخاب کاربر
     const results = tours.filter(
       (t) =>
         t.origin.name === startLoc &&
         t.destination.name === endLoc &&
-        t.date === selectedDate // فرض می‌کنیم date دقیقاً با selectedDate برابر است
+        t.date === selectedDate.format ? selectedDate.format("YYYY-MM-DD") : selectedDate
     );
 
     setFoundTours(results);
@@ -174,12 +177,15 @@ function BookDate() {
       </div>
 
       {/* تاریخ */}
-      <div className={styles.dateBox}>
+      <div className={styles.dateBox} ref={dateRef}>
         <DatePicker
-          value={selectedDate || ""}
+          calendar={persian}
+          locale={persian_fa}
+          value={selectedDate}
           onChange={setSelectedDate}
-          inputClass={styles.date_input}
-          inputAttributes={{ placeholder: "تاریخ" }}
+          placeholder="تاریخ" // ← اینجا
+          calendarPosition="bottom-center"
+          className={styles.myCustomPicker}
         />
         <Image
           src="/SVG/location/calendar.svg"
@@ -193,10 +199,7 @@ function BookDate() {
       </div>
 
       {/* دکمه جست‌وجو */}
-      <button
-        className={styles.searchButton}
-        onClick={handleSearch}
-      >
+      <button className={styles.searchButton} onClick={handleSearch}>
         جست‌وجو
       </button>
 
