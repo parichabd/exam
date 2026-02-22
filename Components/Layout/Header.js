@@ -16,6 +16,7 @@ export default function Header() {
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [mobile, setMobile] = useState(null);
 
   const desktopRef = useRef(null);
   const mobileRef = useRef(null);
@@ -38,16 +39,19 @@ export default function Header() {
   };
 
   useEffect(() => {
+    // خواندن mobile از localStorage بعد از mount
+    const savedMobile = localStorage.getItem("mobile");
+    if (savedMobile) {
+      // setState را داخل setTimeout یا microtask قرار می‌دهیم تا synchronous نباشد
+      Promise.resolve().then(() => setMobile(savedMobile));
+    }
+
     const handleLoginSuccess = () => {
-      const savedMobile = localStorage.getItem("mobile");
-      setMobile(savedMobile);
+      const newMobile = localStorage.getItem("mobile");
+      setMobile(newMobile);
     };
 
     window.addEventListener("auth:login-success", handleLoginSuccess);
-
-    // برای اطمینان بیشتر، موقع mount هم چک کن
-    const initialMobile = localStorage.getItem("mobile");
-    if (initialMobile) setMobile(initialMobile);
 
     return () => {
       window.removeEventListener("auth:login-success", handleLoginSuccess);
@@ -72,14 +76,6 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isUserMenuOpen]);
-
-  // خواندن شماره موبایل
-  const [mobile, setMobile] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("mobile");
-    }
-    return null;
-  });
 
   const handleLogout = () => {
     localStorage.removeItem("mobile");
