@@ -5,7 +5,6 @@ import Image from "next/image";
 import AuthToast from "@/Components/Auth/AuthToast";
 
 import styles from "./Layout.module.css";
-import { GiCaptainHatProfile } from "react-icons/gi";
 
 import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineAirplaneTicket, MdOutlinePermPhoneMsg } from "react-icons/md";
@@ -37,6 +36,23 @@ export default function Header() {
     e.stopPropagation();
     setIsUserMenuOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    const handleLoginSuccess = () => {
+      const savedMobile = localStorage.getItem("mobile");
+      setMobile(savedMobile);
+    };
+
+    window.addEventListener("auth:login-success", handleLoginSuccess);
+
+    // برای اطمینان بیشتر، موقع mount هم چک کن
+    const initialMobile = localStorage.getItem("mobile");
+    if (initialMobile) setMobile(initialMobile);
+
+    return () => {
+      window.removeEventListener("auth:login-success", handleLoginSuccess);
+    };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -254,7 +270,7 @@ export default function Header() {
         <Link href="/Guide/TourismServices" onClick={menuHandler}>
           <MdOutlineAirplaneTicket /> خدمات گردشگری
         </Link>
-        <Link href="/Info/about" onClick={menuHandler}>
+        <Link href="/Info/about-us" onClick={menuHandler}>
           <PiUserSoundDuotone /> درباره ما
         </Link>
         <Link href="/Info/contact" onClick={menuHandler}>

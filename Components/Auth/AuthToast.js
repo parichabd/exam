@@ -35,11 +35,23 @@ export default function AuthToast({ onClose, mode = "login" }) {
   const sendOtpMutation = useSendOtp();
   const verifyOtpMutation = useVerifyOtp();
 
+  useEffect(() => {
+    const syncMobile = () => {
+      setMobile(localStorage.getItem("mobile"));
+    };
+
+    window.addEventListener("storage", syncMobile);
+
+    return () => {
+      window.removeEventListener("storage", syncMobile);
+    };
+  }, []);
+
   // نمایش هشدار وقتی ثبت‌نام با نام فعال شد
   useEffect(() => {
     if (isRegister) {
       toast.error(
-        "ثبت نام با نام فعلاً در دسترس نیست. لطفاً با شماره تلفن وارد شوید.",
+        "ثبت نام با نام فعلاً در دسترس نیست. لطفاً با شماره تلفن در بخش ورود ٬ وارد شوید.",
         { position: "top-center", duration: 4000 },
       );
     }
@@ -125,7 +137,8 @@ export default function AuthToast({ onClose, mode = "login" }) {
 
           // **این خط رو اضافه کن برای ذخیره شماره موبایل**
           localStorage.setItem("mobile", mobile);
-
+          window.dispatchEvent(new Event("auth:login-success"));
+          toast.success("ورود موفق بود! خوش آمدید 🎉", {});
           setTimeout(() => {
             setIsLoggingIn(false);
             toast.success("ورود موفق بود! خوش آمدید 🎉", {
@@ -133,7 +146,7 @@ export default function AuthToast({ onClose, mode = "login" }) {
               duration: 4000,
             });
             onClose();
-            router.push("/new");
+            router.push("/");
           }, 1000);
         },
         onError: () => {

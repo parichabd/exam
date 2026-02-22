@@ -32,7 +32,7 @@ a, p, span {
   word-break: break-word;
 }
 
-
+/* Custom Date Mobile first */
 
 .rmdp-input {        /* یا کلاس واقعی input کتابخونه */
   font-size: 16px;
@@ -133,4 +133,6 @@ a, p, span {
   color: #fff !important;
 }
 
+
+/* desktop%tablet */
 

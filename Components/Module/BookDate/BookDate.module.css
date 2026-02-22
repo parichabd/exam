@@ -146,6 +146,11 @@
 }
 
 
+.iconSelected {
+  right: calc(50% - 62px);   /* 👈 میره چپ‌تر */
+}
+
+
 /* سرچ */
 
 .searchButton{
