@@ -18,7 +18,7 @@ function BookDate() {
   const [endOpen, setEndOpen] = useState(false);
   const [startLoc, setStartLoc] = useState("مبدا");
   const [endLoc, setEndLoc] = useState("مقصد");
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState([null, null]); // [start, end]
 
   const [foundTours, setFoundTours] = useState([]);
 
@@ -44,12 +44,12 @@ function BookDate() {
       .then((data) => {
         setTours(data);
         const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name)),
+          new Set(data.map((t) => t.origin.name))
         ).map((name) => translateLocations[name] || name);
         setOrigins(uniqueOrigins);
 
         const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name)),
+          new Set(data.map((t) => t.destination.name))
         ).map((name) => translateLocations[name] || name);
         setDestinations(uniqueDestinations);
       })
@@ -74,13 +74,16 @@ function BookDate() {
   }, [selectedDate]);
 
   const handleSearch = () => {
-    if (!selectedDate || startLoc === "مبدا" || endLoc === "مقصد") {
-      alert("لطفاً مبدا، مقصد و تاریخ را انتخاب کنید!");
+    const [startSelected, endSelected] = selectedDate;
+
+    if (!startSelected || !endSelected || startLoc === "مبدا" || endLoc === "مقصد") {
+      alert("لطفاً مبدا، مقصد و تاریخ شروع و پایان را انتخاب کنید!");
       return;
     }
 
     // تبدیل تاریخ شمسی به میلادی و فرمت YYYY-MM-DD
-    const formattedDate = selectedDate.toDate().toISOString().split("T")[0];
+    const formattedStart = startSelected.toDate().toISOString().split("T")[0];
+    const formattedEnd = endSelected.toDate().toISOString().split("T")[0];
 
     // ترجمه معکوس فارسی -> انگلیسی برای مقایسه با داده بک‌اند
     const reverseTranslate = {
@@ -99,14 +102,14 @@ function BookDate() {
     const destEng = reverseTranslate[endLoc] || endLoc;
 
     const results = tours.filter((t) => {
-      const start = t.startDate.split("T")[0];
-      const end = t.endDate.split("T")[0];
+      const tourStart = t.startDate.split("T")[0];
+      const tourEnd = t.endDate.split("T")[0];
 
       return (
         t.origin.name === originEng &&
         t.destination.name === destEng &&
-        formattedDate >= start &&
-        formattedDate <= end
+        formattedStart >= tourStart &&
+        formattedEnd <= tourEnd
       );
     });
 
@@ -210,9 +213,10 @@ function BookDate() {
           locale={persian_fa}
           value={selectedDate}
           onChange={setSelectedDate}
-          placeholder="تاریخ"
+          placeholder="تاریخ  "
           calendarPosition="bottom-center"
           className={styles.myCustomPicker}
+          range // فعال کردن انتخاب بازه
         />
         <Image
           src="/SVG/location/calendar.svg"
@@ -220,7 +224,7 @@ function BookDate() {
           width={18}
           height={18}
           className={`${styles.dateIcon} ${
-            selectedDate ? styles.iconSelected : ""
+            selectedDate[0] ? styles.iconSelected : ""
           }`}
         />
       </div>

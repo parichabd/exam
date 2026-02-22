@@ -134,5 +134,33 @@ a, p, span {
 }
 
 
+.rmdp-range {
+  background-color: #28A745 !important;
+  color: #000 !important;
+}
+
+
+/* روزهای انتخاب شده */
+.rmdp-day.rmdp-selected span:not(.highlight) {
+    background-color: #28A745 !important;
+    box-shadow: 0 0 3px #8798ad;
+    color: #fff !important; /* متن سفید شد تا خوانا باشه */
+}
+
+/* رنگ روزهای داخل بازه (range) */
+.rmdp-day.rmdp-range {
+    background-color: #28A745 !important; /* همان سبز */
+    color: #fff !important; /* متن سفید تا خوانا باشد */
+}
+
+/* رنگ روز شروع و پایان بازه */
+.rmdp-day.rmdp-range-start,
+.rmdp-day.rmdp-range-end {
+    background-color: #28A745 !important;
+    color: #fff !important;
+    font-weight: bold !important;
+    border-radius: 50% !important;
+}
+
 /* desktop%tablet */
 
