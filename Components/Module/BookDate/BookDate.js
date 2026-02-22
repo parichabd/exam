@@ -79,13 +79,36 @@ function BookDate() {
       return;
     }
 
-    const results = tours.filter((t) =>
-      t.origin.name === startLoc &&
-      t.destination.name === endLoc &&
-      t.date === selectedDate.format
-        ? selectedDate.format("YYYY-MM-DD")
-        : selectedDate,
-    );
+    // تبدیل تاریخ شمسی به میلادی و فرمت YYYY-MM-DD
+    const formattedDate = selectedDate.toDate().toISOString().split("T")[0];
+
+    // ترجمه معکوس فارسی -> انگلیسی برای مقایسه با داده بک‌اند
+    const reverseTranslate = {
+      تهران: "Tehran",
+      اصفهان: "Isfahan",
+      سنندج: "Sanandaj",
+      مادرید: "Madrid",
+      هولر: "Hewler",
+      مازندران: "Mazandaran",
+      ایتالیا: "Italy",
+      "آفرود سنتر": "offRoad Center",
+      سلیمانیه: "sulaymaniyahTour",
+    };
+
+    const originEng = reverseTranslate[startLoc] || startLoc;
+    const destEng = reverseTranslate[endLoc] || endLoc;
+
+    const results = tours.filter((t) => {
+      const start = t.startDate.split("T")[0];
+      const end = t.endDate.split("T")[0];
+
+      return (
+        t.origin.name === originEng &&
+        t.destination.name === destEng &&
+        formattedDate >= start &&
+        formattedDate <= end
+      );
+    });
 
     setFoundTours(results);
   };
@@ -212,7 +235,8 @@ function BookDate() {
         <ul className={styles.results}>
           {foundTours.map((t, i) => (
             <li key={i}>
-              {t.origin.name} → {t.destination.name} | {t.date}
+              {t.origin.name} → {t.destination.name} |{" "}
+              {t.startDate.split("T")[0]} تا {t.endDate.split("T")[0]}
             </li>
           ))}
         </ul>
