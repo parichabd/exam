@@ -467,10 +467,7 @@ body {
   color: #D40000;
 }
 
-/* داخل BookDate.module.css یا Layout.module.css */
 .noUnderline {
   text-decoration: none;
-  color: inherit; /* تا رنگ متن هم تغییر نکنه */
+  color: inherit; 
 }
-
-
