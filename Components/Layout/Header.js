@@ -5,6 +5,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineAirplaneTicket, MdOutlinePermPhoneMsg } from "react-icons/md";
 import { PiUserSoundDuotone } from "react-icons/pi";
 import { toPersianNumber } from "@/utils/number";
+import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 import AuthToast from "@/Components/Auth/AuthToast";
@@ -79,13 +80,23 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isUserMenuOpen]);
 
+  const router = useRouter();
   // ------------------ LOGOUT ------------------
   const handleLogout = () => {
+    // 1️⃣ پاک کردن localStorage
     localStorage.removeItem("mobile");
+    localStorage.removeItem("userName");
+
+    // 2️⃣ پاک کردن کوکی‌ها
+    Cookies.remove("accessToken", { path: "/" });
+    Cookies.remove("refreshToken", { path: "/" });
+
+    // 3️⃣ پاک کردن state UI
     setMobile(null);
     setIsUserMenuOpen(false);
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
+
+    // 4️⃣ هدایت اجباری به صفحه اصلی
+    router.replace("/"); // ← جایگزین router.push برای جلوگیری از back button
   };
 
   const userMenuContent = (
