@@ -1,43 +1,44 @@
-.headerTours{
-    margin-top: 60px;
+/* Header */
+.headerTours {
+  margin-top: 60px;
 }
 
-.headerTours h1{
-    font-weight: 400;
-    font-size: 20px;
-    color: #000;
+.headerTours h1 {
+  font-weight: 400;
+  font-size: 20px;
+  color: #000;
 }
 
-
+/* Grid */
 .results {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
   padding: 0;
 }
 
+/* Tour Card */
 .tourCard {
   background: #fff;
   border-radius: 16px;
   overflow: hidden;
   list-style: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
 }
 
 .tourCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
-/* عکس */
+/* Image */
 .imageWrapper {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
   position: relative;
+  height: 180px;
+  overflow: hidden;
 }
 
 .imageWrapper img {
@@ -48,61 +49,98 @@
 }
 
 .tourCard:hover .imageWrapper img {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
-/* عنوان */
+/* Overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.tourCard:hover .overlay {
+  opacity: 1;
+}
+
+.zoomIcon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.overlayText {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Title */
 .tourTitle {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
-  margin: 14px 16px 6px 16px;
+  margin: 12px 16px 6px 16px;
   color: #222;
 }
 
-/* متا دیتا */
+/* Meta */
 .tourMeta {
-  font-size: 14px;
-  color: #777;
-  margin: 0 16px 12px 16px;
-  line-height: 1.8;
+  font-size: 16px;
+  font-weight: 500;
+  color: #282828B2;
+  margin: 0 16px 10px 16px;
+  line-height: 1.6;
 }
 
-/* خط جداکننده */
+/* Divider */
 .divider {
   height: 1px;
-  background: #f0f0f0;
-  margin: 0 16px;
+  background: #f1f1f1;
+  margin: 0; /* خط تمام عرض */
 }
 
-/* بخش پایین */
+/* Bottom row */
 .bottomRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 16px 18px 16px;
+  padding: 12px 16px;
 }
 
-/* قیمت */
-.price {
-  font-size: 17px;
-  font-weight: 800;
-  color: #222;
-}
-
-/* دکمه رزرو */
+/* Book button */
 .bookBtn {
-  background: linear-gradient(135deg, #28a745, #218838);
+  background: #28a745;
   border: none;
-  color: white;
-  padding: 8px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 14px;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 16px;
   font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
+  font-family: "BYekan";
+  width: 109px;
 }
 
 .bookBtn:hover {
-  background: linear-gradient(135deg, #218838, #1e7e34);
   transform: scale(1.05);
+  background: linear-gradient(135deg, #218838, #1e7e34);
+}
+
+/* Price */
+.price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+}
+
+.price span {
+  color: #009ECA;
+  font-size: 18px;
+  margin-left: 4px;
 }

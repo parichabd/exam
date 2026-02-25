@@ -1,8 +1,8 @@
 "use client";
 
 import Skeleton from "react-loading-skeleton";
+import { TbMapSearch } from "react-icons/tb";
 import "react-loading-skeleton/dist/skeleton.css";
-
 import Image from "next/image";
 import styles from "./ShowTours.module.css";
 
@@ -42,68 +42,88 @@ export default function ShowTours({ tours, isLoading }) {
         <h1>همه تور ها</h1>
       </div>
 
-      <div className={styles.eachTourInfo}>
-        <ul className={styles.results}>
-          {tours.map((tour, index) => {
-            const startDate = new Date(tour.startDate);
-            const endDate = new Date(tour.endDate);
-            const monthName = startDate.toLocaleString("fa-IR", {
-              month: "long",
-            });
-            const days =
-              Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+      <ul className={styles.results}>
+        {tours.map((tour, index) => {
+          const startDate = new Date(tour.startDate);
+          const endDate = new Date(tour.endDate);
 
-            let imageSrc = "/default-tour.jpg";
+          const monthName = startDate.toLocaleString("fa-IR", {
+            month: "long",
+          });
 
-            if (tour?.image) {
-              if (tour.image.startsWith("http")) {
-                imageSrc = tour.image;
-              } else {
-                const path = tour.image.startsWith("/")
-                  ? tour.image
-                  : `/${tour.image}`;
-                imageSrc = `${BACKEND_BASE_URL}${path}`;
-              }
+          const days =
+            Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+          const vehicleMap = {
+            bus: "اتوبوس",
+            train: "قطار",
+            flight: "پرواز",
+            airplane: "پرواز",
+          };
+
+          const vehicleFa =
+            vehicleMap[tour.fleetVehicle?.toLowerCase()] || "پرواز";
+
+          const hotelText = tour.hotel
+            ? tour.hotel.length > 14
+              ? tour.hotel.slice(0, 14) + "..."
+              : tour.hotel
+            : " هتل....";
+
+          const priceFa = tour.price ? tour.price.toLocaleString("fa-IR") : "—";
+
+          let imageSrc = "/default-tour.jpg";
+
+          if (tour?.image) {
+            if (tour.image.startsWith("http")) {
+              imageSrc = tour.image;
+            } else {
+              const path = tour.image.startsWith("/")
+                ? tour.image
+                : `/${tour.image}`;
+              imageSrc = `${BACKEND_BASE_URL}${path}`;
             }
+          }
 
-            return (
-              <li key={index} className={styles.tourCard}>
-                {/* عکس */}
-                <div className={styles.imageWrapper}>
-                  <Image
-                    src={imageSrc}
-                    alt={tour.title || "تور"}
-                    width={300}
-                    height={180}
-                    unoptimized={process.env.NODE_ENV === "development"}
-                  />
+          return (
+            <li key={index} className={styles.tourCard}>
+              {/* عکس با overlay */}
+              <div className={styles.imageWrapper}>
+                <Image
+                  src={imageSrc}
+                  alt={tour.title || "تور"}
+                  width={400}
+                  height={220}
+                  unoptimized={process.env.NODE_ENV === "development"}
+                />
+
+                <div className={styles.overlay}>
+                  <span className={styles.zoomIcon}>
+                    {" "}
+                    <TbMapSearch />
+                  </span>
+                  <span className={styles.overlayText}>جزئیات تور</span>
                 </div>
+              </div>
 
-                {/* نام تور */}
-                <h2 className={styles.tourTitle}>{tour.title}</h2>
+              <h2 className={styles.tourTitle}>{tour.title}</h2>
 
-                {/* جزئیات */}
-                <p className={styles.tourMeta}>
-                  {monthName} ماه · {days} روزه - {tour.fleetVehicle || "پرواز"}{" "}
-                  - {tour.hotel || "هتل 3 ستاره"}
+              <p className={styles.tourMeta}>
+                {monthName} ماه · {days} روزه - {vehicleFa} - {hotelText}
+              </p>
+
+              <div className={styles.divider}></div>
+
+              <div className={styles.bottomRow}>
+                <button className={styles.bookBtn}>رزرو</button>
+                <p className={styles.price}>
+                  <span> {priceFa} </span> تومان{" "}
                 </p>
-
-                {/* خط جداکننده */}
-                <div className={styles.divider}></div>
-
-                {/* دکمه و قیمت */}
-                <div className={styles.bottomRow}>
-                  <button className={styles.bookBtn}>رزرو</button>
-
-                  <p className={styles.price}>
-                    {tour.price?.toLocaleString()} تومان
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
