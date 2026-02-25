@@ -1,10 +1,13 @@
 "use client";
+
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
 import Image from "next/image";
 import styles from "./ShowTours.module.css";
 
-const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:6500";
+const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:6500";
 
 export default function ShowTours({ tours, isLoading }) {
   if (isLoading) {
@@ -50,49 +53,51 @@ export default function ShowTours({ tours, isLoading }) {
             const days =
               Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
-            // ساخت آدرس تصویر به صورت امن
-            let imageSrc = "/default-tour.jpg"; // fallback
+            let imageSrc = "/default-tour.jpg";
 
             if (tour?.image) {
-              // اگر با http/https شروع شده → همون رو استفاده کن
               if (tour.image.startsWith("http")) {
                 imageSrc = tour.image;
               } else {
-                // اضافه کردن BASE_URL + اطمینان از اسلش درست
-                const path = tour.image.startsWith("/") ? tour.image : `/${tour.image}`;
+                const path = tour.image.startsWith("/")
+                  ? tour.image
+                  : `/${tour.image}`;
                 imageSrc = `${BACKEND_BASE_URL}${path}`;
               }
             }
 
             return (
               <li key={index} className={styles.tourCard}>
-                <div className={styles.tourImage}>
+                {/* عکس */}
+                <div className={styles.imageWrapper}>
                   <Image
                     src={imageSrc}
                     alt={tour.title || "تور"}
                     width={300}
                     height={180}
-                    style={{ borderRadius: "8px" }}
-                    // برای جلوگیری از خطای hydration در dev mode
                     unoptimized={process.env.NODE_ENV === "development"}
                   />
                 </div>
 
-                <div className={styles.tourDetails}>
-                  <h2 className={styles.tourName}>{tour.title}</h2>
-                  <p>
-                    ماه: <strong>{monthName}</strong> | تعداد روز:{" "}
-                    <strong>{days}</strong>
-                  </p>
-                  <p>
-                    حرکت: <strong>{tour.fleetVehicle || "پرواز"}</strong> | هتل:{" "}
-                    <strong>{tour.hotel || "---"}</strong>
-                  </p>
-                  <p>
-                    قیمت: <strong>{tour.price?.toLocaleString() || "—"} تومان</strong>
-                  </p>
+                {/* نام تور */}
+                <h2 className={styles.tourTitle}>{tour.title}</h2>
 
+                {/* جزئیات */}
+                <p className={styles.tourMeta}>
+                  {monthName} ماه · {days} روزه - {tour.fleetVehicle || "پرواز"}{" "}
+                  - {tour.hotel || "هتل 3 ستاره"}
+                </p>
+
+                {/* خط جداکننده */}
+                <div className={styles.divider}></div>
+
+                {/* دکمه و قیمت */}
+                <div className={styles.bottomRow}>
                   <button className={styles.bookBtn}>رزرو</button>
+
+                  <p className={styles.price}>
+                    {tour.price?.toLocaleString()} تومان
+                  </p>
                 </div>
               </li>
             );

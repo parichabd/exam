@@ -51,15 +51,17 @@ function BookDate({ setFoundTours, setIsLoading }) {
         setTours(data);
 
         const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name))
+          new Set(data.map((t) => t.origin.name)),
         ).map((name) => translateLocations[name] || name);
 
         const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name))
+          new Set(data.map((t) => t.destination.name)),
         ).map((name) => translateLocations[name] || name);
 
         setOrigins(uniqueOrigins);
         setDestinations(uniqueDestinations);
+
+        setFoundTours(data);
       })
       .catch(() => showToastMessage("مشکل در اتصال به سرور!"));
   }, []);
@@ -75,8 +77,7 @@ function BookDate({ setFoundTours, setIsLoading }) {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSearch = () => {
@@ -122,31 +123,10 @@ function BookDate({ setFoundTours, setIsLoading }) {
         startCheckUTC.setUTCHours(0, 0, 0, 0);
         endCheckUTC.setUTCHours(0, 0, 0, 0);
 
-        // لاگ دیباگ
-        console.log("تور:", t.title);
-        console.log("  مبدا:", t.origin.name, "مقصد:", t.destination.name);
-        console.log(
-          "  تاریخ تور (UTC):",
-          tourStartUTC,
-          "-",
-          tourEndUTC
-        );
-        console.log(
-          "  تاریخ انتخاب‌شده (UTC):",
-          startCheckUTC,
-          "-",
-          endCheckUTC
-        );
-
         const originMatch = t.origin.name === originEng;
         const destMatch = t.destination.name === destEng;
         const dateMatch =
           startCheckUTC >= tourStartUTC && endCheckUTC <= tourEndUTC;
-
-        console.log(
-          "  تطابق تاریخ و مسیر:",
-          originMatch && destMatch && dateMatch
-        );
 
         return originMatch && destMatch && dateMatch;
       });
@@ -259,13 +239,7 @@ function BookDate({ setFoundTours, setIsLoading }) {
             calendar={persian}
             locale={persian_fa}
             value={selectedDate}
-            onChange={(dates) => {
-              console.log(
-                "تاریخ انتخاب شد:",
-                dates.map((d) => d.format())
-              );
-              setSelectedDate(dates);
-            }}
+            onChange={(dates) => setSelectedDate(dates)}
             placeholder="تاریخ"
             calendarPosition="bottom-center"
             className={styles.myCustomPicker}

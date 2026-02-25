@@ -1,0 +1,108 @@
+.headerTours{
+    margin-top: 60px;
+}
+
+.headerTours h1{
+    font-weight: 400;
+    font-size: 20px;
+    color: #000;
+}
+
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 0;
+}
+
+.tourCard {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  list-style: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+.tourCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* عکس */
+.imageWrapper {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.tourCard:hover .imageWrapper img {
+  transform: scale(1.08);
+}
+
+/* عنوان */
+.tourTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 14px 16px 6px 16px;
+  color: #222;
+}
+
+/* متا دیتا */
+.tourMeta {
+  font-size: 14px;
+  color: #777;
+  margin: 0 16px 12px 16px;
+  line-height: 1.8;
+}
+
+/* خط جداکننده */
+.divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 0 16px;
+}
+
+/* بخش پایین */
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px 18px 16px;
+}
+
+/* قیمت */
+.price {
+  font-size: 17px;
+  font-weight: 800;
+  color: #222;
+}
+
+/* دکمه رزرو */
+.bookBtn {
+  background: linear-gradient(135deg, #28a745, #218838);
+  border: none;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.bookBtn:hover {
+  background: linear-gradient(135deg, #218838, #1e7e34);
+  transform: scale(1.05);
+}
