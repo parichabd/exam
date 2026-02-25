@@ -10,6 +10,7 @@ import Link from "next/link";
 import AuthToast from "@/Components/Auth/AuthToast";
 
 import Image from "next/image";
+import Cookies from "js-cookie";
 import styles from "./Layout.module.css";
 
 export default function Header() {
@@ -39,24 +40,30 @@ export default function Header() {
     setIsUserMenuOpen((prev) => !prev);
   };
 
+  // Sync mobile from localStorage
   useEffect(() => {
-    const savedMobile = localStorage.getItem("mobile");
-    if (savedMobile) {
-      Promise.resolve().then(() => setMobile(savedMobile));
+    if (typeof window !== "undefined") {
+      const savedMobile = localStorage.getItem("mobile");
+
+      if (savedMobile !== null) {
+        // تغییر state به صورت async تا از cascading renders جلوگیری شود
+        setTimeout(() => setMobile(savedMobile), 0);
+      }
+
+      const handleLoginSuccess = () => {
+        const newMobile = localStorage.getItem("mobile");
+        if (newMobile !== null) {
+          setTimeout(() => setMobile(newMobile), 0);
+        }
+      };
+
+      window.addEventListener("auth:login-success", handleLoginSuccess);
+      return () =>
+        window.removeEventListener("auth:login-success", handleLoginSuccess);
     }
-
-    const handleLoginSuccess = () => {
-      const newMobile = localStorage.getItem("mobile");
-      setMobile(newMobile);
-    };
-
-    window.addEventListener("auth:login-success", handleLoginSuccess);
-
-    return () => {
-      window.removeEventListener("auth:login-success", handleLoginSuccess);
-    };
   }, []);
 
+  // Close user menu on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       const isDesktop = window.innerWidth >= 1024;
@@ -67,19 +74,18 @@ export default function Header() {
       }
     };
 
-    if (isUserMenuOpen) {
+    if (isUserMenuOpen)
       document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isUserMenuOpen]);
 
+  // ------------------ LOGOUT ------------------
   const handleLogout = () => {
     localStorage.removeItem("mobile");
     setMobile(null);
     setIsUserMenuOpen(false);
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
   };
 
   const userMenuContent = (
@@ -97,7 +103,6 @@ export default function Header() {
                 height={22}
               />
             </div>
-
             <div className={styles.DP_profile_icon}>
               <Image
                 src="/SVG/profile/DP/frame.svg"
@@ -110,7 +115,10 @@ export default function Header() {
           <div className={styles.numberPD}>{toPersianNumber(mobile)}</div>
         </div>
       )}
-      <Link href="/ProfileInfo" className={`${styles.item} ${styles.noUnderline}`}>
+      <Link
+        href="/ProfileInfo"
+        className={`${styles.item} ${styles.noUnderline}`}
+      >
         <Image
           src="/SVG/profile/profile.svg"
           alt="Torino Logo"
@@ -149,7 +157,6 @@ export default function Header() {
             <Link href="/Info/about-us">درباره ما</Link>
             <Link href="/Info/contact">تماس با ما</Link>
           </div>
-
           <div className={styles.mobile_menu}>
             <button className={styles.button} onClick={menuHandler}>
               <Image
@@ -167,9 +174,7 @@ export default function Header() {
           {/* DESKTOP */}
           <div className={styles.desktop_menu}>
             <div
-              className={`${styles.login_desktop} ${
-                mobile ? styles.noBorder : ""
-              }`}
+              className={`${styles.login_desktop} ${mobile ? styles.noBorder : ""}`}
             >
               {mobile ? (
                 <div className={styles.userWrapper} ref={desktopRef}>
@@ -191,7 +196,6 @@ export default function Header() {
                       className={isUserMenuOpen ? styles.rotateArrow : ""}
                     />
                   </div>
-
                   {isUserMenuOpen && userMenuContent}
                 </div>
               ) : (
@@ -236,7 +240,6 @@ export default function Header() {
                     className={isUserMenuOpen ? styles.rotateArrow : ""}
                   />
                 </div>
-
                 {isUserMenuOpen && userMenuContent}
               </div>
             ) : (
@@ -257,7 +260,6 @@ export default function Header() {
       {isOpen && (
         <div className={styles.mobile_overlay} onClick={menuHandler} />
       )}
-
       <nav className={`${styles.mobile_drawer} ${isOpen ? styles.open : ""}`}>
         <Link href="/" onClick={menuHandler}>
           <IoHomeOutline /> صفحه اصلی
