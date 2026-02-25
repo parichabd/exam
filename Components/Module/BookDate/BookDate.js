@@ -5,11 +5,9 @@ import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import Image from "next/image";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./BookDate.module.css";
 
-function BookDate() {
+function BookDate({ setFoundTours, setIsLoading }) {
   const [tours, setTours] = useState([]);
   const [origins, setOrigins] = useState([]);
   const [destinations, setDestinations] = useState([]);
@@ -19,9 +17,6 @@ function BookDate() {
   const [startLoc, setStartLoc] = useState("مبدا");
   const [endLoc, setEndLoc] = useState("مقصد");
   const [selectedDate, setSelectedDate] = useState([null, null]); // [start, end]
-
-  const [foundTours, setFoundTours] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [toast, setToast] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -56,10 +51,10 @@ function BookDate() {
       .then((data) => {
         setTours(data);
         const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name)),
+          new Set(data.map((t) => t.origin.name))
         ).map((name) => translateLocations[name] || name);
         const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name)),
+          new Set(data.map((t) => t.destination.name))
         ).map((name) => translateLocations[name] || name);
         setOrigins(uniqueOrigins);
         setDestinations(uniqueDestinations);
@@ -84,7 +79,10 @@ function BookDate() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [selectedDate]);
 
-  // جست‌وجو با لودینگ و مدیریت ارورها
+  // تبدیل اعداد فارسی به انگلیسی
+  const persianToEnglish = (str) =>
+    str.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+
   const handleSearch = () => {
     const [startSelected, endSelected] = selectedDate;
 
@@ -92,7 +90,6 @@ function BookDate() {
       showToastMessage("لطفاً تاریخ شروع و پایان را انتخاب کنید!");
       return;
     }
-
     if (startLoc === "مبدا" || endLoc === "مقصد") {
       showToastMessage("لطفاً مبدا و مقصد را انتخاب کنید!");
       return;
@@ -141,7 +138,7 @@ function BookDate() {
 
       setFoundTours(results);
       setIsLoading(false);
-    }, 2000); // 2 ثانیه نمایش Skeleton
+    }, 2000);
   };
 
   return (
@@ -254,7 +251,9 @@ function BookDate() {
             alt="calendar"
             width={18}
             height={18}
-            className={`${styles.dateIcon} ${selectedDate[0] ? styles.iconSelected : ""}`}
+            className={`${styles.dateIcon} ${
+              selectedDate[0] ? styles.iconSelected : ""
+            }`}
           />
         </div>
 
@@ -263,23 +262,6 @@ function BookDate() {
           جست‌وجو
         </button>
       </div>
-      {/* نمایش نتایج یا Skeleton */}
-      {isLoading ? (
-        <div className={styles.skeletonWrapper}>
-          <Skeleton height={50} count={3} style={{ marginBottom: 10 }} />
-        </div>
-      ) : (
-        foundTours.length > 0 && (
-          <ul className={styles.results}>
-            {foundTours.map((t, i) => (
-              <li key={i}>
-                {t.origin.name} → {t.destination.name} |{" "}
-                {t.startDate.split("T")[0]} تا {t.endDate.split("T")[0]}
-              </li>
-            ))}
-          </ul>
-        )
-      )}
 
       {/* Toast بالای صفحه */}
       <div className={`${styles.toast} ${showToast ? styles.show : ""}`}>
