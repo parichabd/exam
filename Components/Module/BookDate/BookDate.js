@@ -25,44 +25,46 @@ function BookDate({ setFoundTours, setIsLoading }) {
   const endRef = useRef(null);
   const dateRef = useRef(null);
 
-  // تابع نمایش Toast
   const showToastMessage = (msg) => {
     setToast(msg);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  // دریافت داده‌ها
+  // Fetch تورها و مبدا/مقصد
   useEffect(() => {
     const translateLocations = {
       Tehran: "تهران",
       Isfahan: "اصفهان",
-      Sanandaj: "سنندج",
+      Sananndaj: "سنندج",
       Madrid: "مادرید",
       Hewler: "هولر",
       Mazandaran: "مازندران",
       Italy: "ایتالیا",
-      "offRoad Center": "آفرود سنتر",
-      sulaymaniyahTour: "سلیمانیه",
+      Gilan: "گیلان",
+      Sulaymaniyah: "سلیمانیه",
     };
 
     fetch("http://localhost:6500/tour")
       .then((res) => res.json())
       .then((data) => {
         setTours(data);
+
         const uniqueOrigins = Array.from(
           new Set(data.map((t) => t.origin.name))
         ).map((name) => translateLocations[name] || name);
+
         const uniqueDestinations = Array.from(
           new Set(data.map((t) => t.destination.name))
         ).map((name) => translateLocations[name] || name);
+
         setOrigins(uniqueOrigins);
         setDestinations(uniqueDestinations);
       })
       .catch(() => showToastMessage("مشکل در اتصال به سرور!"));
   }, []);
 
-  // بستن dropdown و datepicker هنگام کلیک بیرون
+  // بستن dropdown هنگام کلیک بیرون
   useEffect(() => {
     function handleClickOutside(event) {
       if (startRef.current && !startRef.current.contains(event.target)) {
@@ -71,17 +73,11 @@ function BookDate({ setFoundTours, setIsLoading }) {
       if (endRef.current && !endRef.current.contains(event.target)) {
         setEndOpen(false);
       }
-      if (dateRef.current && !dateRef.current.contains(event.target)) {
-        setSelectedDate(selectedDate);
-      }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [selectedDate]);
-
-  // تبدیل اعداد فارسی به انگلیسی
-  const persianToEnglish = (str) =>
-    str.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSearch = () => {
     const [startSelected, endSelected] = selectedDate;
@@ -95,41 +91,64 @@ function BookDate({ setFoundTours, setIsLoading }) {
       return;
     }
 
-    const formattedStart = startSelected.toDate().toISOString().split("T")[0];
-    const formattedEnd = endSelected.toDate().toISOString().split("T")[0];
-
-    if (formattedStart > formattedEnd) {
-      showToastMessage("تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد!");
-      return;
-    }
-
     const reverseTranslate = {
       تهران: "Tehran",
       اصفهان: "Isfahan",
-      سنندج: "Sanandaj",
+      سنندج: "Sananndaj",
       مادرید: "Madrid",
       هولر: "Hewler",
       مازندران: "Mazandaran",
       ایتالیا: "Italy",
-      "آفرود سنتر": "offRoad Center",
-      سلیمانیه: "sulaymaniyahTour",
+      گیلان: "Gilan",
+      سلیمانیه: "Sulaymaniyah",
     };
 
-    const originEng = reverseTranslate[startLoc] || startLoc;
-    const destEng = reverseTranslate[endLoc] || endLoc;
+    const originEng = reverseTranslate[startLoc];
+    const destEng = reverseTranslate[endLoc];
 
     setIsLoading(true);
 
     setTimeout(() => {
       const results = tours.filter((t) => {
-        const tourStart = t.startDate.split("T")[0];
-        const tourEnd = t.endDate.split("T")[0];
-        return (
-          t.origin.name === originEng &&
-          t.destination.name === destEng &&
-          formattedStart >= tourStart &&
-          formattedEnd <= tourEnd
+        // تاریخ تور UTC
+        const tourStartUTC = new Date(t.startDate);
+        const tourEndUTC = new Date(t.endDate);
+        tourStartUTC.setUTCHours(0, 0, 0, 0);
+        tourEndUTC.setUTCHours(0, 0, 0, 0);
+
+        // تاریخ انتخاب شده از DatePicker به UTC
+        const startCheckUTC = new Date(startSelected.toDate());
+        const endCheckUTC = new Date(endSelected.toDate());
+        startCheckUTC.setUTCHours(0, 0, 0, 0);
+        endCheckUTC.setUTCHours(0, 0, 0, 0);
+
+        // لاگ دیباگ
+        console.log("تور:", t.title);
+        console.log("  مبدا:", t.origin.name, "مقصد:", t.destination.name);
+        console.log(
+          "  تاریخ تور (UTC):",
+          tourStartUTC,
+          "-",
+          tourEndUTC
         );
+        console.log(
+          "  تاریخ انتخاب‌شده (UTC):",
+          startCheckUTC,
+          "-",
+          endCheckUTC
+        );
+
+        const originMatch = t.origin.name === originEng;
+        const destMatch = t.destination.name === destEng;
+        const dateMatch =
+          startCheckUTC >= tourStartUTC && endCheckUTC <= tourEndUTC;
+
+        console.log(
+          "  تطابق تاریخ و مسیر:",
+          originMatch && destMatch && dateMatch
+        );
+
+        return originMatch && destMatch && dateMatch;
       });
 
       if (results.length === 0) {
@@ -138,7 +157,7 @@ function BookDate({ setFoundTours, setIsLoading }) {
 
       setFoundTours(results);
       setIsLoading(false);
-    }, 2000);
+    }, 200);
   };
 
   return (
@@ -240,7 +259,13 @@ function BookDate({ setFoundTours, setIsLoading }) {
             calendar={persian}
             locale={persian_fa}
             value={selectedDate}
-            onChange={setSelectedDate}
+            onChange={(dates) => {
+              console.log(
+                "تاریخ انتخاب شد:",
+                dates.map((d) => d.format())
+              );
+              setSelectedDate(dates);
+            }}
             placeholder="تاریخ"
             calendarPosition="bottom-center"
             className={styles.myCustomPicker}
@@ -257,13 +282,11 @@ function BookDate({ setFoundTours, setIsLoading }) {
           />
         </div>
 
-        {/* دکمه جست‌وجو */}
         <button className={styles.searchButton} onClick={handleSearch}>
           جست‌وجو
         </button>
       </div>
 
-      {/* Toast بالای صفحه */}
       <div className={`${styles.toast} ${showToast ? styles.show : ""}`}>
         {toast}
       </div>
