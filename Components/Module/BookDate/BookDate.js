@@ -16,7 +16,7 @@ function BookDate({ setFoundTours, setIsLoading }) {
   const [endOpen, setEndOpen] = useState(false);
   const [startLoc, setStartLoc] = useState("مبدا");
   const [endLoc, setEndLoc] = useState("مقصد");
-  const [selectedDate, setSelectedDate] = useState([null, null]); // [start, end]
+  const [selectedDate, setSelectedDate] = useState([null, null]);
 
   const [toast, setToast] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -31,50 +31,55 @@ function BookDate({ setFoundTours, setIsLoading }) {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  // Fetch تورها و مبدا/مقصد
-  useEffect(() => {
-    const translateLocations = {
-      Tehran: "تهران",
-      Isfahan: "اصفهان",
-      Sananndaj: "سنندج",
-      Madrid: "مادرید",
-      Hewler: "هولیر",
-      Mazandaran: "مازندران",
-      Italy: "ایتالیا",
-      Gilan: "گیلان",
-      Sulaymaniyah: "سلیمانیه",
-    };
+  const translateToFa = {
+    Tehran: "تهران",
+    Isfahan: "اصفهان",
+    Sanandaj: "سنندج",
+    Sananndaj: "سنندج",
+    Madrid: "مادرید",
+    Hewler: "هولر",
+    Mazandaran: "مازندران",
+    Gilan: "گیلان",
+    Sulaymaniyah: "سلیمانیه",
+    Italy: "ایتالیا",
+    Offroad: "آفرود",
+    "offRoad Center": "آفرود",
+    "sulaymaniyahTour": "سلیمانیه",
+  };
 
+  useEffect(() => {
     fetch("http://localhost:6500/tour")
       .then((res) => res.json())
       .then((data) => {
-        setTours(data);
+        const normalizedTours = data.map((tour) => ({
+          ...tour,
+          origin: {
+            ...tour.origin,
+            name: translateToFa[tour.origin.name.trim()] || tour.origin.name,
+          },
+          destination: {
+            ...tour.destination,
+            name: translateToFa[tour.destination.name.trim()] || tour.destination.name,
+          },
+        }));
 
-        const uniqueOrigins = Array.from(
-          new Set(data.map((t) => t.origin.name)),
-        ).map((name) => translateLocations[name] || name);
+        setTours(normalizedTours);
 
-        const uniqueDestinations = Array.from(
-          new Set(data.map((t) => t.destination.name)),
-        ).map((name) => translateLocations[name] || name);
+        const uniqueOrigins = [...new Set(normalizedTours.map((t) => t.origin.name))].sort();
+        const uniqueDestinations = [...new Set(normalizedTours.map((t) => t.destination.name))].sort();
 
         setOrigins(uniqueOrigins);
         setDestinations(uniqueDestinations);
 
-        setFoundTours(data);
+        setFoundTours(normalizedTours);
       })
       .catch(() => showToastMessage("مشکل در اتصال به سرور!"));
-  }, []);
+  }, [setFoundTours]);
 
-  // بستن dropdown هنگام کلیک بیرون
   useEffect(() => {
     function handleClickOutside(event) {
-      if (startRef.current && !startRef.current.contains(event.target)) {
-        setStartOpen(false);
-      }
-      if (endRef.current && !endRef.current.contains(event.target)) {
-        setEndOpen(false);
-      }
+      if (startRef.current && !startRef.current.contains(event.target)) setStartOpen(false);
+      if (endRef.current && !endRef.current.contains(event.target)) setEndOpen(false);
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -87,56 +92,41 @@ function BookDate({ setFoundTours, setIsLoading }) {
       showToastMessage("لطفاً تاریخ شروع و پایان را انتخاب کنید!");
       return;
     }
+
     if (startLoc === "مبدا" || endLoc === "مقصد") {
       showToastMessage("لطفاً مبدا و مقصد را انتخاب کنید!");
+      setFoundTours(tours);
+      setIsLoading(false);
       return;
     }
 
-    const reverseTranslate = {
-      تهران: "Tehran",
-      اصفهان: "Isfahan",
-      سنندج: "Sananndaj",
-      مادرید: "Madrid",
-      هولیر: "Hewler",
-      مازندران: "Mazandaran",
-      ایتالیا: "Italy",
-      گیلان: "Gilan",
-      سلیمانیه: "Sulaymaniyah",
-    };
-
-    const originEng = reverseTranslate[startLoc];
-    const destEng = reverseTranslate[endLoc];
+    const originFa = startLoc;
+    const destFa = endLoc;
 
     setIsLoading(true);
 
     setTimeout(() => {
       const results = tours.filter((t) => {
-        // تاریخ تور UTC
-        const tourStartUTC = new Date(t.startDate);
-        const tourEndUTC = new Date(t.endDate);
-        tourStartUTC.setUTCHours(0, 0, 0, 0);
-        tourEndUTC.setUTCHours(0, 0, 0, 0);
+        const originMatch = t.origin.name === originFa;
+        const destMatch = t.destination.name === destFa;
 
-        // تاریخ انتخاب شده از DatePicker به UTC
-        const startCheckUTC = new Date(startSelected.toDate());
-        const endCheckUTC = new Date(endSelected.toDate());
-        startCheckUTC.setUTCHours(0, 0, 0, 0);
-        endCheckUTC.setUTCHours(0, 0, 0, 0);
-
-        const originMatch = t.origin.name === originEng;
-        const destMatch = t.destination.name === destEng;
-        const dateMatch =
-          startCheckUTC >= tourStartUTC && endCheckUTC <= tourEndUTC;
+        // شرط تاریخ شل شده (فقط شروع کاربر بعد یا همزمان با شروع تور)
+        let dateMatch = true;
+        if (startSelected) {
+          const startCheck = new Date(startSelected.toDate());
+          const tourStart = new Date(t.startDate);
+          dateMatch = startCheck >= tourStart;
+        }
 
         return originMatch && destMatch && dateMatch;
       });
 
-      if (results.length === 0) {
-        showToastMessage("تور موجودی ندارد یا ورودی‌ها نامعتبر است!");
-      }
-
       setFoundTours(results);
       setIsLoading(false);
+
+      if (results.length === 0) {
+        showToastMessage("هیچ توری با این مشخصات یافت نشد");
+      }
     }, 200);
   };
 
