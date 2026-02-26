@@ -1,18 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import { TbMapSearch } from "react-icons/tb";
-import "react-loading-skeleton/dist/skeleton.css";
 import { IoIosArrowDown } from "react-icons/io";
 import Image from "next/image";
+import Link from "next/link";
+import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./ShowTours.module.css";
 
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:6500";
 
 export default function ShowTours({ tours, isLoading }) {
-  const [showAll, setShowAll] = useState(false); // کنترل نمایش همه تورها
+  const [showAll, setShowAll] = useState(false);
+
+  console.log("🔥 ShowTours Render");
+  console.log("📦 tours:", tours);
+  console.log("⏳ isLoading:", isLoading);
+
+  useEffect(() => {
+    console.log("🟢 tours updated:", tours);
+  }, [tours]);
 
   if (isLoading) {
     return (
@@ -28,6 +37,7 @@ export default function ShowTours({ tours, isLoading }) {
   }
 
   if (!tours || tours.length === 0) {
+    console.warn("⚠️ tours is empty or undefined");
     return (
       <div className={styles.tourInfo_Mbobile}>
         <div className={styles.headerTours}>
@@ -40,7 +50,6 @@ export default function ShowTours({ tours, isLoading }) {
     );
   }
 
-  // نمایش ۴ اول یا همه بسته به استیت
   const visibleTours = showAll ? tours : tours.slice(0, 4);
 
   return (
@@ -51,41 +60,50 @@ export default function ShowTours({ tours, isLoading }) {
 
       <ul className={styles.results}>
         {visibleTours.map((tour, index) => {
+          console.log("--------------");
+          console.log("🧩 Tour index:", index);
+          console.log("🧩 Tour object:", tour);
+          console.log("🆔 tour.id:", tour.id);
+          console.log("🔗 Link:", `/Tours/${tour.id}`);
+
+          if (!tour.id) {
+            console.error("🚨 tour.id is missing!", tour);
+          }
+
           const startDate = new Date(tour.startDate);
           const endDate = new Date(tour.endDate);
-
-          const monthName = startDate.toLocaleString("fa-IR", { month: "long" });
-          const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+          const monthName = startDate.toLocaleString("fa-IR", {
+            month: "long",
+          });
+          const days =
+            Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
           const vehicleMap = {
             bus: "اتوبوس",
             train: "قطار",
             flight: "پرواز",
             airplane: "پرواز",
+            suv: "SUV",
           };
-          const vehicleFa = vehicleMap[tour.fleetVehicle?.toLowerCase()] || "پرواز";
 
-          const hotelText = tour.hotel
-            ? tour.hotel.length > 14
-              ? tour.hotel.slice(0, 14) + "..."
-              : tour.hotel
-            : "هتل....";
+          const vehicleFa =
+            vehicleMap[tour.fleetVehicle?.toLowerCase()] || "پرواز";
 
           const priceFa = tour.price ? tour.price.toLocaleString("fa-IR") : "—";
 
           let imageSrc = "/default-tour.jpg";
+
           if (tour?.image) {
-            if (tour.image.startsWith("http")) {
-              imageSrc = tour.image;
-            } else {
-              const path = tour.image.startsWith("/") ? tour.image : `/${tour.image}`;
-              imageSrc = `${BACKEND_BASE_URL}${path}`;
-            }
+            imageSrc = tour.image.startsWith("http")
+              ? tour.image
+              : `${BACKEND_BASE_URL}${
+                  tour.image.startsWith("/") ? tour.image : `/${tour.image}`
+                }`;
           }
 
           return (
             <li key={index} className={styles.tourCard}>
-              <div className={styles.imageWrapper}>
+              <Link href={`/tours/${tour.id}`} className={styles.imageWrapper}>
                 <Image
                   src={imageSrc}
                   alt={tour.title || "تور"}
@@ -99,7 +117,7 @@ export default function ShowTours({ tours, isLoading }) {
                   </span>
                   <span className={styles.overlayText}>جزئیات تور</span>
                 </div>
-              </div>
+              </Link>
 
               <h2 className={styles.tourTitle}>{tour.title}</h2>
 
@@ -109,14 +127,14 @@ export default function ShowTours({ tours, isLoading }) {
                 <span className={styles.metaItem}>{days} روزه</span>
                 <span className={styles.metaSeparator}>·</span>
                 <span className={styles.metaItem}>{vehicleFa}</span>
-                <span className={styles.metaSeparator}>·</span>
-                <span className={styles.metaItem}>{hotelText}</span>
               </p>
 
               <div className={styles.divider}></div>
 
               <div className={styles.bottomRow}>
-                <button className={styles.bookBtn}>رزرو</button>
+                <Link href={`/bookTour/${tour.id}`}>
+                  <button className={styles.bookBtn}>رزرو</button>
+                </Link>
                 <p className={styles.price}>
                   <span>{priceFa}</span> تومان
                 </p>
@@ -126,7 +144,6 @@ export default function ShowTours({ tours, isLoading }) {
         })}
       </ul>
 
-      {/* دکمه جزئیات بیشتر */}
       {tours.length > 4 && !showAll && (
         <div style={{ textAlign: "center", marginTop: 20 }}>
           <button

@@ -134,7 +134,7 @@
 
 /* Price */
 .price {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 700;
   color: #222;
 }
@@ -176,3 +176,4 @@ gap: 4px;
 .showMoreBtn:hover {
   transform: scale(1.05);
 }
+
