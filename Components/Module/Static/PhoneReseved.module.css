@@ -41,7 +41,7 @@
 .reservedImage {
     position: absolute;
     left: -6px;
-    top: -57px;
+    top: -55px;
     object-fit: cover; /* تصویر داخل باکس فیت میشه */
     transform: perspective(500px) rotateY(-10deg) rotateX(5deg);
     transform-origin: bottom left;
@@ -104,4 +104,100 @@
   color: #fff;
   text-decoration: none;
   display: block;
+}
+
+
+
+/* ────────── انیمیشن لرزش تلفن هر 2 ثانیه ────────── */
+@keyframes phoneShake {
+  0% { transform: translateX(0); }
+  20% { transform: translateY(-2px); }
+  40% { transform: translateY(2px); }
+  60% { transform: translateY(-2px); }
+  80% { transform: translateY(2px); }
+  100% { transform: translateX(0); }
+}
+
+.phone p:last-child {
+  animation: phoneShake 0.5s ease-in-out infinite;
+  animation-delay: 2s; /* هر ۲ ثانیه */
+}
+
+/* ────────── هاور جذاب برای دکمه اطلاعات بیشتر ────────── */
+.phoneNum button:hover {
+  background: linear-gradient(135deg, #28a745, #1ee87e, #218838);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  transform: translateY(-3px) scale(1.1) rotateX(2deg);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 0 12px rgba(62, 232, 126, 0.6);
+  transition: all 0.4s ease-in-out;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* استایل‌های موردنظر */
+
+  /* کانتینر بالایی سبز بزرگ‌تر */
+  .reserved {
+    width: 100%; /* بزرگ‌تر از موبایل */
+    height: 170px;
+    padding: 24px 24px;
+    gap: 24px;
+  }
+
+  /* متن خرید تور */
+  .buyPhone h1 {
+    width: 220px;
+    font-size: 30px;
+    height: auto;
+    margin-bottom: 8px;
+  }
+
+  .buyPhone h1 span {
+    padding: 10px;
+    font-size: 28px;
+  }
+
+  .buyPhone p {
+    font-size: 19px;
+    text-align: left;
+  }
+
+  /* تصویر بزرگ‌تر و نسبت به والد موقعیت */
+  .reservedImage {
+    width: 260px;
+    top: 11px;
+    left: -30px;
+    transform: perspective(500px) rotateY(-10deg) rotateX(5deg);
+  }
+
+  /* پایین با پس زمینه سفید */
+  .phoneNum {
+    width: 100%;
+    height: 80px;
+    padding: 18px;
+    gap: 12px;
+  }
+
+  .phone {
+    font-size: 16px;
+    gap: 12px;
+  }
+
+  .phone p:first-child {
+    font-size: 22px;
+    padding: 0 18px 0 0;
+  }
+
+  .phoneNum button {
+    width: 150px;
+    height: 42px;
+    font-size: 15px;
+  }
 }
