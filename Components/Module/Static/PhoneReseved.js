@@ -25,11 +25,10 @@ function PhoneReseved() {
       </div>
       <div className={styles.phoneNum}>
         <div className={styles.phone}>
+          <p>۰۲۱-۱۸۴۰</p>
           <p>
-            {" "}
             <FaPhoneVolume />
           </p>
-          <p>021-1840</p>
         </div>
         <div>
           <button>
