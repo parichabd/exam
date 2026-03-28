@@ -6,6 +6,30 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "fonnts.com-YekanBakh-Bold";
+  src: url("/font/fonnts.com-YekanBakh-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iranian Sans";
+  src: url("/font/Iranian Sans.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  src: url('/font/Vazirmatn-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   font-family: "BYekan";
 }

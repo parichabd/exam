@@ -1,0 +1,49 @@
+.info{
+    display: flex;
+    margin: 40px 0;
+}
+.eachParagraph h2{
+    margin-bottom: 0;
+    color: #000;
+    font-size: 19px;
+}
+.eachParagraph p{
+    margin-top: 5px;
+    font-size: 12px;
+    color: #282828;
+}
+.eachParagraph{
+    margin-right: 25px;
+}
+
+.mainDiv{
+    height: 300px;
+}
+
+@media (min-width: 1024px) and (max-width: 2860px) {
+    .eachParagraph h2{
+        font-size: 26px;
+    }
+    .eachParagraph p{
+        font-size: 16px;
+    }
+    .mainDiv {
+    display: grid;
+    grid-template-columns: repeat(3, 365px);
+    justify-content: center; /* وسط صفحه */
+    gap: 40px;
+    height: 120px;
+  }
+
+  .info {
+    width: 365px;
+    height: 90px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    align-items: center;
+  }
+  .eachParagraph{
+    margin-right: 15px;
+}
+
+}

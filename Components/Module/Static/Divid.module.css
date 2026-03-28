@@ -1,0 +1,10 @@
+.divider {
+  position: relative;
+  width: 100vw;      
+  height: 1px;    
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background: #00000040;
+} 

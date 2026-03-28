@@ -25,20 +25,38 @@ export default function TourSlider() {
 
   return (
     <div className={styles.staticImg}>
-      <div className={styles.headqus}>
-        <div className={styles.qus}>
-          <Image
-            src="/SVG/static/Group 7.svg"
-            alt="phone"
-            width={34}
-            height={38}
-          />
-          <Image src="/SVG/static/؟.svg" alt="phone" width={10} height={20} className={styles.question} />
+      <div className={styles.desktopParagraph}>
+        <div className={styles.headqus}>
+          <div className={styles.qus}>
+            <Image
+              src="/SVG/static/Group 7.svg"
+              alt="phone"
+              width={34}
+              height={38}
+            />
+            <Image
+              src="/SVG/static/؟.svg"
+              alt="phone"
+              width={10}
+              height={20}
+              className={styles.question}
+            />
+          </div>
+          <div className={styles.head}>
+            <h1>
+              چرا <span>تورینو</span> ؟
+            </h1>
+          </div>
         </div>
-        <div className={styles.head}>
-          <h1>
-            چرا <span>تورینو</span> ؟
-          </h1>
+        <div className={styles.paragraph}>
+          <h1>تور طبیعت گردی و تاریخی </h1>
+          <p>
+            اگر دوست داشته باشید که یک جاذبه طبیعی را از نزدیک ببینید و در دل
+            طبیعت چادر بزنید یا در یک اقامتگاه بوم گردی اتاق بگیرید، باید تورهای
+            طبیعت‌گردی را خریداری کنید. اما اگر بخواهید از جاذبه‌های گردشگری و
+            آثار تاریخی یک مقصد خاص بازدید کنید، می‌توانید تورهای فرهنگی و
+            تاریخی را خریداری کنید.
+          </p>
         </div>
       </div>
       <div className={styles.wrapper}>
@@ -71,15 +89,15 @@ export default function TourSlider() {
             <GoArrowRight />
           </button>
           <span>
-             {(active + 1).toLocaleString("fa-IR")} / {images.length.toLocaleString("fa-IR")}
+            {(active + 1).toLocaleString("fa-IR")} /{" "}
+            {images.length.toLocaleString("fa-IR")}
           </span>
           <button onClick={next}>
             <GoArrowLeft />
           </button>
         </div>
       </div>
-      <div  className={styles.divider}></div>
+      <div className={styles.divider}></div>
     </div>
-    
   );
 }
