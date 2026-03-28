@@ -1,0 +1,67 @@
+.mainPageInfo{
+background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.263);
+    border-radius: 16px;
+    margin-top: 10px;
+}
+.mainDetails{
+    display: flex;
+    gap: 30px;
+    
+}
+
+.price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #222;
+}
+.price span {
+  color: #009ECA;
+  font-size: 18px;
+  margin-left: 4px;
+}
+
+.bookBtn {
+  background: #28a745;
+  border: none;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "BYekan";
+}
+
+.infoTour h1{
+    font-family: "fonnts.com-YekanBakh-Bold";
+}
+
+.dayAndNight{
+    word-spacing: 3px;
+}
+
+.details{
+    display: flex;
+    gap: 50px;
+}
+
+.priceAndbook{
+    display: flex;
+    justify-content: space-between;
+}
+
+.tourMainDetails{
+    display: flex;
+    justify-content: space-between;
+}
+
+.divider {
+  width: 1px; /* عرض دیوایدر */
+  height: 100px; /* ارتفاع دیوایدر، باید با tourInfoDetails هم‌خوانی داشته باشه */
+  background-color: #ccc; /* رنگ دیوایدر (یا هر رنگ دلخواه) */
+  margin: 0 5px; /* فاصله کوچک از دو طرف */
+  align-self: stretch; /* باعث میشه دیوایدر به اندازه کل ارتفاع آیتم‌های flex کشیده بشه */
+}
