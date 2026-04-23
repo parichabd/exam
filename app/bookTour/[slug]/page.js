@@ -3,10 +3,84 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./bookTour.module.css";
 import { useSearchParams, usePathname } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:6500";
+
+// ✅ کلمات غیرمجاز فارسی
+const INVALID_PERSIAN_WORDS = [
+  "نام",
+  "نام خانوادگی",
+  "نام و نام خانوادگی",
+  "نام ونام خانوادگی",
+  "test",
+  "asdf",
+  "qwerty",
+  "abc",
+  "test123",
+  "name",
+  "username",
+  "کاربر",
+  "مسافر",
+  "مشتری",
+  "خریدار",
+  "ثبت نام",
+  "ثبت",
+  "آزمایشی",
+  "فیک",
+  "نامشخص",
+  "نامحدود",
+];
+
+// ✅ کلمات غیرمجاز انگلیسی
+const INVALID_ENGLISH_WORDS = [
+  "test",
+  "asdf",
+  "qwerty",
+  "abc",
+  "name",
+  "username",
+  "user",
+  "fake",
+  "dummy",
+  "sample",
+  "example",
+  "demo",
+  "temp",
+];
+
+// ✅ تبدیل اعداد فارسی به انگلیسی
+const persianToEnglish = (str) => {
+  const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+  const englishDigits = "0123456789";
+  return str.replace(/[۰-۹]/g, (d) => englishDigits[persianDigits.indexOf(d)]);
+};
+
+// ✅ تبدیل تاریخ شمسی به میلادی (برای اعتبارسنجی سن)
+const shamsiToGregorian = (shamsiDate) => {
+  if (!shamsiDate) return null;
+  
+  // اگر فرمت YYYY/MM/DD باشد
+  const parts = shamsiDate.split("/");
+  if (parts.length === 3) {
+    const year = parseInt(parts[0]);
+    const month = parseInt(parts[1]);
+    const day = parseInt(parts[2]);
+    
+    // تبدیل ساده شمسی به میلادی
+    const d = new Date();
+    d.setFullYear(year + 621);
+    d.setMonth(month - 1);
+    d.setDate(day);
+    return d;
+  }
+  
+  return null;
+};
 
 export default function BookingForm({ initialTourId }) {
   const searchParams = useSearchParams();
@@ -17,7 +91,6 @@ export default function BookingForm({ initialTourId }) {
   if (!tourId && pathname) {
     const cleanPathname = pathname.replace(/^\/|\/$/g, "");
     const parts = cleanPathname.split("/");
-
     if (parts[0] === "bookTour" && parts[1]) {
       tourId = parts[1];
     } else if (parts[1] === "bookTour" && parts[2]) {
@@ -32,24 +105,86 @@ export default function BookingForm({ initialTourId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ React Hook Form
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     mode: "onBlur",
   });
 
+  // ✅ اعتبارسنجی نام فارسی کامل
+  const validatePersianName = (value) => {
+    if (!value) return true;
+    const trimmedValue = value.trim();
+
+    if (trimmedValue.length < 5) {
+      return "نام و نام خانوادگی باید حداقل ۵ کاراکتر باشد";
+    }
+    if (trimmedValue.length > 100) {
+      return "نام و نام خانوادگی نباید بیشتر از ۱۰۰ کاراکتر باشد";
+    }
+
+    const parts = trimmedValue.split(/\s+/);
+    if (parts.length < 2) {
+      return "لطفاً نام و نام خانوادگی را با فاصله جدا کنید";
+    }
+    if (parts.length > 4) {
+      return "نام و نام خانوادگی نباید بیشتر از ۴ کلمه باشد";
+    }
+
+    for (const part of parts) {
+      if (part.length < 2) {
+        return "هر بخش از نام باید حداقل ۲ کاراکتر باشد";
+      }
+    }
+
+    const persianPattern = /^[\u0600-\u06FF\s]+$/;
+    if (!persianPattern.test(trimmedValue)) {
+      return "فقط حروف فارسی مجاز است";
+    }
+
+    const repeatedPattern = /^(.)\1+$/;
+    if (repeatedPattern.test(trimmedValue.replace(/\s/g, ""))) {
+      return "کاراکترهای تکراری مجاز نیست";
+    }
+
+    const lowerValue = trimmedValue.toLowerCase();
+    for (const word of INVALID_PERSIAN_WORDS) {
+      if (lowerValue.includes(word.toLowerCase())) {
+        return "این نام معتبر نیست";
+      }
+    }
+    for (const word of INVALID_ENGLISH_WORDS) {
+      if (lowerValue.includes(word.toLowerCase())) {
+        return "این نام معتبر نیست";
+      }
+    }
+
+    if (/\d/.test(trimmedValue)) {
+      return "استفاده از اعداد مجاز نیست";
+    }
+
+    const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?0-9]/;
+    if (specialChars.test(trimmedValue)) {
+      return "کاراکترهای خاص مجاز نیست";
+    }
+
+    return true;
+  };
+
   // ✅ اعتبارسنجی کد ملی ایران
   const validateNationalId = (value) => {
     if (!value) return true;
-    
-    if (!/^\d{10}$/.test(value)) {
+
+    const englishValue = persianToEnglish(value);
+
+    if (!/^\d{10}$/.test(englishValue)) {
       return "کد ملی باید ۱۰ رقم باشد";
     }
 
-    const digits = value.split("").map(Number);
+    const digits = englishValue.split("").map(Number);
     const checkDigit = digits[9];
     let sum = 0;
 
@@ -67,15 +202,18 @@ export default function BookingForm({ initialTourId }) {
     return true;
   };
 
-  // ✅ اعتبارسنجی سن
+  // ✅ اعتبارسنجی سن (با تاریخ شمسی)
   const validateAge = (value) => {
     if (!value) return true;
-    
-    const birthDate = new Date(value);
+
+    // تبدیل تاریخ شمسی به میلادی برای محاسبه سن
+    const birthDate = shamsiToGregorian(value);
+    if (!birthDate) return true;
+
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
+
     if (
       monthDiff < 0 ||
       (monthDiff === 0 && today.getDate() < birthDate.getDate())
@@ -89,12 +227,14 @@ export default function BookingForm({ initialTourId }) {
     if (age > 120) {
       return "تاریخ تولد معتبر نیست";
     }
+
     return true;
   };
 
   // ✅ ارسال فرم
   const onSubmit = (data) => {
     console.log("داده‌های فرم:", data);
+    // تاریخ شمسی ذخیره می‌شود: "1378/03/15"
     window.open(GATEWAY_URL, "_blank");
   };
 
@@ -141,7 +281,7 @@ export default function BookingForm({ initialTourId }) {
     return { days, nights };
   };
 
-  const toPersianNumber = (num) => {
+  const toPersianNumberLocal = (num) => {
     if (num === undefined || num === null) return "—";
     return num.toLocaleString("fa-IR");
   };
@@ -179,8 +319,8 @@ export default function BookingForm({ initialTourId }) {
 
   return (
     <div className={styles.mainContainer}>
-      {/* ✅ فرم با React Hook Form */}
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        {/* ✅ بخش فرم */}
         <div className={styles.formSection}>
           <div className={styles.formInfo}>
             <Image
@@ -203,22 +343,11 @@ export default function BookingForm({ initialTourId }) {
             className={styles.formInput}
             {...register("fullName", {
               required: "نام و نام خانوادگی الزامی است",
-              minLength: {
-                value: 3,
-                message: "نام باید حداقل ۳ کاراکتر باشد",
-              },
-              maxLength: {
-                value: 50,
-                message: "نام نباید بیشتر از ۵۰ کاراکتر باشد",
-              },
-              pattern: {
-                value: /^[\u0600-\u06FF\sa-zA-Z]+$/,
-                message: "فقط حروف فارسی و لاتین مجاز است",
-              },
+              validate: validatePersianName,
             })}
           />
           {errors.fullName && (
-            <small style={{ color: "red", fontSize: "11px", display: "block", marginBottom: "8px" }}>
+            <small className={styles.errorMessage}>
               ⚠️ {errors.fullName.message}
             </small>
           )}
@@ -240,7 +369,7 @@ export default function BookingForm({ initialTourId }) {
             <option value="other">سایر</option>
           </select>
           {errors.gender && (
-            <small style={{ color: "red", fontSize: "11px", display: "block", marginBottom: "8px" }}>
+            <small className={styles.errorMessage}>
               ⚠️ {errors.gender.message}
             </small>
           )}
@@ -254,27 +383,62 @@ export default function BookingForm({ initialTourId }) {
               required: "کد ملی الزامی است",
               validate: validateNationalId,
               onChange: (e) => {
-                e.target.value = e.target.value.replace(/\D/g, "");
+                const clean = e.target.value
+                  .split("")
+                  .map((c) =>
+                    "0123456789".includes(c)
+                      ? "۰۱۲۳۴۵۶۷۸۹"["0123456789".indexOf(c)]
+                      : c
+                  )
+                  .join("")
+                  .replace(/[^۰-۹]/g, "");
+                e.target.value = clean;
               },
             })}
           />
           {errors.nationalId && (
-            <small style={{ color: "red", fontSize: "11px", display: "block", marginBottom: "8px" }}>
+            <small className={styles.errorMessage}>
               ⚠️ {errors.nationalId.message}
             </small>
           )}
 
-          {/* ✅ تاریخ تولد */}
-          <input
-            type="date"
-            className={styles.formInput}
-            {...register("birthDate", {
+          {/* ✅ تاریخ تولد - ذخیره به فرمت شمسی */}
+          <Controller
+            name="birthDate"
+            control={control}
+            rules={{
               required: "تاریخ تولد الزامی است",
               validate: validateAge,
-            })}
+            }}
+            render={({ field }) => (
+              <DatePicker
+                value={field.value || null}
+                onChange={(date) => {
+                  if (date) {
+                    // ✅ ذخیره به فرمت شمسی "YYYY/MM/DD"
+                    const shamsiDate = date.format("YYYY/MM/DD");
+                    field.onChange(shamsiDate);
+                  } else {
+                    field.onChange("");
+                  }
+                }}
+                calendar={persian}
+                locale={persian_fa}
+                calendarPosition="bottom-right"
+                placeholder="تاریخ تولد"
+                inputClass={styles.datePickerInput}
+                containerClassName={styles.datePickerContainer}
+                format="YYYY/MM/DD"
+                maxDate={new Date()}
+                minDate={
+                  new Date().setFullYear(new Date().getFullYear() - 120)
+                }
+                editable={false}
+              />
+            )}
           />
           {errors.birthDate && (
-            <small style={{ color: "red", fontSize: "11px", display: "block", marginBottom: "8px" }}>
+            <small className={styles.errorMessage}>
               ⚠️ {errors.birthDate.message}
             </small>
           )}
@@ -289,12 +453,14 @@ export default function BookingForm({ initialTourId }) {
               </p>
               {durationInDays > 0 && (
                 <p className={styles.tourDuration}>
-                  {toPersianNumber(durationInDays)} روز و{" "}
-                  {toPersianNumber(durationInNights)} شب
+                  {toPersianNumberLocal(durationInDays)} روز و{" "}
+                  {toPersianNumberLocal(durationInNights)} شب
                 </p>
               )}
             </div>
+
             <div className={styles.divider_two}></div>
+
             <div className={styles.priceBoxFooter}>
               <div className={styles.priceFooter}>
                 <p>قیمت نهایی :</p>
@@ -303,6 +469,7 @@ export default function BookingForm({ initialTourId }) {
                   <span>تومان</span>
                 </p>
               </div>
+
               <div className={styles.bookBtn}>
                 <a
                   href="#"

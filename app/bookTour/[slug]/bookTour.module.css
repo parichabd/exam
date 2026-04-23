@@ -1,14 +1,13 @@
-
-/* استایل کانتینر اصلی */
+/* ✅ کانتینر اصلی */
 .mainContainer {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
   direction: rtl;
-  font-family: "Iranian Sans", sans-serif; /* فونت پیش‌فرض */
+  font-family: "Iranian Sans", sans-serif;
 }
 
-/* استایل بخش‌های فرم و خلاصه تور (کارت‌ها) */
+/* ✅ بخش‌های فرم و خلاصه تور */
 .formSection,
 .summarySection {
   border: 1px solid #ddd;
@@ -16,15 +15,14 @@
   border-radius: 12px;
   margin-bottom: 30px;
   background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* سایه نرم برای مدرن‌تر شدن کارت‌ها */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* بخش خلاصه تور حاشیه پایین‌تر ندارد */
 .summarySection {
   margin-bottom: 0;
 }
 
-/* استایل هدر فرم (آیکون و عنوان) */
+/* ✅ هدر فرم */
 .formInfo {
   display: flex;
   align-items: center;
@@ -35,16 +33,16 @@
 .formInfo h1 {
   font-size: 24px;
   margin: 0;
-  color: #333; /* رنگ هدر فرم */
+  color: #333;
 }
 
-
+/* ✅ اینپوت‌های فرم */
 .formInput {
   display: block;
   width: 100%;
   height: 50px;
   margin: 20px 0;
-  padding: 10px 15px; /* پدینگ عادی */
+  padding: 10px 15px;
   border-radius: 8px;
   border: 1px solid #00000080;
   font-family: inherit;
@@ -54,60 +52,103 @@
 
 .formInput:focus {
   outline: none;
-  border-color: #28A745; /* رنگ آبی مدرن به جای سبز */
+  border-color: #28A745;
   box-shadow: 0 0 0 3px rgba(0, 158, 202, 0.1);
   background-color: #fff;
 }
 
-/* استایل خلاصه تور */
-.summarySection h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #333;
-  font-size: 20px;
+/* ✅ خطای اعتبارسنجی */
+.errorMessage {
+  color: red;
+  font-size: 11px;
+  display: block;
+  margin-bottom: 8px;
 }
 
-.summarySection p {
-  margin: 10px 0;
-  color: #555;
+/* ✅ سلکت جنسیت */
+.secoundInput {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("/SVG/profile/arrow-down.svg");
+  background-repeat: no-repeat;
+  padding-left: 40px;
+  background-position: left 12px center;
+  background-size: 15px;
 }
 
-.summarySection hr {
-  border: 0;
-  border-top: 1px solid #eee;
-  margin: 15px 0;
+/* ✅ DatePicker */
+.datePickerContainer {
+  width: 100%;
+  margin: 20px 0;
 }
 
-/* *** اصلاح مهم: کلاس‌های تکراری حذف شدند و اصلاح شدند *** */
+.datePickerInput {
+  width: 100%;
+  height: 50px;
+  padding: 12px 22px;
+  border: 1px solid #000;
+  border-radius: 8px;
+  font-size: 14px;
+  direction: rtl;
+  text-align: right;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+  font-family: "Iranian Sans";
+  box-sizing: border-box;
+}
 
-/* استایل عنوان تور */
+.datePickerInput:focus {
+  border-color: #28A745;
+  outline: none;
+}
+
+/* ✅ تقویم */
+.rmdp-wrapper {
+  direction: rtl;
+}
+
+.rmdp-calendar {
+  direction: rtl;
+}
+
+.rmdp-day {
+  cursor: pointer;
+}
+
+.rmdp-day:hover {
+  background-color: #f0f0f0;
+}
+
+.rmdp-selected {
+  background-color: #28A745 !important;
+  color: #fff;
+}
+
+/* ✅ خلاصه تور */
 .tourTitle {
   font-size: 22px;
-  /* رنگ تیره‌تر برای خوانایی بهتر، اگر پس‌زمینه سفید است #000 خوب است */
-  color: #000; 
+  color: #000;
   font-family: "Yekan Bakh", "fonnts.com-YekanBakh-Bold", sans-serif;
   font-weight: bold;
   margin: 0;
 }
 
-/* استایل مدت زمان سفر */
 .tourDuration {
-  color: #282828; /* رنگ خاکستری تیره برای خوانایی */
+  color: #282828;
   font-size: 16px;
-  /* letter-spacing: 9px; این مقدار خیلی زیاد است و فاصله حروف را غیرطبیعی می‌کند، بهتر است حذف یا کم شود */
-  letter-spacing: 1px; 
+  letter-spacing: 1px;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* میانه‌بر */
 .divider_two {
-  border-top: 1px dashed  #00000080;
+  border-top: 1px dashed #00000080;
   margin: 20px 0;
 }
 
+/* ✅ باکس قیمت */
 .priceBoxFooter {
   display: flex;
   flex-direction: column;
@@ -143,14 +184,15 @@
   font-family: "Iranian Sans", sans-serif;
 }
 
-/* *** اصلاح مهم: دکمه مدرن و هاور *** */
-.bookBtn a{
+/* ✅ دکمه ثبت و خرید */
+.bookBtn a {
   text-decoration: none;
   color: #fff;
 }
+
 .bookBtn {
   display: flex;
-   align-items: center;
+  align-items: center;
   justify-content: center;
   text-align: center;
   width: 100%;
@@ -162,43 +204,26 @@
   font-weight: bold;
   cursor: pointer;
   font-family: "Iranian Sans", sans-serif;
-  
-  /* رنگ گرادینت مدرن به جای رنگ تخت */
   background-color: #28A745;
-  /* سایه نرم زیر دکمه */
   box-shadow: 0 4px 15px rgba(0, 158, 202, 0.3);
-  
   transition: all 0.9s ease;
   position: relative;
   overflow: hidden;
 }
 
-/* حالت هاور دکمه */
 .bookBtn:hover {
-  transform: translateY(-2px); /* دکمه کمی بالا می‌آید */
-  box-shadow: 0 6px 20px rgba(0, 158, 202, 0.4); /* سایه بیشتر می‌شود */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 158, 202, 0.4);
   background: linear-gradient(135deg, #344515 0%, #69e10e 100%);
 }
 
-/* حالت کلیک (Active) */
 .bookBtn:active {
   transform: translateY(0);
   box-shadow: 0 2px 10px rgba(0, 158, 202, 0.2);
 }
 
-.formFooterInfo{
+/* ✅ فوتر فرم */
+.formFooterInfo {
   display: flex;
   justify-content: space-between;
 }
-.secoundInput {
-  appearance: none;
-  -webkit-appearance: none;
-  
-  background-image: url("/SVG/profile/arrow-down.svg");
-  background-repeat: no-repeat;
-  
-  padding-left: 40px; 
-  background-position: left 12px center;
-  background-size: 15px;
-}
-
