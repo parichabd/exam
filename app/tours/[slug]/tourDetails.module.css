@@ -1,67 +1,375 @@
 .mainPageInfo{
-background-color: #fff;
+    background-color: #fff;
     padding: 20px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.263);
     border-radius: 16px;
     margin-top: 10px;
 }
-.mainDetails{
+
+.headers{
     display: flex;
-    gap: 30px;
-    
+    justify-content: space-between;
 }
 
-.price {
-  font-size: 13px;
-  font-weight: 700;
-  color: #222;
-}
-.price span {
-  color: #009ECA;
-  font-size: 18px;
-  margin-left: 4px;
+.headers h1{
+     font-family: "fonnts.com-YekanBakh-Bold";
+     font-size: 24px;
 }
 
-.bookBtn {
+.headers p {
+    margin-top: 36px;
+    margin-left: 25px;
+    word-spacing: 3px;
+    font-size: 15px;
+}
+
+.details_icons{
+    display: flex;
+    gap: 8px;
+}
+.details_icons p {
+    margin-bottom: 10px;
+    color: #7D7D7D;
+}
+.details{
+    display: flex;
+    gap: 20px;
+    font-size: 15.5px;
+}
+
+.headerThings{
+    display: flex;
+    gap: 2px;
+}
+
+.headerThings span{
+    color: #222;
+} 
+
+.headerParagraph p{
+    margin-right: 16px;
+    font-family: "fonnts.com-YekanBakh-Bold";
+    font-size: 14px;
+}
+
+.tourMainDetailsWrapper {
+  position: relative;
+}
+
+
+.tourMainDetails {
+    margin-top: 30px;
+    font-size: 16px;
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 25px;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #28a746a6 #cccccc23; 
+  }
+
+
+  .priceAndbook{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+  }
+
+
+
+  .bookBtn button{
   background: #28a745;
   border: none;
   color: #fff;
   padding: 10px 18px;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.9s ease;
   font-family: "BYekan";
+  width: 150px;
+  word-spacing: 3px;
 }
 
-.infoTour h1{
-    font-family: "fonnts.com-YekanBakh-Bold";
+.bookBtn:hover {
+  transform: scale(1.05);
 }
 
-.dayAndNight{
-    word-spacing: 3px;
+
+.price {
+  font-size: 10px;
+  font-weight: 700;
+  color: #222;
 }
 
-.details{
+.price span {
+  color: #009ECA;
+  font-size: 24px;
+  margin-left: 4px;
+}
+
+
+
+.windowsBuy{
+  display: none;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+     .responsive-image {
+    max-width: 950px; /* یا مقدار دلخواه دیگر */
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1443px) {
+
+  
+  .windowTourDetails{
     display: flex;
     gap: 50px;
-}
-
-.priceAndbook{
+  }
+  .windowsBuy{
+    display: block;
     display: flex;
     justify-content: space-between;
-}
+    gap: 400px;
+  }
+  .priceAndbook{
+    display: none;
+  }
+  .headers{
+    display: grid;
+  }
+  .details{
+    gap: 100px;
+  }
+  .headers p {
+    margin-top: 9px;
+  }
 
-.tourMainDetails{
-    display: flex;
-    justify-content: space-between;
-}
-
-.divider {
+  .divider {
   width: 1px; /* عرض دیوایدر */
   height: 100px; /* ارتفاع دیوایدر، باید با tourInfoDetails هم‌خوانی داشته باشه */
   background-color: #ccc; /* رنگ دیوایدر (یا هر رنگ دلخواه) */
   margin: 0 5px; /* فاصله کوچک از دو طرف */
   align-self: stretch; /* باعث میشه دیوایدر به اندازه کل ارتفاع آیتم‌های flex کشیده بشه */
+}
+.details{
+    display: flex;
+    gap: 110px;
+    margin: 3px 0 3px 0;
+}
+.tourMainDetails{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    padding:  0 45px;
+}
+.price p{
+  width: 150px;
+}
+
+}
+
+
+@media (min-width: 1444px) {
+
+.windowTourDetails{
+    display: flex;
+    gap: 30px;
+}
+ .windowsBuy{
+    display: block;
+    display: flex;
+    justify-content: space-between;
+    gap: 500px;
+  }
+  .priceAndbook{
+    display: none;
+  }
+  .headers{
+    display: grid;
+  }
+  .details{
+    gap: 100px;
+  }
+  .headers p {
+    margin-top: 9px;
+  }
+
+  .divider {
+  width: 1px; /* عرض دیوایدر */
+  height: 100px; /* ارتفاع دیوایدر، باید با tourInfoDetails هم‌خوانی داشته باشه */
+  background-color: #ccc; /* رنگ دیوایدر (یا هر رنگ دلخواه) */
+  margin: 0 5px; /* فاصله کوچک از دو طرف */
+  align-self: stretch; /* باعث میشه دیوایدر به اندازه کل ارتفاع آیتم‌های flex کشیده بشه */
+}
+.details{
+    display: flex;
+    gap: 110px;
+    margin: 3px 0 3px 0;
+}
+.tourMainDetails{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    padding:  0 45px;
+}
+
+.imageBox{
+  width: 500px;
+  padding: 90px;
+}
+ 
+}
+
+
+
+@media (min-width: 768px) and (max-width: 1023px) {
+     .responsive-image {
+    max-width: 950px; /* یا مقدار دلخواه دیگر */
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1443px) {
+
+  .details_icons p {
+    font-size: 14px;
+  }
+  .headers h1 {
+    font-size: 22px;
+  }
+  .headers p {
+    font-size: 17px;
+  }
+  .windowTourDetails{
+    display: flex;
+    gap: 50px;
+  }
+  .windowsBuy{
+    display: block;
+    display: flex;
+    justify-content: space-between;
+    gap: 68px;
+    margin-top: 22px;
+  }
+  .priceAndbook{
+    display: none;
+  }
+  .headers{
+    display: grid;
+  }
+  .details{
+    gap: 100px;
+  }
+  .headers p {
+    margin-top: 9px;
+  }
+
+  .divider {
+  width: 1px; /* عرض دیوایدر */
+  height: 100px; /* ارتفاع دیوایدر، باید با tourInfoDetails هم‌خوانی داشته باشه */
+  background-color: #ccc; /* رنگ دیوایدر (یا هر رنگ دلخواه) */
+  margin: 0 5px; /* فاصله کوچک از دو طرف */
+  align-self: stretch; /* باعث میشه دیوایدر به اندازه کل ارتفاع آیتم‌های flex کشیده بشه */
+}
+.details{
+    display: flex;
+    gap: 110px;
+    margin: 3px 0 3px 0;
+}
+.tourMainDetails{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    padding:  0 45px;
+}
+.price p{
+  width: 150px;
+}
+
+}
+
+
+@media (min-width: 1444px) {
+
+  .headers h1 {
+    font-size: 32px;
+  }
+  .headers p {
+    font-size: 20px;
+  }
+
+  .details_icons p {
+    font-size: 20px;
+  }
+
+.windowTourDetails{
+    display: flex;
+    gap: 30px;
+}
+ .windowsBuy{
+    display: block;
+    display: flex;
+    justify-content: space-between;
+    gap: 220px;
+    margin-top: 10px;
+  }
+  .priceAndbook{
+    display: none;
+  }
+  .headers{
+    display: grid;
+  }
+  .details{
+    gap: 100px;
+  }
+  .headers p {
+    margin-top: 9px;
+  }
+
+  .divider {
+  width: 1px; /* عرض دیوایدر */
+  height: 100px; /* ارتفاع دیوایدر، باید با tourInfoDetails هم‌خوانی داشته باشه */
+  background-color: #ccc; /* رنگ دیوایدر (یا هر رنگ دلخواه) */
+  margin: 0 5px; /* فاصله کوچک از دو طرف */
+  align-self: stretch; /* باعث میشه دیوایدر به اندازه کل ارتفاع آیتم‌های flex کشیده بشه */
+}
+.details{
+    display: flex;
+    gap: 110px;
+    margin: 3px 0 3px 0;
+}
+.tourMainDetails{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    padding:  0 45px;
+}
+
+.imageBox{
+  width: 500px;
+  padding: 90px;
+}
+
+.price{
+  width: 190px;
+}
+ 
+}
+
+
+
+/* در دسکتاپ: عرض 450 پیکسل */
+@media (min-width: 1024px) {
+    .responsiveImage {
+        width: 450px !important;
+        max-width: 450px;
+        height: auto;
+    }
+}
+
+.imageBox {
+    width: 100%; /* موبایل */
 }
