@@ -184,13 +184,7 @@
   font-family: "Iranian Sans", sans-serif;
 }
 
-/* ✅ دکمه ثبت و خرید */
-.bookBtn a {
-  text-decoration: none;
-  color: #fff;
-}
-
-.bookBtn {
+.bookBtn button {
   display: flex;
   align-items: center;
   justify-content: center;
