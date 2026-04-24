@@ -60,32 +60,41 @@ const persianToEnglish = (str) => {
   return str.replace(/[۰-۹]/g, (d) => englishDigits[persianDigits.indexOf(d)]);
 };
 
-// ✅ تبدیل تاریخ شمسی به میلادی
-const shamsiToGregorian = (shamsiDate) => {
+// ✅ استخراج سال شمسی از رشته تاریخ
+const getShamsiYear = (shamsiDate) => {
   if (!shamsiDate) return null;
   const parts = shamsiDate.split("/");
-  if (parts.length === 3) {
-    const year = parseInt(parts[0]);
-    const month = parseInt(parts[1]);
-    const day = parseInt(parts[2]);
-    const d = new Date();
-    d.setFullYear(year + 621);
-    d.setMonth(month - 1);
-    d.setDate(day);
-    return d;
+  if (parts.length !== 3) return null;
+  return parseInt(parts[0], 10);
+};
+
+// ✅ اعتبارسنجی سن - برمیگردونه پیام خطا یا null
+const validateAgeMessage = (value) => {
+  if (!value) return null;
+
+  const year = getShamsiYear(value);
+
+  if (!year) {
+    return "تاریخ تولد معتبر نیست";
   }
+
+  // اگر سال شمسی بیشتر از ۱۴۰۰ باشد → خطا
+  if (year > 1400) {
+    return "سن مجاز برای خرید بلیط نیست. لطفاً با پشتیبانی تماس بگیرید";
+  }
+
+  // حداقل سال معقول: ۱۲۸۰ (حدود ۱۲۰ سال پیش)
+  if (year < 1280) {
+    return "تاریخ تولد معتبر نیست";
+  }
+
   return null;
 };
 
-// ✅ کامپوننت پیام خطا با لرزش (ساده‌ترین روش)
+// ✅ کامپوننت پیام خطا
 const ErrorMessage = ({ message }) => {
   if (!message) return null;
-
-  return (
-    <small key={message} className={styles.errorMessage}>
-      ⚠️ {message}
-    </small>
-  );
+  return <small className={styles.errorMessage}>⚠️ {message}</small>;
 };
 
 export default function BookingForm({ initialTourId }) {
@@ -111,13 +120,17 @@ export default function BookingForm({ initialTourId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ✅ state برای خطای تاریخ تولد
+  const [birthDateError, setBirthDateError] = useState("");
+
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
-    mode: "onBlur",
+    mode: "onChange", // ← تغییر از onBlur به onChange
   });
 
   // ✅ اعتبارسنجی نام فارسی کامل
@@ -183,7 +196,6 @@ export default function BookingForm({ initialTourId }) {
   // ✅ اعتبارسنجی کد ملی ایران
   const validateNationalId = (value) => {
     if (!value) return true;
-
     const englishValue = persianToEnglish(value);
 
     if (!/^\d{10}$/.test(englishValue)) {
@@ -193,11 +205,9 @@ export default function BookingForm({ initialTourId }) {
     const digits = englishValue.split("").map(Number);
     const checkDigit = digits[9];
     let sum = 0;
-
     for (let i = 0; i < 9; i++) {
       sum += digits[i] * (10 - i);
     }
-
     const remainder = sum % 11;
     const calculatedCheck = remainder < 2 ? remainder : 11 - remainder;
 
@@ -208,36 +218,31 @@ export default function BookingForm({ initialTourId }) {
     return true;
   };
 
-  // ✅ اعتبارسنجی سن
-  const validateAge = (value) => {
-    if (!value) return true;
+  // ✅ هندلر تغییر تاریخ با اعتبارسنجی فوری
+  const handleBirthDateChange = (date, onChange) => {
+    if (date) {
+      const shamsiDate = date.format("YYYY/MM/DD");
 
-    const birthDate = shamsiToGregorian(value);
-    if (!birthDate) return true;
+      // ✅ اعتبارسنجی فوری
+      const errorMsg = validateAgeMessage(shamsiDate);
+      setBirthDateError(errorMsg || "");
 
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      age--;
+      onChange(shamsiDate);
+    } else {
+      setBirthDateError("تاریخ تولد الزامی است");
+      onChange("");
     }
-
-    if (age < 18) {
-      return "حداقل سن ۱۸ سال است";
-    }
-    if (age > 120) {
-      return "تاریخ تولد معتبر نیست";
-    }
-
-    return true;
   };
 
   // ✅ ارسال فرم
   const onSubmit = (data) => {
+    // بررسی نهایی تاریخ تولد قبل از ارسال
+    const birthDateErrorMsg = validateAgeMessage(data.birthDate);
+    if (birthDateErrorMsg) {
+      setBirthDateError(birthDateErrorMsg);
+      return;
+    }
+
     console.log("داده‌های فرم:", data);
     window.open(GATEWAY_URL, "_blank");
   };
@@ -314,7 +319,6 @@ export default function BookingForm({ initialTourId }) {
     tourData?.startDate,
     tourData?.endDate,
   );
-
   const formattedPrice = tourData?.price
     ? Number(tourData.price).toLocaleString("fa-IR")
     : "0";
@@ -394,25 +398,17 @@ export default function BookingForm({ initialTourId }) {
           />
           <ErrorMessage message={errors.nationalId?.message} />
 
-          {/* ✅ تاریخ تولد */}
+          {/* ✅ تاریخ تولد - با اعتبارسنجی فوری */}
           <Controller
             name="birthDate"
             control={control}
             rules={{
               required: "تاریخ تولد الزامی است",
-              validate: validateAge,
             }}
             render={({ field }) => (
               <DatePicker
                 value={field.value || null}
-                onChange={(date) => {
-                  if (date) {
-                    const shamsiDate = date.format("YYYY/MM/DD");
-                    field.onChange(shamsiDate);
-                  } else {
-                    field.onChange("");
-                  }
-                }}
+                onChange={(date) => handleBirthDateChange(date, field.onChange)}
                 calendar={persian}
                 locale={persian_fa}
                 calendarPosition="bottom-right"
@@ -426,7 +422,8 @@ export default function BookingForm({ initialTourId }) {
               />
             )}
           />
-          <ErrorMessage message={errors.birthDate?.message} />
+          {/* ✅ نمایش خطای تاریخ تولد */}
+          <ErrorMessage message={birthDateError || errors.birthDate?.message} />
         </div>
 
         {/* ✅ خلاصه سفارش */}
@@ -441,9 +438,7 @@ export default function BookingForm({ initialTourId }) {
                 </p>
               )}
             </div>
-
             <div className={styles.divider_two}></div>
-
             <div className={styles.priceBoxFooter}>
               <div className={styles.priceFooter}>
                 <p>قیمت نهایی :</p>
@@ -452,7 +447,6 @@ export default function BookingForm({ initialTourId }) {
                   <span>تومان</span>
                 </p>
               </div>
-
               <div className={styles.bookBtn}>
                 <a
                   href="#"
