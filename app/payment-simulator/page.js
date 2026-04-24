@@ -10,15 +10,37 @@ export default function PaymentSimulator() {
   const searchParams = useSearchParams();
   const [isProcessing, setIsProcessing] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [cardNumber, setCardNumber] = useState("");
 
   // دریافت اطلاعات از URL
   const amount = searchParams.get("amount") || "0";
   const tourTitle = searchParams.get("tourTitle") || "تور";
   const orderId = searchParams.get("orderId") || `ORD-${Date.now()}`;
 
+  // فرمت شماره کارت (هر ۴ رقم یک فاصله)
+  const formatCardNumber = (value) => {
+    const cleaned = value.replace(/\s/g, "").replace(/\D/g, "");
+    const chunks = cleaned.match(/.{1,4}/g) || [];
+    return chunks.join(" ").substring(0, 19);
+  };
+
   // شبیه‌سازی پرداخت
   const handlePayment = async () => {
+    if (!cardNumber || cardNumber.replace(/\s/g, "").length < 16) {
+      alert("لطفاً شماره کارت معتبر وارد کنید");
+      return;
+    }
+
     setIsProcessing(true);
+
+    // ✅ ذخیره ۴ رقم آخر کارت
+    const cleanCard = cardNumber.replace(/\s/g, "");
+    const lastFourDigits = cleanCard.slice(-4);
+    localStorage.setItem("lastUsedCard", lastFourDigits);
+
+    // ✅ ذخیره وضعیت نوتیفیکیشن
+    localStorage.setItem("hasNewOrder", "true");
+    localStorage.setItem("newOrderCount", "1");
 
     // شبیه‌سازی تاخیر پرداخت
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -39,7 +61,7 @@ export default function PaymentSimulator() {
 
   return (
     <div className={styles.container}>
-      {/* هدر شبیه‌سازی */}
+      {/* هدر */}
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <div className={styles.logo}>
@@ -59,17 +81,17 @@ export default function PaymentSimulator() {
 
       {/* محتوای اصلی */}
       <div className={styles.content}>
-        {/* باکس پرداخت */}
         <div className={styles.paymentBox}>
+          {/* اطلاعات پرداخت */}
           <div className={styles.merchantInfo}>
             <h2>اطلاعات پرداخت</h2>
             <div className={styles.infoRow}>
               <span>فروشگاه:</span>
-              <span>آژانس مسافرتی تورینو</span>
+              <span>آژانس مسافرتی آنلاین</span>
             </div>
             <div className={styles.infoRow}>
               <span>کالا:</span>
-              <span>{tourTitle}</span>
+              <span>{decodeURIComponent(tourTitle)}</span>
             </div>
             <div className={styles.infoRow}>
               <span>شماره سفارش:</span>
@@ -94,10 +116,12 @@ export default function PaymentSimulator() {
               <label>شماره کارت</label>
               <input
                 type="text"
-                placeholder="XXXX-XXXX-XXXX-XXXX"
-                maxLength={19}
+                placeholder="XXXX XXXX XXXX XXXX"
                 className={styles.cardInput}
                 dir="ltr"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                maxLength={19}
               />
             </div>
 
@@ -159,18 +183,6 @@ export default function PaymentSimulator() {
             <button onClick={handleCancel} className={styles.cancelButton}>
               انصراف
             </button>
-          </div>
-        </div>
-
-        {/* لوگوهای بانک‌ها */}
-        <div className={styles.bankLogos}>
-          <p>پشتیبانی از کلیه کارت‌های بانکی عضو شتاب</p>
-          <div className={styles.logos}>
-            <span>بانک ملی</span>
-            <span>بانک سامان</span>
-            <span>بانک پارسیان</span>
-            <span>بانک ملت</span>
-            <span>بانک مسکن</span>
           </div>
         </div>
       </div>

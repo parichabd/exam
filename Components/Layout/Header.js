@@ -1,18 +1,24 @@
+// app/Header/Layout.jsx
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineAirplaneTicket, MdOutlinePermPhoneMsg } from "react-icons/md";
 import { PiUserSoundDuotone } from "react-icons/pi";
+import { IoMdNotifications } from "react-icons/io";
 import { toPersianNumber } from "@/utils/number";
 import { useRouter } from "next/navigation";
-
 import Link from "next/link";
 import AuthToast from "@/Components/Auth/AuthToast";
-
 import Image from "next/image";
 import Cookies from "js-cookie";
 import styles from "./Layout.module.css";
+
+// ✅ کامپوننت Badge - بیرون از function اصلی
+const NotificationBadge = () => (
+  <span className={styles.notificationBadge}>
+    <IoMdNotifications size={10} color="#fff" />
+  </span>
+);
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +26,10 @@ export default function Header() {
   const [authMode, setAuthMode] = useState("login");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [mobile, setMobile] = useState(null);
+
+  // ✅ وضعیت نوتیفیکیشن
+  const [hasNotification, setHasNotification] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const desktopRef = useRef(null);
   const mobileRef = useRef(null);
@@ -41,10 +51,33 @@ export default function Header() {
     setIsUserMenuOpen((prev) => !prev);
   };
 
+  // ✅ بررسی نوتیفیکیشن‌ها
+  useEffect(() => {
+    const checkNotifications = () => {
+      const hasNew = localStorage.getItem("hasNewOrder");
+      const count = localStorage.getItem("newOrderCount");
+      if (hasNew === "true") {
+        setHasNotification(true);
+        setNotificationCount(parseInt(count || "0", 10));
+      }
+    };
+
+    checkNotifications();
+    const interval = setInterval(checkNotifications, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // ✅ پاک کردن نوتیفیکیشن
+  const clearNotification = () => {
+    localStorage.removeItem("hasNewOrder");
+    localStorage.removeItem("newOrderCount");
+    setHasNotification(false);
+    setNotificationCount(0);
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedMobile = localStorage.getItem("mobile");
-
       if (savedMobile !== null) {
         setTimeout(() => setMobile(savedMobile), 0);
       }
@@ -66,7 +99,6 @@ export default function Header() {
     const handleClickOutside = (event) => {
       const isDesktop = window.innerWidth >= 1024;
       const ref = isDesktop ? desktopRef.current : mobileRef.current;
-
       if (ref && !ref.contains(event.target)) {
         setIsUserMenuOpen(false);
       }
@@ -78,18 +110,24 @@ export default function Header() {
   }, [isUserMenuOpen]);
 
   const router = useRouter();
-  //  LOGOUT
+
   const handleLogout = () => {
     localStorage.removeItem("mobile");
     localStorage.removeItem("userName");
-
+    localStorage.removeItem("hasNewOrder");
+    localStorage.removeItem("newOrderCount");
     Cookies.remove("accessToken", { path: "/" });
     Cookies.remove("refreshToken", { path: "/" });
-
     setMobile(null);
     setIsUserMenuOpen(false);
-
+    setHasNotification(false);
     router.replace("/");
+  };
+
+  // ✅ وقتی روی "اطلاعات حساب کاربری" کلیک می‌کنه
+  const handleProfileClick = () => {
+    clearNotification();
+    setIsUserMenuOpen(false);
   };
 
   const userMenuContent = (
@@ -119,9 +157,12 @@ export default function Header() {
           <div className={styles.numberPD}>{toPersianNumber(mobile)}</div>
         </div>
       )}
+
+      {/* ✅ لینک پروفایل با زنگوله */}
       <Link
         href="/ProfileInfo"
         className={`${styles.item} ${styles.noUnderline}`}
+        onClick={handleProfileClick}
       >
         <Image
           src="/SVG/profile/profile.svg"
@@ -130,7 +171,10 @@ export default function Header() {
           height={20}
         />
         <h1>اطلاعات حساب کاربری</h1>
+        {/* ✅ زنگوله در کنار پروفایل */}
+        {hasNotification && <NotificationBadge />}
       </Link>
+
       <div className={styles.divider_profile}></div>
       <div className={`${styles.item} ${styles.exit}`} onClick={handleLogout}>
         <Image
@@ -182,7 +226,10 @@ export default function Header() {
             >
               {mobile ? (
                 <div className={styles.userWrapper} ref={desktopRef}>
-                  <div className={styles.userSection} onClick={toggleUserMenu}>
+                  <div
+                    className={styles.userSection}
+                    onClick={toggleUserMenu}
+                  >
                     <Image
                       src="/icon/profile.png"
                       alt="profile"
@@ -226,7 +273,10 @@ export default function Header() {
           <div className={styles.mobile_menu}>
             {mobile ? (
               <div className={styles.userWrapper} ref={mobileRef}>
-                <div className={styles.userSection} onClick={toggleUserMenu}>
+                <div
+                  className={styles.userSection}
+                  onClick={toggleUserMenu}
+                >
                   <Image
                     src="/icon/profile.png"
                     alt="profile"
