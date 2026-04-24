@@ -7,6 +7,8 @@ import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import toast, { Toaster } from "react-hot-toast";
+import { getCookie } from "../../../utils/cookie";
 
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:6500";
@@ -93,6 +95,7 @@ export default function BookingForm({ initialTourId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [birthDateError, setBirthDateError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -188,32 +191,24 @@ export default function BookingForm({ initialTourId }) {
     return true;
   };
 
-  // ✅ هندلر تغییر تاریخ - استفاده از date.year مستقیم
+  // ✅ هندلر تغییر تاریخ
   const handleBirthDateChange = (date, onChange) => {
     if (date) {
-      // ✅ سال رو مستقیم از آبجکت DateObject میگیریم
       const year = date.year;
       const month = date.month;
       const day = date.day;
 
-      console.log("تاریخ انتخاب شده:", year, month, day); // برای دیباگ
-
-      // اگر سال بیشتر از ۱۴۰۰ باشد → خطا
       if (year > 1400) {
         setBirthDateError("سن مجاز برای خرید بلیط نیست. لطفاً با پشتیبانی تماس بگیرید");
-        return; // مقدار تغییر نمیکنه
+        return;
       }
 
-      // اگر سال کمتر از ۱۲۸۰ باشد → خطا
       if (year < 1280) {
         setBirthDateError("تاریخ تولد معتبر نیست");
         return;
       }
 
-      // تاریخ معتبره - ذخیره میکنیم
       setBirthDateError("");
-      
-      // فرمت تاریخ شمسی
       const shamsiDate = `${year}/${String(month).padStart(2, "0")}/${String(day).padStart(2, "0")}`;
       onChange(shamsiDate);
     } else {
@@ -222,10 +217,128 @@ export default function BookingForm({ initialTourId }) {
     }
   };
 
-  // ✅ ارسال فرم
-  const onSubmit = (data) => {
-    console.log("داده‌های فرم:", data);
-    window.open(GATEWAY_URL, "_blank");
+  // ✅ تبدیل تاریخ شمسی به میلادی
+  const convertShamsiToGregorian = (shamsiDate) => {
+    if (!shamsiDate) return null;
+
+    const parts = shamsiDate.split("/");
+    if (parts.length !== 3) return null;
+
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
+
+    const d = new Date();
+    d.setFullYear(year + 621);
+    d.setMonth(month - 1);
+    d.setDate(day);
+
+    const gregorianDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    return gregorianDate;
+  };
+
+  // ✅ افزودن تور به سبد خرید
+  const addToBasket = async (tourId, token) => {
+    try {
+      const response = await fetch(`${BACKEND_BASE_URL}/basket/${tourId}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "خطا در افزودن به سبد خرید");
+      }
+
+      return true;
+    } catch (error) {
+      console.error("خطا در افزودن به سبد خرید:", error);
+      throw error;
+    }
+  };
+
+  // ✅ ارسال فرم به بک‌اند
+  const onSubmit = async (data) => {
+    // 🔒 مرحله ۱: بررسی لاگین بودن کاربر
+    const refreshToken = getCookie("refreshToken");
+    
+    if (!refreshToken) {
+      toast.error("ابتدا ثبت نام کنید و سپس میتوانید خرید کنید", {
+        duration: 4000,
+        position: "top-center",
+        style: {
+          background: "#ff4444",
+          color: "#fff",
+          fontSize: "16px",
+          fontFamily: "Vazirmatn, sans-serif",
+        },
+      });
+      return;
+    }
+
+    // 🔒 مرحله ۲: بررسی خطاهای فرم
+    if (birthDateError) {
+      toast.error("لطفاً خطاهای فرم را برطرف کنید");
+      return;
+    }
+
+    // 🔒 مرحله ۳: بررسی خطاهای react-hook-form
+    if (Object.keys(errors).length > 0) {
+      toast.error("لطفاً تمام فیلدها را به درستی پر کنید");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      // 🔒 مرحله ۴: اول تور رو به سبد خرید اضافه کن
+      await addToBasket(tourId, refreshToken);
+
+      const gregorianBirthDate = convertShamsiToGregorian(data.birthDate);
+
+      const orderData = {
+        nationalCode: persianToEnglish(data.nationalId),
+        fullName: data.fullName,
+        gender: data.gender,
+        birthDate: gregorianBirthDate,
+      };
+
+      console.log("داده‌های ارسالی:", orderData);
+
+      const response = await fetch(`${BACKEND_BASE_URL}/order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${refreshToken}`,
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "خطا در ثبت سفارش");
+      }
+
+      const result = await response.json();
+      console.log("نتیجه ثبت سفارش:", result);
+
+      toast.success("سفارش شما با موفقیت ثبت شد!", {
+        duration: 4000,
+        position: "top-center",
+      });
+
+    } catch (error) {
+      console.error("خطا در ثبت سفارش:", error);
+      
+      toast.error(error.message || "مشکلی در ثبت سفارش پیش آمد", {
+        duration: 4000,
+        position: "top-center",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -304,10 +417,11 @@ export default function BookingForm({ initialTourId }) {
     ? Number(tourData.price).toLocaleString("fa-IR")
     : "0";
 
-  const GATEWAY_URL = "https://bpm.shaparak.ir/pgwchannel/startpay.mellat";
-
   return (
     <div className={styles.mainContainer}>
+      {/* ✅ Toaster برای نمایش Toastها */}
+      <Toaster />
+
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         {/* ✅ بخش فرم */}
         <div className={styles.formSection}>
@@ -428,15 +542,16 @@ export default function BookingForm({ initialTourId }) {
                 </p>
               </div>
               <div className={styles.bookBtn}>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSubmit(onSubmit)();
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  style={{
+                    opacity: isSubmitting ? 0.7 : 1,
+                    cursor: isSubmitting ? "not-allowed" : "pointer",
                   }}
                 >
-                  ثبت و خرید نهایی
-                </a>
+                  {isSubmitting ? "در حال ثبت..." : "ثبت و خرید نهایی"}
+                </button>
               </div>
             </div>
           </div>
