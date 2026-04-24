@@ -13,11 +13,16 @@ import Image from "next/image";
 import Cookies from "js-cookie";
 import styles from "./Layout.module.css";
 
-// ✅ کامپوننت Badge - بیرون از function اصلی
-const NotificationBadge = () => (
-  <span className={styles.notificationBadge}>
+// ✅ کامپوننت Badge زنگوله
+const BellBadge = () => (
+  <span className={styles.bellBadge}>
     <IoMdNotifications size={10} color="#fff" />
   </span>
+);
+
+// ✅ کامپوننت Badge عدد
+const NumberBadge = () => (
+  <span className={styles.numberBadge}>۱</span>
 );
 
 export default function Header() {
@@ -172,7 +177,7 @@ export default function Header() {
         />
         <h1>اطلاعات حساب کاربری</h1>
         {/* ✅ زنگوله در کنار پروفایل */}
-        {hasNotification && <NotificationBadge />}
+        {hasNotification && <BellBadge />}
       </Link>
 
       <div className={styles.divider_profile}></div>
@@ -236,9 +241,16 @@ export default function Header() {
                       width={19}
                       height={14}
                     />
-                    <span className={styles.user_mobile}>
-                      {toPersianNumber(mobile)}
-                    </span>
+                    
+                    {/* ✅ شماره تلفن با Badge عدد */}
+                    <div className={styles.phoneWrapper}>
+                      <span className={styles.user_mobile}>
+                        {toPersianNumber(mobile)}
+                      </span>
+                      {/* ✅ عدد ۱ بالای شماره تلفن */}
+                      {hasNotification && <NumberBadge />}
+                    </div>
+                    
                     <Image
                       src="/SVG/arrow-down.svg"
                       alt="arrow"
@@ -283,9 +295,16 @@ export default function Header() {
                     width={22}
                     height={22}
                   />
-                  <span className={styles.user_mobile}>
-                    {toPersianNumber(mobile)}
-                  </span>
+                  
+                  {/* ✅ شماره تلفن با Badge عدد */}
+                  <div className={styles.phoneWrapper}>
+                    <span className={styles.user_mobile}>
+                      {toPersianNumber(mobile)}
+                    </span>
+                    {/* ✅ عدد ۱ بالای شماره تلفن */}
+                    {hasNotification && <NumberBadge />}
+                  </div>
+                  
                   <Image
                     src="/SVG/arrow-down.svg"
                     alt="arrow"
