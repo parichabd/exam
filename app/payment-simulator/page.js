@@ -38,6 +38,9 @@ export default function PaymentSimulator() {
     const lastFourDigits = cleanCard.slice(-4);
     localStorage.setItem("lastUsedCard", lastFourDigits);
 
+    // ✅ ذخیره کل شماره کارت برای نمایش در پروفایل
+    localStorage.setItem("fullCardNumber", cardNumber); 
+
     // ✅ ذخیره وضعیت نوتیفیکیشن
     localStorage.setItem("hasNewOrder", "true");
     localStorage.setItem("newOrderCount", "1");

@@ -253,6 +253,10 @@ export default function BookingForm({ initialTourId }) {
         gender: data.gender,
         birthDate: gregorianBirthDate,
       };
+      localStorage.setItem("passengerFullName", data.fullName);
+      localStorage.setItem("passengerGender", data.gender);
+      localStorage.setItem("passengerNationalId", data.nationalId);
+      localStorage.setItem("passengerBirthDate", data.birthDate);
       const response = await fetch(`${BACKEND_BASE_URL}/order`, {
         method: "POST",
         headers: {
