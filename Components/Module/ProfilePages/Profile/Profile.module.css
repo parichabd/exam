@@ -36,8 +36,6 @@
   transition: all 0.2s;
 }
 
-
-
 .content {
   padding: 20px;
 }
@@ -63,9 +61,7 @@
 .value {
   font-size: 17px;
   font-weight: 900;
-  color:#282828;
-  direction: ;
-  text-align: ;
+  color: #282828;
 }
 
 /* استایل‌های فرم */
@@ -94,14 +90,12 @@
   display: block;
 }
 
-/* تنظیم عرض فیلدهای ورودی - اصلاح شده */
-.formGroup input{
-    width: 280px !important;
-    height: 40px;
-    border-radius: 5px;
-    border: 1px solid #00000080;
+/* تنظیم عرض فیلدهای ورودی */
+.formGroup input {
+  width: 280px !important;
+  height: 40px;
+  border-radius: 5px;
   border: 1px solid #a9a7a7;
-
 }
 
 .formGroup select {
@@ -115,9 +109,6 @@
   box-sizing: border-box;
 }
 
-
-
-
 .errorInput {
   border-color: #dc3545 !important;
 }
@@ -127,7 +118,7 @@
   font-size: 0.8rem;
   margin-top: 4px;
 }
-ltr
+
 .saveBtn {
   background-color: #28a745;
   color: white;
@@ -138,8 +129,6 @@ ltr
   font-size: 1rem;
   margin-top: 10px;
 }
-
-
 
 .loading {
   text-align: center;
@@ -155,10 +144,7 @@ ltr
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
-  margin-: 8px;
 }
-
-
 
 .addButt button {
   color: #009ECA !important;
@@ -172,49 +158,26 @@ ltr
   padding: 0 9px !important;
 }
 
-.inputEmail{
-    display: flex;
-    justify-content: space-between;
+.inputEmail {
+  display: flex;
+  justify-content: space-between !important;
+  gap: 9px;
 }
 
 .inputEmail input {
-    width: 170px !important;
-    font-family: "Iranian Sans";
-    font-size: 12px;
-    padding: 0 5px;
+  width: 170px !important;
+  font-family: "Iranian Sans";
+  font-size: 12px;
+  padding: 0 5px;
 }
 
-
-.inputEmail button{
-    width: 93px;
-    height: 40px;
-    border-radius: 5px;
-    background-color: #28A745;
-    font-family: "Iranian Sans";
-    margin: 0px;
-}
-
-.profInfo input{
-    border: none;
-    background-color: #fff;
-}
-
-.profInfo{
-    display: flex;
-}
-
-.profInfo label{
-    width: 110px;
-    font-size: 15px;
-    color: #000000b9;
-}
-
-.saveBtn{
-  display: flex;
-  justify-content: space-between;
-}
-
-.saveBtn button {
+.inputEmail button {
+  width: 93px;
+  height: 40px;
+  border-radius: 5px;
+  background-color: #28A745;
+  font-family: "Iranian Sans";
+  margin: 0px;
   width: 136px;
   gap: 13px;
   height: 42px;
@@ -222,22 +185,111 @@ ltr
   color: #fff;
   font-family: inherit;
   font-size: 16px;
-  border: none;
+  border: none !important;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.twoCols input{
+.profInfo input {
+  border: none;
+  background-color: #fff;
+}
+
+.profInfo {
+  display: flex;
+}
+
+.profInfo label {
+  width: 110px;
+  font-size: 15px;
+  color: #000000b9;
+}
+
+.saveBtn {
+  display: flex;
+  justify-content: space-between;
+}
+
+.twoCols input {
   font-family: inherit;
   padding: 3px 6px;
-}
-.saveBtn button:nth-child(2){
-  background-color: #fff;
-  color: #28A745;
-  border: 2px solid #28A745;
 }
 
 .twoCols select {
   font-family: inherit;
   padding: 3px 6px;
+}
+
+/* ✅ دکمه لغو بالای فرم باکس اول */
+.cancelTop {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}
+
+.cancelBtn {
+  padding: 6px 20px;
+  height: 36px;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #dc3545;
+  border: 2px solid #dc3545 !important;
+  font-family: "Iranian Sans";
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelBtn:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.saveBtn button:nth-child(2) {
+  background-color: #fff;
+  color: #28A745;
+  border: 2px solid #28A745;
+}
+
+.saveBtnOne {
+  padding: 10px 30px;
+  height: 42px;
+  background-color: #28a745;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  border: none !important;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.saveBtnOne:hover {
+  background-color: #218838;
+}
+
+.saveBtnTwo {
+  padding: 10px 30px;
+  height: 42px;
+  background-color: #fff;
+  color: #28A745;
+  border: 2px solid #28A745 !important;
+  font-family: inherit;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.saveBtnTwo:hover {
+  background-color: #28A745;
+  color: #fff;
+}
+
+.disabledInput {
+  border: none !important;
+  background-color: transparent !important;
+  color: #282828;
+  font-weight: 900;
+  font-size: 17px;
 }

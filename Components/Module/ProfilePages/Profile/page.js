@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
@@ -28,6 +28,10 @@ export default function Profile() {
     accountNumber: "",
   });
 
+  // State برای نمایش موقت ایمیل
+  const [tempEmail, setTempEmail] = useState(null);
+  const emailTimeoutRef = useRef(null);
+
   useEffect(() => {
     const mobile = localStorage.getItem("mobile") || "";
     const storedName =
@@ -52,7 +56,6 @@ export default function Profile() {
     handleSubmit,
     reset,
     setValue,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -99,8 +102,26 @@ export default function Profile() {
 
   const onSubmit = (data) => {
     if (editingSection === "account") {
-      setAccountData((prev) => ({ ...prev, email: data.email }));
+      const newEmail = data.email;
+      setAccountData((prev) => ({ ...prev, email: newEmail }));
+
+      // نمایش موقت ایمیل
+      setTempEmail(newEmail);
+
+      // پاک کردن timeout قبلی
+      if (emailTimeoutRef.current) {
+        clearTimeout(emailTimeoutRef.current);
+      }
+
+      // بعد از 1.5 ثانیه فرم را ببند
+      emailTimeoutRef.current = setTimeout(() => {
+        setTempEmail(null);
+        setEditingSection(null);
+        reset();
+      }, 1500);
+
       toast.success("ایمیل ذخیره شد");
+
     } else if (editingSection === "personal") {
       setPersonalData(data);
       localStorage.setItem("passengerFullName", data.fullName);
@@ -108,6 +129,9 @@ export default function Profile() {
       localStorage.setItem("passengerNationalId", data.nationalId);
       localStorage.setItem("passengerBirthDate", data.birthDate);
       toast.success("مشخصات مسافر ذخیره شد");
+      setEditingSection(null);
+      reset();
+
     } else if (editingSection === "bank") {
       setBankData({
         cardNumber: data.cardNumber,
@@ -116,8 +140,28 @@ export default function Profile() {
       });
       localStorage.setItem("fullCardNumber", data.cardNumber);
       toast.success("اطلاعات بانکی ذخیره شد");
+      setEditingSection(null);
+      reset();
     }
-    setEditingSection(null);
+  };
+
+  // پاکسازی timeout هنگام unmount
+  useEffect(() => {
+    return () => {
+      if (emailTimeoutRef.current) {
+        clearTimeout(emailTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // تابع برای نمایش هدر مناسب
+  const getSectionTitle = (section, defaultTitle) => {
+    if (editingSection === section) {
+      if (section === "personal") return "ویرایش اطلاعات شخصی";
+      if (section === "bank") return "ویرایش اطلاعات بانکی";
+      if (section === "account") return "ویرایش اطلاعات حساب";
+    }
+    return defaultTitle;
   };
 
   if (loading) return <div className={styles.loading}>در حال بارگذاری...</div>;
@@ -129,11 +173,22 @@ export default function Profile() {
         {/* --- ۱. اطلاعات حساب کاربری --- */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
-            <h3>اطلاعات حساب کاربری</h3>
+            <h3>{getSectionTitle("account", "اطلاعات حساب کاربری")}</h3>
           </div>
           <div className={styles.content}>
             {editingSection === "account" ? (
               <div className={styles.formGroup}>
+                {/* ✅ دکمه لغو بالای فرم */}
+                <div className={styles.cancelTop}>
+                  <button
+                    type="button"
+                    className={styles.cancelBtn}
+                    onClick={handleCancel}
+                  >
+                    لغو
+                  </button>
+                </div>
+
                 <div className={styles.profInfo}>
                   <label>شماره موبایل</label>
                   <input
@@ -158,6 +213,22 @@ export default function Profile() {
                   <button type="submit" className={styles.saveBtn}>
                     تایید
                   </button>
+                </div>
+              </div>
+            ) : tempEmail ? (
+              // نمایش موقت ایمیل بعد از ذخیره
+              <div className={styles.infoGrid}>
+                <div className={styles.infoRow}>
+                  <span className={styles.label}>شماره موبایل:</span>
+                  <span className={styles.value} dir="ltr">
+                    {toPersianNumber(accountData.mobile)}
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <span className={styles.label}>ایمیل:</span>
+                  <span className={styles.value} dir="ltr">
+                    {tempEmail}
+                  </span>
                 </div>
               </div>
             ) : (
@@ -185,7 +256,7 @@ export default function Profile() {
                       className={styles.addBtn}
                       onClick={() => handleEditClick("account")}
                     >
-                      فزودن
+                      افزودن
                     </button>
                   </div>
                 </div>
@@ -199,7 +270,7 @@ export default function Profile() {
         {/* --- ۲. اطلاعات شخصی --- */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
-            <h3>اطلاعات شخصی</h3>
+            <h3>{getSectionTitle("personal", "اطلاعات شخصی")}</h3>
             <div>
               <Image
                 width={14}
@@ -216,6 +287,7 @@ export default function Profile() {
               </button>
             </div>
           </div>
+
           <div className={styles.content}>
             {editingSection === "personal" ? (
               <div className={styles.formGroup}>
@@ -334,7 +406,7 @@ export default function Profile() {
         {/* --- ۳. اطلاعات حساب بانکی --- */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
-            <h3>اطلاعات حساب بانکی</h3>
+            <h3>{getSectionTitle("bank", "اطلاعات حساب بانکی")}</h3>
             <div>
               <Image
                 width={14}
@@ -351,6 +423,7 @@ export default function Profile() {
               </button>
             </div>
           </div>
+
           <div className={styles.content}>
             {editingSection === "bank" ? (
               <div className={styles.formGroup}>
