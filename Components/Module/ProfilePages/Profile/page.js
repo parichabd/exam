@@ -12,6 +12,12 @@ const getCookieValue = (name) => {
   return Cookies.get(name) || "";
 };
 
+const truncateEmail = (email, maxLength = 25) => {
+  if (!email) return "";
+  if (email.length <= maxLength) return email;
+  return email.substring(0, maxLength) + "...";
+};
+
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [editingSection, setEditingSection] = useState(null);
@@ -27,10 +33,6 @@ export default function Profile() {
     sheba: "",
     accountNumber: "",
   });
-
-  // State برای نمایش موقت ایمیل
-  const [tempEmail, setTempEmail] = useState(null);
-  const emailTimeoutRef = useRef(null);
 
   useEffect(() => {
     const mobile = localStorage.getItem("mobile") || "";
@@ -59,7 +61,6 @@ export default function Profile() {
     formState: { errors },
   } = useForm();
 
-  // تبدیل اعداد به فارسی هنگام تایپ
   const handlePersianInput = (e, fieldName) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
     let value = e.target.value;
@@ -104,23 +105,9 @@ export default function Profile() {
     if (editingSection === "account") {
       const newEmail = data.email;
       setAccountData((prev) => ({ ...prev, email: newEmail }));
-
-      // نمایش موقت ایمیل
-      setTempEmail(newEmail);
-
-      // پاک کردن timeout قبلی
-      if (emailTimeoutRef.current) {
-        clearTimeout(emailTimeoutRef.current);
-      }
-
-      // بعد از 1.5 ثانیه فرم را ببند
-      emailTimeoutRef.current = setTimeout(() => {
-        setTempEmail(null);
-        setEditingSection(null);
-        reset();
-      }, 1500);
-
       toast.success("ایمیل ذخیره شد");
+      setEditingSection(null);
+      reset();
     } else if (editingSection === "personal") {
       setPersonalData(data);
       localStorage.setItem("passengerFullName", data.fullName);
@@ -143,16 +130,6 @@ export default function Profile() {
     }
   };
 
-  // پاکسازی timeout هنگام unmount
-  useEffect(() => {
-    return () => {
-      if (emailTimeoutRef.current) {
-        clearTimeout(emailTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  // تابع برای نمایش هدر مناسب
   const getSectionTitle = (section, defaultTitle) => {
     if (editingSection === section) {
       if (section === "personal") return "ویرایش اطلاعات شخصی";
@@ -170,66 +147,72 @@ export default function Profile() {
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* --- ۱. اطلاعات حساب کاربری --- */}
         <div className={styles.section}>
+          {/* ✅ Header یکپارچه مثل باکس ۲ و ۳ */}
           <div className={styles.sectionHeader}>
             <h3>{getSectionTitle("account", "اطلاعات حساب کاربری")}</h3>
+            {editingSection !== "account" && (
+              <div className={styles.headerActions}>
+                <Image
+                  width={14}
+                  height={14}
+                  alt="icon"
+                  src="/SVG/profile/edit-2.svg"
+                />
+                <button
+                  type="button"
+                  className={styles.editBtn}
+                  onClick={() => handleEditClick("account")}
+                >
+                  {accountData.email ? "ویرایش اطلاعات" : "افزودن"}
+                </button>
+              </div>
+            )}
           </div>
+
           <div className={styles.content}>
             {editingSection === "account" ? (
-              <div className={styles.formGroup}>
-                {/* دکمه لغو بالای فرم */}
-                <div className={styles.cancelTop}>
-                  <button
-                    type="button"
-                    className={styles.cancelBtn}
-                    onClick={handleCancel}
-                  >
-                    لغو
-                  </button>
+              /* ✅ فرم ویرایش Inline */
+              <div className={styles.accountEditForm}>
+                <div className={styles.accountFields}>
+                  <div className={styles.accountField}>
+                    <label>شماره موبایل</label>
+                    <input
+                      type="tel"
+                      value={toPersianNumber(accountData.mobile)}
+                      disabled
+                      className={styles.disabledInput}
+                    />
+                  </div>
+                  <div className={styles.accountField}>
+                    <label>ایمیل</label>
+                    <input
+                      placeholder="آدرس ایمیل"
+                      type="email"
+                      {...register("email", { required: "الزامی است" })}
+                      className={errors.email ? styles.errorInput : ""}
+                    />
+                    {errors.email && (
+                      <span className={styles.errorText}>
+                        {errors.email.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
-
-                <div className={styles.profInfo}>
-                  <label>شماره موبایل</label>
-                  <input
-                    type="tel"
-                    value={toPersianNumber(accountData.mobile)}
-                    disabled
-                    className={styles.disabledInput}
-                  />
-                </div>
-                <div className={styles.inputEmail}>
-                  <input
-                    placeholder="آدرس ایمیل"
-                    type="email"
-                    {...register("email", { required: "الزامی است" })}
-                    className={errors.email ? styles.errorInput : ""}
-                  />
-                  {errors.email && (
-                    <span className={styles.errorText}>
-                      {errors.email.message}
-                    </span>
-                  )}
-                  <button type="submit" className={styles.saveBtn}>
+                <div className={styles.accountActions}>
+                  <button type="submit" className={styles.saveBtnOne}>
                     تایید
                   </button>
-                </div>
-              </div>
-            ) : tempEmail ? (
-              // نمایش موقت ایمیل بعد از ذخیره
-              <div className={styles.infoGrid}>
-                <div className={styles.infoRow}>
-                  <span className={styles.label}>شماره موبایل:</span>
-                  <span className={styles.value} dir="ltr">
-                    {toPersianNumber(accountData.mobile)}
-                  </span>
-                </div>
-                <div className={styles.infoRow}>
-                  <span className={styles.label}>ایمیل:</span>
-                  <span className={styles.value} dir="ltr">
-                    {tempEmail}
-                  </span>
+                  <button
+                    type="button"
+                    className={styles.saveBtnTwo}
+                    onClick={handleCancel}
+                  >
+                    انصراف
+                  </button>
                 </div>
               </div>
             ) : (
+              /* ✅ نمایش عادی اطلاعات */
               <>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>شماره موبایل:</span>
@@ -239,24 +222,9 @@ export default function Profile() {
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>ایمیل:</span>
-                  <span className={styles.value} dir="ltr">
-                    {accountData.email || "-"}
+                  <span className={styles.value} dir="ltr" title={accountData.email}>
+                    {accountData.email ? truncateEmail(accountData.email) : "-"}
                   </span>
-                  <div className={styles.addButt}>
-                    <Image
-                      width={14}
-                      height={14}
-                      alt="icon"
-                      src="/SVG/profile/edit-2.svg"
-                    />
-                    <button
-                      type="button"
-                      className={styles.addBtn}
-                      onClick={() => handleEditClick("account")}
-                    >
-                      افزودن
-                    </button>
-                  </div>
                 </div>
               </>
             )}
@@ -269,9 +237,8 @@ export default function Profile() {
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
             <h3>{getSectionTitle("personal", "اطلاعات شخصی")}</h3>
-            {/* ✅ مخفی کردن دکمه در حالت ویرایش */}
             {editingSection !== "personal" && (
-              <div>
+              <div className={styles.headerActions}>
                 <Image
                   width={14}
                   height={14}
@@ -354,7 +321,6 @@ export default function Profile() {
                     )}
                   </div>
                 </div>
-                {/* دکمه انصراف زیر فرم */}
                 <div className={styles.saveBtn}>
                   <button type="submit" className={styles.saveBtnOne}>
                     تایید
@@ -409,9 +375,8 @@ export default function Profile() {
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
             <h3>{getSectionTitle("bank", "اطلاعات حساب بانکی")}</h3>
-            {/* ✅ مخفی کردن دکمه در حالت ویرایش */}
             {editingSection !== "bank" && (
-              <div>
+              <div className={styles.headerActions}>
                 <Image
                   width={14}
                   height={14}
@@ -479,7 +444,6 @@ export default function Profile() {
                     )}
                   </div>
                 </div>
-                {/* دکمه انصراف زیر فرم */}
                 <div className={styles.saveBtn}>
                   <button type="submit" className={styles.saveBtnOne}>
                     تایید
