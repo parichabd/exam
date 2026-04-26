@@ -1,14 +1,6 @@
 .container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  font-family: inherit;
-}
-
-.title {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #333;
+  max-width: 900px;
+  margin: 10px 0;
 }
 
 .section {
@@ -17,6 +9,7 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border: 1px solid #00000033;
 }
 
 .sectionHeader {
@@ -24,14 +17,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #eee;
 }
 
 .sectionHeader h3 {
   margin: 0;
-  font-size: 1.1rem;
-  color: #444;
+  font-size: 17px;
+  color: #000;
 }
 
 .editBtn {
@@ -45,27 +36,16 @@
   transition: all 0.2s;
 }
 
-.editBtn:hover {
-  background: #007bff;
-  color: #fff;
-}
+
 
 .content {
   padding: 20px;
 }
 
-.infoRow, .infoGrid {
+.infoGrid {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-@media (min-width: 600px) {
-  .infoGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
 }
 
 .infoRow {
@@ -81,16 +61,11 @@
 }
 
 .value {
-  font-size: 1rem;
-  color: #333;
+  font-size: 17px;
+  font-weight: 900;
+  color:#282828;
   direction: ltr;
   text-align: right;
-}
-
-.divider {
-  height: 1px;
-  background: #eee;
-  margin: 20px 0;
 }
 
 /* استایل‌های فرم */
@@ -106,10 +81,10 @@
   gap: 15px;
 }
 
-@media (min-width: 600px) {
-  .twoCols {
-    grid-template-columns: 1fr 1fr;
-  }
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  margin: 25px 0 3px 0;
 }
 
 .formGroup label {
@@ -119,21 +94,29 @@
   display: block;
 }
 
-.formGroup input,
+/* تنظیم عرض فیلدهای ورودی - اصلاح شده */
+.formGroup input{
+    width: 280px !important;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #00000080;
+  border: 1px solid #a9a7a7;
+
+}
+
 .formGroup select {
-  width: 100%;
+  width: 280px !important;
+  height: 40px;
+  border-radius: 5px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #a9a7a7;
   border-radius: 4px;
   font-size: 1rem;
   box-sizing: border-box;
 }
 
-.formGroup input:focus,
-.formGroup select:focus {
-  outline: none;
-  border-color: #007bff;
-}
+
+
 
 .errorInput {
   border-color: #dc3545 !important;
@@ -164,4 +147,68 @@
   text-align: center;
   margin-top: 50px;
   color: #666;
+}
+
+.addBtn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.addBtn:hover {
+  background-color: #45a049;
+}
+
+.addButt button {
+  color: #009ECA !important;
+  padding: 0 9px !important;
+  all: unset;
+}
+
+.sectionHeader button {
+  all: unset;
+  color: #009ECA !important;
+  padding: 0 9px !important;
+}
+
+.inputEmail{
+    display: flex;
+    justify-content: space-between;
+}
+
+.inputEmail input {
+    width: 170px !important;
+    font-family: "Iranian Sans";
+    font-size: 12px;
+    padding: 0 5px;
+}
+
+
+.inputEmail button{
+    width: 93px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #28A745;
+    font-family: "Iranian Sans";
+    margin: 0px;
+}
+
+.profInfo input{
+    border: none;
+    background-color: #fff;
+}
+
+.profInfo{
+    display: flex;
+}
+
+.profInfo label{
+    width: 110px;
+    font-size: 15px;
+    color: #000000b9;
 }
