@@ -25,7 +25,7 @@ export default function Profile() {
   const [bankData, setBankData] = useState({
     cardNumber: "",
     sheba: "",
-    accountNumber: "", // ← اضافه شد
+    accountNumber: "",
   });
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function Profile() {
 
     setAccountData({ mobile, email: "" });
     setPersonalData({ fullName, gender, nationalId, birthDate });
-    setBankData({ cardNumber: cardToShow, sheba: "-", accountNumber: "-" });
+    setBankData({ cardNumber: cardToShow, sheba: "", accountNumber: "" });
     setLoading(false);
   }, []);
 
@@ -51,15 +51,50 @@ export default function Profile() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm();
 
+  // تبدیل اعداد به فارسی هنگام تایپ
+  const handlePersianInput = (e, fieldName) => {
+    const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+    let value = e.target.value;
+    let persianValue = "";
+    for (let i = 0; i < value.length; i++) {
+      const char = value[i];
+      if (char >= "0" && char <= "9") {
+        persianValue += persianDigits[parseInt(char)];
+      } else {
+        persianValue += char;
+      }
+    }
+    setValue(fieldName, persianValue);
+  };
+
   const handleEditClick = (section) => {
     setEditingSection(section);
-    if (section === "account")
+    if (section === "account") {
       reset({ mobile: accountData.mobile, email: accountData.email });
-    else if (section === "personal") reset({ ...personalData });
-    else if (section === "bank") reset({ ...bankData });
+    } else if (section === "personal") {
+      reset({
+        fullName: personalData.fullName,
+        gender: personalData.gender,
+        nationalId: toPersianNumber(personalData.nationalId),
+        birthDate: toPersianNumber(personalData.birthDate),
+      });
+    } else if (section === "bank") {
+      reset({
+        cardNumber: toPersianNumber(bankData.cardNumber),
+        accountNumber: toPersianNumber(bankData.accountNumber),
+        sheba: toPersianNumber(bankData.sheba),
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingSection(null);
+    reset();
   };
 
   const onSubmit = (data) => {
@@ -103,7 +138,7 @@ export default function Profile() {
                   <label>شماره موبایل</label>
                   <input
                     type="tel"
-                    value={accountData.mobile}
+                    value={toPersianNumber(accountData.mobile)}
                     disabled
                     className={styles.disabledInput}
                   />
@@ -136,7 +171,7 @@ export default function Profile() {
                 <div className={styles.infoRow}>
                   <span className={styles.label}>ایمیل:</span>
                   <span className={styles.value} dir="ltr">
-                    {accountData.email}
+                    {accountData.email || "-"}
                   </span>
                   <div className={styles.addButt}>
                     <Image
@@ -150,7 +185,7 @@ export default function Profile() {
                       className={styles.addBtn}
                       onClick={() => handleEditClick("account")}
                     >
-                      افزودن
+                      فزودن
                     </button>
                   </div>
                 </div>
@@ -205,12 +240,13 @@ export default function Profile() {
                       {...register("nationalId", {
                         required: "الزامی است",
                         pattern: {
-                          value: /^[0-9]{10}$/,
+                          value: /^[۰-۹0-9]{10}$/,
                           message: "۱۰ رقم باشد",
                         },
                       })}
                       maxLength={10}
                       className={errors.nationalId ? styles.errorInput : ""}
+                      onChange={(e) => handlePersianInput(e, "nationalId")}
                     />
                     {errors.nationalId && (
                       <span className={styles.errorText}>
@@ -236,6 +272,7 @@ export default function Profile() {
                       {...register("birthDate", { required: "الزامی است" })}
                       placeholder="تاریخ تولد"
                       className={errors.birthDate ? styles.errorInput : ""}
+                      onChange={(e) => handlePersianInput(e, "birthDate")}
                     />
                     {errors.birthDate && (
                       <span className={styles.errorText}>
@@ -248,7 +285,11 @@ export default function Profile() {
                   <button type="submit" className={styles.saveBtnOne}>
                     تایید
                   </button>
-                  <button type="submit" className={styles.saveBtnTwo}>
+                  <button
+                    type="button"
+                    className={styles.saveBtnTwo}
+                    onClick={handleCancel}
+                  >
                     انصراف
                   </button>
                 </div>
@@ -258,13 +299,13 @@ export default function Profile() {
                 <div className={styles.infoRow}>
                   <span className={styles.label}>نام و نام خانوادگی:</span>
                   <span className={styles.value}>
-                    {personalData.fullName || "ثبت نشده"}
+                    {personalData.fullName || "-"}
                   </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>کد ملی:</span>
                   <span className={styles.value} dir="ltr">
-                    {personalData.nationalId || "ثبت نشده"}
+                    {toPersianNumber(personalData.nationalId) || "-"}
                   </span>
                 </div>
                 <div className={styles.infoRow}>
@@ -280,7 +321,7 @@ export default function Profile() {
                 <div className={styles.infoRow}>
                   <span className={styles.label}>تاریخ تولد:</span>
                   <span className={styles.value}>
-                    {personalData.birthDate || "ثبت نشده"}
+                    {toPersianNumber(personalData.birthDate) || "-"}
                   </span>
                 </div>
               </div>
@@ -301,7 +342,6 @@ export default function Profile() {
                 alt="icon"
                 src="/SVG/profile/edit-2.svg"
               />
-
               <button
                 type="button"
                 className={styles.editBtn}
@@ -316,27 +356,28 @@ export default function Profile() {
               <div className={styles.formGroup}>
                 <div className={styles.twoCols}>
                   <div>
-                    <label>شماره شبا</label>
                     <input
                       type="text"
-                      {...register("sheba", { required: "الزامی است" })}
-                      placeholder="IR..."
+                      {...register("cardNumber", { required: "الزامی است" })}
+                      placeholder="شماره کارت"
                       dir="ltr"
-                      className={errors.sheba ? styles.errorInput : ""}
+                      className={errors.cardNumber ? styles.errorInput : ""}
+                      onChange={(e) => handlePersianInput(e, "cardNumber")}
                     />
-                    {errors.sheba && (
+                    {errors.cardNumber && (
                       <span className={styles.errorText}>
-                        {errors.sheba.message}
+                        {errors.cardNumber.message}
                       </span>
                     )}
                   </div>
                   <div>
-                    <label>شماره حساب</label>
                     <input
+                      placeholder="شماره حساب"
                       type="text"
                       {...register("accountNumber", { required: "الزامی است" })}
                       dir="ltr"
                       className={errors.accountNumber ? styles.errorInput : ""}
+                      onChange={(e) => handlePersianInput(e, "accountNumber")}
                     />
                     {errors.accountNumber && (
                       <span className={styles.errorText}>
@@ -344,27 +385,31 @@ export default function Profile() {
                       </span>
                     )}
                   </div>
-                </div>
-                <div>
-                  <label>شماره کارت</label>
-                  <input
-                    type="text"
-                    {...register("cardNumber", { required: "الزامی است" })}
-                    placeholder="XXXX XXXX XXXX XXXX"
-                    dir="ltr"
-                    className={errors.cardNumber ? styles.errorInput : ""}
-                  />
-                  {errors.cardNumber && (
-                    <span className={styles.errorText}>
-                      {errors.cardNumber.message}
-                    </span>
-                  )}
+                  <div>
+                    <input
+                      type="text"
+                      {...register("sheba", { required: "الزامی است" })}
+                      placeholder="شماره شبا"
+                      dir="ltr"
+                      className={errors.sheba ? styles.errorInput : ""}
+                      onChange={(e) => handlePersianInput(e, "sheba")}
+                    />
+                    {errors.sheba && (
+                      <span className={styles.errorText}>
+                        {errors.sheba.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className={styles.saveBtn}>
                   <button type="submit" className={styles.saveBtnOne}>
                     تایید
                   </button>
-                  <button type="submit" className={styles.saveBtnTwo}>
+                  <button
+                    type="button"
+                    className={styles.saveBtnTwo}
+                    onClick={handleCancel}
+                  >
                     انصراف
                   </button>
                 </div>
@@ -374,19 +419,19 @@ export default function Profile() {
                 <div className={styles.infoRow}>
                   <span className={styles.label}>شماره شبا:</span>
                   <span className={styles.value} dir="ltr">
-                    {bankData.sheba || "ثبت نشده"}
+                    {toPersianNumber(bankData.sheba) || "-"}
                   </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>شماره حساب:</span>
                   <span className={styles.value} dir="ltr">
-                    {bankData.accountNumber || "ثبت نشده"}
+                    {toPersianNumber(bankData.accountNumber) || "-"}
                   </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>شماره کارت:</span>
                   <span className={styles.value} dir="ltr">
-                    {bankData.cardNumber || "ثبت نشده"}
+                    {toPersianNumber(bankData.cardNumber) || "-"}
                   </span>
                 </div>
               </div>
