@@ -121,7 +121,6 @@ export default function Profile() {
       }, 1500);
 
       toast.success("ایمیل ذخیره شد");
-
     } else if (editingSection === "personal") {
       setPersonalData(data);
       localStorage.setItem("passengerFullName", data.fullName);
@@ -131,7 +130,6 @@ export default function Profile() {
       toast.success("مشخصات مسافر ذخیره شد");
       setEditingSection(null);
       reset();
-
     } else if (editingSection === "bank") {
       setBankData({
         cardNumber: data.cardNumber,
