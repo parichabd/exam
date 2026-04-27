@@ -14,6 +14,7 @@ import {
   getCardType,
   formatSheba,
 } from "@/utils/bankValidation";
+import { getCookie, setCookie } from "@/utils/cookie"; // ✅ اضافه شد
 import styles from "./Profile.module.css";
 import Image from "next/image";
 
@@ -29,20 +30,9 @@ const sanitizeInput = (input) => {
     .trim();
 };
 
-
 // ============================================
 // کمکی‌ها
 // ============================================
-const getLocalStorage = (name) => {
-  if (typeof window === "undefined") return "";
-  return localStorage.getItem(name) || "";
-};
-
-const setLocalStorage = (name, value) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(name, value);
-};
-
 const truncateEmail = (email, maxLength = 25) => {
   if (!email) return "";
   if (email.length <= maxLength) return email;
@@ -183,18 +173,18 @@ export default function Profile() {
   }, [watchedAccount, editingSection]);
 
   // ============================================
-  // 📦 بارگذاری اولیه داده‌ها از localStorage
+  // 📦 بارگذاری اولیه داده‌ها از کوکی
   // ============================================
   useEffect(() => {
-    // ✅ خواندن از localStorage (همانند سایر کامپوننت‌ها)
-    const mobile = getLocalStorage("mobile") || "";
-    const fullName = getLocalStorage("passengerFullName") || getLocalStorage("userName") || "";
-    const gender = getLocalStorage("passengerGender") || "";
-    const nationalId = getLocalStorage("passengerNationalId") || "";
-    const birthDate = getLocalStorage("passengerBirthDate") || "";
+    // ✅ خواندن از کوکی (همانند سایر کامپوننت‌ها)
+    const mobile = localStorage.getItem("mobile") || ""; // mobile از localStorage
+    const fullName = getCookie("passengerFullName") || getCookie("userName") || "";
+    const gender = getCookie("passengerGender") || "";
+    const nationalId = getCookie("passengerNationalId") || "";
+    const birthDate = getCookie("passengerBirthDate") || "";
     
     // ✅ فقط ۴ رقم آخر کارت
-    const lastFour = getLocalStorage("lastUsedCard") || "";
+    const lastFour = getCookie("lastUsedCard") || "";
     const cardToShow = lastFour ? `**** **** **** ${lastFour}` : "";
 
     setAccountData({ mobile, email: "" });
@@ -219,31 +209,31 @@ export default function Profile() {
       if (data.firstName || data.lastName) {
         const fullName = `${data.firstName || ""} ${data.lastName || ""}`.trim();
         setPersonalData((prev) => ({ ...prev, fullName }));
-        // ✅ ذخیره در localStorage
-        setLocalStorage("passengerFullName", fullName);
+        // ✅ ذخیره در کوکی
+        setCookie("passengerFullName", fullName, 30);
       }
       
       if (data.gender) {
         setPersonalData((prev) => ({ ...prev, gender: data.gender }));
-        setLocalStorage("passengerGender", data.gender);
+        setCookie("passengerGender", data.gender, 30);
       }
       
       if (data.nationalCode) {
         const nationalCodeStr = String(data.nationalCode);
         setPersonalData((prev) => ({ ...prev, nationalId: nationalCodeStr }));
-        setLocalStorage("passengerNationalId", nationalCodeStr);
+        setCookie("passengerNationalId", nationalCodeStr, 30);
       }
       
       if (data.birthDate) {
         setPersonalData((prev) => ({ ...prev, birthDate: data.birthDate }));
-        setLocalStorage("passengerBirthDate", data.birthDate);
+        setCookie("passengerBirthDate", data.birthDate, 30);
       }
       
       if (data.payment) {
         // ✅ فقط ۴ رقم آخر کارت
         if (data.payment.debitCard_code) {
           const lastFour = data.payment.debitCard_code.slice(-4);
-          setLocalStorage("lastUsedCard", lastFour);
+          setCookie("lastUsedCard", lastFour, 30);
         }
         
         setBankData({
@@ -379,11 +369,11 @@ export default function Profile() {
           birthDate: convertToEnglishDigits(sanitizedData.birthDate),
         });
 
-        // ✅ ذخیره در localStorage
-        setLocalStorage("passengerFullName", sanitizedData.fullName);
-        setLocalStorage("passengerGender", sanitizedData.gender);
-        setLocalStorage("passengerNationalId", sanitizedData.nationalId);
-        setLocalStorage("passengerBirthDate", sanitizedData.birthDate);
+        // ✅ ذخیره در کوکی
+        setCookie("passengerFullName", sanitizedData.fullName, 30);
+        setCookie("passengerGender", sanitizedData.gender, 30);
+        setCookie("passengerNationalId", sanitizedData.nationalId, 30);
+        setCookie("passengerBirthDate", sanitizedData.birthDate, 30);
 
         setPersonalData({
           fullName: sanitizedData.fullName,
@@ -416,7 +406,7 @@ export default function Profile() {
 
         // ✅ فقط ۴ رقم آخر کارت
         const lastFour = sanitizedData.cardNumber.replace(/\s/g, "").slice(-4);
-        setLocalStorage("lastUsedCard", lastFour);
+        setCookie("lastUsedCard", lastFour, 30);
 
         setBankData({
           cardNumber: `**** **** **** ${lastFour}`,
