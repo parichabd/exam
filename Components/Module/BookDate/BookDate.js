@@ -30,6 +30,9 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
     setTimeout(() => setShowToast(false), 3000);
   };
 
+
+
+  useEffect(() => {
   const translateToFa = {
     Tehran: "تهران",
     Isfahan: "اصفهان",
@@ -43,42 +46,35 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
     Italy: "ایتالیا",
     Offroad: "آفرود",
     "offRoad Center": "آفرود",
-    sulaymaniyahTour: "سلیمانیه",
+    "sulaymaniyahTour": "سلیمانیه",
   };
 
-  useEffect(() => {
-    fetch("http://localhost:6500/tour")
-      .then((res) => res.json())
-      .then((data) => {
-        const normalizedTours = data.map((tour) => ({
-          ...tour,
-          origin: {
-            ...tour.origin,
-            name: translateToFa[tour.origin.name.trim()] || tour.origin.name,
-          },
-          destination: {
-            ...tour.destination,
-            name:
-              translateToFa[tour.destination.name.trim()] ||
-              tour.destination.name,
-          },
-        }));
-        setTours(normalizedTours);
-        const uniqueOrigins = [
-          ...new Set(normalizedTours.map((t) => t.origin.name)),
-        ].sort();
-        const uniqueDestinations = [
-          ...new Set(normalizedTours.map((t) => t.destination.name)),
-        ].sort();
-        setOrigins(uniqueOrigins);
-        setDestinations(uniqueDestinations);
-        setFoundTours(normalizedTours);
-      })
-      .catch(() => {
-        showToastMessage("مشکل در اتصال به سرور!");
-        setHasError(true);
-      });
-  }, [setFoundTours]);
+  fetch("http://localhost:6500/tour")
+    .then((res) => res.json())
+    .then((data) => {
+      const normalizedTours = data.map((tour) => ({
+        ...tour,
+        origin: {
+          ...tour.origin,
+          name: translateToFa[tour.origin.name.trim()] || tour.origin.name,
+        },
+        destination: {
+          ...tour.destination,
+          name: translateToFa[tour.destination.name.trim()] || tour.destination.name,
+        },
+      }));
+      setTours(normalizedTours);
+      const uniqueOrigins = [...new Set(normalizedTours.map((t) => t.origin.name))].sort();
+      const uniqueDestinations = [...new Set(normalizedTours.map((t) => t.destination.name))].sort();
+      setOrigins(uniqueOrigins);
+      setDestinations(uniqueDestinations);
+      setFoundTours(normalizedTours);
+    })
+    .catch(() => {
+      showToastMessage("مشکل در اتصال به سرور!");
+      setHasError(true);
+    });
+}, [setFoundTours, setHasError]);
 
   useEffect(() => {
     function handleClickOutside(event) {
