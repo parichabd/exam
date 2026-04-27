@@ -2,6 +2,30 @@
   max-width: 900px;
   margin: 10px 0;
 }
+.disabledInput{
+  font-family: inherit;
+}
+.accountField{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.accountField input { 
+  width: 186px;
+  height: 40px;
+  padding: 8px;
+  font-family: inherit;
+}
+.accountActions{
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.accountActions button {
+  width: 138px;
+  height: 41px;
+}
 
 .section {
   margin-bottom: 20px;
@@ -281,10 +305,7 @@
   transition: all 0.2s;
 }
 
-.saveBtnTwo:hover {
-  background-color: #28A745;
-  color: #fff;
-}
+
 
 .disabledInput {
   border: none !important;

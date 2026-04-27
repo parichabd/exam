@@ -75,7 +75,6 @@ export default function Profile() {
     valid: null,
     message: "",
   });
-
   // ============================================
   // useForm با custom validation
   // ============================================
@@ -131,7 +130,9 @@ export default function Profile() {
       setShebaValidation({ valid: null, message: "" });
       return;
     }
-    const cleaned = toEnglishDigits(watchedSheba).toUpperCase().replace(/\s/g, "");
+    const cleaned = toEnglishDigits(watchedSheba)
+      .toUpperCase()
+      .replace(/\s/g, "");
     if (cleaned.length > 0 && !cleaned.startsWith("IR")) {
       setShebaValidation({ valid: false, message: "با IR شروع شود" });
       return;
@@ -178,11 +179,12 @@ export default function Profile() {
   useEffect(() => {
     // ✅ خواندن از کوکی (همانند سایر کامپوننت‌ها)
     const mobile = localStorage.getItem("mobile") || ""; // mobile از localStorage
-    const fullName = getCookie("passengerFullName") || getCookie("userName") || "";
+    const fullName =
+      getCookie("passengerFullName") || getCookie("userName") || "";
     const gender = getCookie("passengerGender") || "";
     const nationalId = getCookie("passengerNationalId") || "";
     const birthDate = getCookie("passengerBirthDate") || "";
-    
+
     // ✅ فقط ۴ رقم آخر کارت
     const lastFour = getCookie("lastUsedCard") || "";
     const cardToShow = lastFour ? `**** **** **** ${lastFour}` : "";
@@ -201,41 +203,42 @@ export default function Profile() {
   const fetchServerData = async () => {
     try {
       const data = await profileApi.getProfile();
-      
+
       if (data.email) {
         setAccountData((prev) => ({ ...prev, email: data.email }));
       }
-      
+
       if (data.firstName || data.lastName) {
-        const fullName = `${data.firstName || ""} ${data.lastName || ""}`.trim();
+        const fullName =
+          `${data.firstName || ""} ${data.lastName || ""}`.trim();
         setPersonalData((prev) => ({ ...prev, fullName }));
         // ✅ ذخیره در کوکی
         setCookie("passengerFullName", fullName, 30);
       }
-      
+
       if (data.gender) {
         setPersonalData((prev) => ({ ...prev, gender: data.gender }));
         setCookie("passengerGender", data.gender, 30);
       }
-      
+
       if (data.nationalCode) {
         const nationalCodeStr = String(data.nationalCode);
         setPersonalData((prev) => ({ ...prev, nationalId: nationalCodeStr }));
         setCookie("passengerNationalId", nationalCodeStr, 30);
       }
-      
+
       if (data.birthDate) {
         setPersonalData((prev) => ({ ...prev, birthDate: data.birthDate }));
         setCookie("passengerBirthDate", data.birthDate, 30);
       }
-      
+
       if (data.payment) {
         // ✅ فقط ۴ رقم آخر کارت
         if (data.payment.debitCard_code) {
           const lastFour = data.payment.debitCard_code.slice(-4);
           setCookie("lastUsedCard", lastFour, 30);
         }
-        
+
         setBankData({
           cardNumber: data.payment.debitCard_code
             ? `**** **** **** ${data.payment.debitCard_code.slice(-4)}`
@@ -270,10 +273,13 @@ export default function Profile() {
   // ============================================
   // مدیریت ورودی شماره کارت
   // ============================================
-  const handleCardInput = useCallback((e) => {
-    const formatted = formatCardNumber(e.target.value);
-    setValue("cardNumber", formatted);
-  }, [setValue]);
+  const handleCardInput = useCallback(
+    (e) => {
+      const formatted = formatCardNumber(e.target.value);
+      setValue("cardNumber", formatted);
+    },
+    [setValue],
+  );
 
   // ============================================
   // ورود به حالت ویرایش
@@ -346,16 +352,15 @@ export default function Profile() {
 
       if (editingSection === "account") {
         const response = await profileApi.updateProfile({
-          email: sanitizedData.email
+          email: sanitizedData.email,
         });
         setAccountData((prev) => ({ ...prev, email: sanitizedData.email }));
         toast.success("ایمیل با موفقیت ذخیره شد");
-        
       } else if (editingSection === "personal") {
         const nameParts = sanitizedData.fullName.trim().split(" ");
         const firstName = nameParts[0] || "";
         const lastName = nameParts.slice(1).join(" ") || "";
-        
+
         const convertToEnglishDigits = (str) => {
           const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
           return str.replace(/[۰-۹]/g, (d) => persianDigits.indexOf(d));
@@ -382,7 +387,6 @@ export default function Profile() {
           birthDate: sanitizedData.birthDate,
         });
         toast.success("مشخصات مسافر با موفقیت ذخیره شد");
-        
       } else if (editingSection === "bank") {
         const validationErrors = validateBankData(data);
         if (validationErrors.length > 0) {
@@ -400,7 +404,9 @@ export default function Profile() {
           payment: {
             shaba_code: convertToEnglishDigits(sanitizedData.sheba),
             debitCard_code: convertToEnglishDigits(sanitizedData.cardNumber),
-            accountIdentifier: convertToEnglishDigits(sanitizedData.accountNumber),
+            accountIdentifier: convertToEnglishDigits(
+              sanitizedData.accountNumber,
+            ),
           },
         });
 
@@ -445,7 +451,9 @@ export default function Profile() {
   const ValidationBadge = ({ valid, message }) => {
     if (valid === null) return null;
     return (
-      <span className={`${styles.validationBadge} ${valid ? styles.validBadge : styles.invalidBadge}`}>
+      <span
+        className={`${styles.validationBadge} ${valid ? styles.validBadge : styles.invalidBadge}`}
+      >
         {valid ? "✓" : "✗"} {message}
       </span>
     );
@@ -475,13 +483,18 @@ export default function Profile() {
             <h3>{getSectionTitle("account", "اطلاعات حساب کاربری")}</h3>
             {editingSection !== "account" && (
               <div className={styles.headerActions}>
-                <Image width={14} height={14} alt="icon" src="/SVG/profile/edit-2.svg" />
+                <Image
+                  width={14}
+                  height={14}
+                  alt="icon"
+                  src="/SVG/profile/edit-2.svg"
+                />
                 <button
                   type="button"
                   className={styles.editBtn}
                   onClick={() => handleEditClick("account")}
                 >
-                  {accountData.email ? "ویرایش اطلاعات" : "افزودن"}
+                  {accountData.email ? " افزودن " : " افزودن"}
                 </button>
               </div>
             )}
@@ -504,16 +517,21 @@ export default function Profile() {
                     <input
                       placeholder="آدرس ایمیل"
                       type="email"
-                      {...register("email", { required: "الزامی است" })}
                       className={errors.email ? styles.errorInput : ""}
                     />
                     {errors.email && (
-                      <span className={styles.errorText}>{errors.email.message}</span>
+                      <span className={styles.errorText}>
+                        {errors.email.message}
+                      </span>
                     )}
                   </div>
                 </div>
                 <div className={styles.accountActions}>
-                  <button type="submit" className={styles.saveBtnOne} disabled={saving}>
+                  <button
+                    type="submit"
+                    className={styles.saveBtnOne}
+                    disabled={saving}
+                  >
                     {saving ? "در حال ذخیره..." : "تایید"}
                   </button>
                   <button
@@ -536,7 +554,11 @@ export default function Profile() {
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>ایمیل:</span>
-                  <span className={styles.value} dir="ltr" title={accountData.email}>
+                  <span
+                    className={styles.value}
+                    dir="ltr"
+                    title={accountData.email}
+                  >
                     {accountData.email ? truncateEmail(accountData.email) : "-"}
                   </span>
                 </div>
@@ -553,7 +575,12 @@ export default function Profile() {
             <h3>{getSectionTitle("personal", "اطلاعات شخصی")}</h3>
             {editingSection !== "personal" && (
               <div className={styles.headerActions}>
-                <Image width={14} height={14} alt="icon" src="/SVG/profile/edit-2.svg" />
+                <Image
+                  width={14}
+                  height={14}
+                  alt="icon"
+                  src="/SVG/profile/edit-2.svg"
+                />
                 <button
                   type="button"
                   className={styles.editBtn}
@@ -576,7 +603,9 @@ export default function Profile() {
                       className={errors.fullName ? styles.errorInput : ""}
                     />
                     {errors.fullName && (
-                      <span className={styles.errorText}>{errors.fullName.message}</span>
+                      <span className={styles.errorText}>
+                        {errors.fullName.message}
+                      </span>
                     )}
                   </div>
                   <div>
@@ -595,7 +624,9 @@ export default function Profile() {
                       onChange={(e) => handlePersianInput(e, "nationalId")}
                     />
                     {errors.nationalId && (
-                      <span className={styles.errorText}>{errors.nationalId.message}</span>
+                      <span className={styles.errorText}>
+                        {errors.nationalId.message}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -620,12 +651,18 @@ export default function Profile() {
                       onChange={(e) => handlePersianInput(e, "birthDate")}
                     />
                     {errors.birthDate && (
-                      <span className={styles.errorText}>{errors.birthDate.message}</span>
+                      <span className={styles.errorText}>
+                        {errors.birthDate.message}
+                      </span>
                     )}
                   </div>
                 </div>
                 <div className={styles.saveBtn}>
-                  <button type="submit" className={styles.saveBtnOne} disabled={saving}>
+                  <button
+                    type="submit"
+                    className={styles.saveBtnOne}
+                    disabled={saving}
+                  >
                     {saving ? "در حال ذخیره..." : "تایید"}
                   </button>
                   <button
@@ -642,7 +679,9 @@ export default function Profile() {
               <div className={styles.infoGrid}>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>نام و نام خانوادگی:</span>
-                  <span className={styles.value}>{personalData.fullName || "-"}</span>
+                  <span className={styles.value}>
+                    {personalData.fullName || "-"}
+                  </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>کد ملی:</span>
@@ -681,7 +720,12 @@ export default function Profile() {
             <h3>{getSectionTitle("bank", "اطلاعات حساب بانکی")}</h3>
             {editingSection !== "bank" && (
               <div className={styles.headerActions}>
-                <Image width={14} height={14} alt="icon" src="/SVG/profile/edit-2.svg" />
+                <Image
+                  width={14}
+                  height={14}
+                  alt="icon"
+                  src="/SVG/profile/edit-2.svg"
+                />
                 <button
                   type="button"
                   className={styles.editBtn}
@@ -725,7 +769,9 @@ export default function Profile() {
                     />
                   </div>
                   {errors.cardNumber && (
-                    <span className={styles.errorText}>{errors.cardNumber.message}</span>
+                    <span className={styles.errorText}>
+                      {errors.cardNumber.message}
+                    </span>
                   )}
                 </div>
 
@@ -761,7 +807,9 @@ export default function Profile() {
                     />
                   </div>
                   {errors.sheba && (
-                    <span className={styles.errorText}>{errors.sheba.message}</span>
+                    <span className={styles.errorText}>
+                      {errors.sheba.message}
+                    </span>
                   )}
                 </div>
 
@@ -787,7 +835,9 @@ export default function Profile() {
                       dir="ltr"
                       maxLength={13}
                       className={`${styles.bankInput} ${
-                        accountValidation.valid === false ? styles.inputError : ""
+                        accountValidation.valid === false
+                          ? styles.inputError
+                          : ""
                       } ${accountValidation.valid === true ? styles.inputValid : ""}`}
                       onChange={(e) => handlePersianInput(e, "accountNumber")}
                     />
@@ -797,7 +847,9 @@ export default function Profile() {
                     />
                   </div>
                   {errors.accountNumber && (
-                    <span className={styles.errorText}>{errors.accountNumber.message}</span>
+                    <span className={styles.errorText}>
+                      {errors.accountNumber.message}
+                    </span>
                   )}
                 </div>
 
@@ -815,7 +867,8 @@ export default function Profile() {
                   <button
                     type="submit"
                     className={styles.saveBtnOne}
-                    disabled={saving ||
+                    disabled={
+                      saving ||
                       cardValidation.valid === false ||
                       shebaValidation.valid === false ||
                       accountValidation.valid === false
