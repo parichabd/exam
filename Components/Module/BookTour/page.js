@@ -9,12 +9,13 @@ import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import toast, { Toaster } from "react-hot-toast";
-import { getCookie } from "../../../utils/cookie";
-import PaymentLoadingModal from "../../../Components/Spinner/PaymentLoadingModal";
+import { getCookie, setCookie } from "@/utils/cookie"; // ✅ setCookie اضافه شد
+import PaymentLoadingModal from "@/Components/Spinner/PaymentLoadingModal";
+
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:6500";
-// ✅ کلمات غیرمجاز فارسی
 
+// ✅ کلمات غیرمجاز فارسی
 const INVALID_PERSIAN_WORDS = [
   "نام",
   "نام خانوادگی",
@@ -38,6 +39,7 @@ const INVALID_PERSIAN_WORDS = [
   "نامشخص",
   "نامحدود",
 ];
+
 // ✅ کلمات غیرمجاز انگلیسی
 const INVALID_ENGLISH_WORDS = [
   "test",
@@ -54,22 +56,26 @@ const INVALID_ENGLISH_WORDS = [
   "demo",
   "temp",
 ];
+
 // ✅ تبدیل اعداد فارسی به انگلیسی
 const persianToEnglish = (str) => {
   const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
   const englishDigits = "0123456789";
   return str.replace(/[۰-۹]/g, (d) => englishDigits[persianDigits.indexOf(d)]);
 };
+
 // ✅ کامپوننت پیام خطا
 const ErrorMessage = ({ message }) => {
   if (!message) return null;
   return <small className={styles.errorMessage}>⚠️ {message}</small>;
 };
+
 export default function BookingForm({ initialTourId }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const source = searchParams.get("source");
+
   // بررسی موفقیت پرداخت از URL
   useEffect(() => {
     const paymentStatus = searchParams.get("payment");
@@ -80,6 +86,7 @@ export default function BookingForm({ initialTourId }) {
       router.replace("/bookTour");
     }
   }, [searchParams, router]);
+
   // استخراج tourId
   let tourId = initialTourId;
   if (!tourId && pathname) {
@@ -94,18 +101,21 @@ export default function BookingForm({ initialTourId }) {
   if (!tourId) {
     tourId = searchParams.get("id");
   }
+
   const [tourData, setTourData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [birthDateError, setBirthDateError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({ mode: "onChange" });
+
   // ✅ اعتبارسنجی نام فارسی کامل
   const validatePersianName = (value) => {
     if (!value) return true;
@@ -139,6 +149,7 @@ export default function BookingForm({ initialTourId }) {
     if (specialChars.test(trimmedValue)) return "کاراکترهای خاص مجاز نیست";
     return true;
   };
+
   // ✅ اعتبارسنجی کد ملی ایران
   const validateNationalId = (value) => {
     if (!value) return true;
@@ -155,6 +166,7 @@ export default function BookingForm({ initialTourId }) {
     if (calculatedCheck !== checkDigit) return "کد ملی معتبر نیست";
     return true;
   };
+
   // ✅ هندلر تغییر تاریخ
   const handleBirthDateChange = (date, onChange) => {
     if (date) {
@@ -177,6 +189,7 @@ export default function BookingForm({ initialTourId }) {
       onChange("");
     }
   };
+
   // ✅ تبدیل تاریخ شمسی به میلادی
   const convertShamsiToGregorian = (shamsiDate) => {
     if (!shamsiDate) return null;
@@ -192,6 +205,7 @@ export default function BookingForm({ initialTourId }) {
     const gregorianDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     return gregorianDate;
   };
+
   // ✅ افزودن تور به سبد خرید
   const addToBasket = async (tourId, token) => {
     const response = await fetch(`${BACKEND_BASE_URL}/basket/${tourId}`, {
@@ -204,6 +218,7 @@ export default function BookingForm({ initialTourId }) {
     }
     return true;
   };
+
   // ✅ ارسال فرم و ریدایرکت به درگاه شبیه‌سازی
   const onSubmit = async (data) => {
     const refreshToken = getCookie("refreshToken");
@@ -217,28 +232,36 @@ export default function BookingForm({ initialTourId }) {
       );
       return;
     }
+
     if (birthDateError) {
       toast.error("لطفاً خطاهای فرم را برطرف کنید");
       return;
     }
+
     if (Object.keys(errors).length > 0) {
       toast.error("لطفاً تمام فیلدها را به درستی پر کنید");
       return;
     }
+
     try {
       setIsSubmitting(true);
       await addToBasket(tourId, refreshToken);
+
       const gregorianBirthDate = convertShamsiToGregorian(data.birthDate);
+
       const orderData = {
         nationalCode: persianToEnglish(data.nationalId),
         fullName: data.fullName,
         gender: data.gender,
         birthDate: gregorianBirthDate,
       };
-      localStorage.setItem("passengerFullName", data.fullName);
-      localStorage.setItem("passengerGender", data.gender);
-      localStorage.setItem("passengerNationalId", data.nationalId);
-      localStorage.setItem("passengerBirthDate", data.birthDate);
+
+      // ✅ ذخیره در کوکی به جای localStorage
+      setCookie("passengerFullName", data.fullName, 30);
+      setCookie("passengerGender", data.gender, 30);
+      setCookie("passengerNationalId", data.nationalId, 30);
+      setCookie("passengerBirthDate", data.birthDate, 30);
+
       const response = await fetch(`${BACKEND_BASE_URL}/order`, {
         method: "POST",
         headers: {
@@ -247,17 +270,22 @@ export default function BookingForm({ initialTourId }) {
         },
         body: JSON.stringify(orderData),
       });
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "خطا در ثبت سفارش");
       }
+
       const result = await response.json();
       console.log("نتیجه ثبت سفارش:", result);
+
       setShowLoadingModal(true);
       await new Promise((resolve) => setTimeout(resolve, 3000));
       setShowLoadingModal(false);
+
       const orderId = result.orderId || `ORD-${Date.now()}`;
       const amount = (tourData?.price || 0) * 10;
+
       router.push(
         `/payment-simulator?orderId=${orderId}&amount=${amount}&tourTitle=${encodeURIComponent(tourData?.title || "تور")}`,
       );
@@ -268,12 +296,14 @@ export default function BookingForm({ initialTourId }) {
       setIsSubmitting(false);
     }
   };
+
   useEffect(() => {
     if (!tourId) {
       setError("شناسه تور در آدرس URL پیدا نشد.");
       setIsLoading(false);
       return;
     }
+
     const fetchTourDetails = async () => {
       try {
         setIsLoading(true);
@@ -292,8 +322,10 @@ export default function BookingForm({ initialTourId }) {
         setIsLoading(false);
       }
     };
+
     fetchTourDetails();
   }, [tourId]);
+
   const calculateDuration = (startStr, endStr) => {
     if (!startStr || !endStr) return { days: 0, nights: 0 };
     const startDate = new Date(startStr);
@@ -305,10 +337,12 @@ export default function BookingForm({ initialTourId }) {
     const nights = days > 0 ? days - 1 : 0;
     return { days, nights };
   };
+
   const toPersianNumberLocal = (num) => {
     if (num === undefined || num === null) return "—";
     return num.toLocaleString("fa-IR");
   };
+
   if (isLoading) {
     return (
       <div className={styles.mainContainer}>
@@ -318,6 +352,7 @@ export default function BookingForm({ initialTourId }) {
       </div>
     );
   }
+
   if (error) {
     return (
       <div className={styles.mainContainer}>
@@ -327,13 +362,16 @@ export default function BookingForm({ initialTourId }) {
       </div>
     );
   }
+
   const { days: durationInDays, nights: durationInNights } = calculateDuration(
     tourData?.startDate,
     tourData?.endDate,
   );
+
   const formattedPrice = tourData?.price
     ? Number(tourData.price).toLocaleString("fa-IR")
     : "0";
+
   return (
     <div className={styles.mainContainer}>
       <Toaster />
@@ -444,6 +482,7 @@ export default function BookingForm({ initialTourId }) {
             </div>
           </div>
         </div>
+
         <div className={styles.summarySection}>
           <div className={styles.tourSummaryContent}>
             <div className={styles.formFooterInfo}>
