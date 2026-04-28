@@ -8,7 +8,6 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./BookDate.module.css";
 
-
 const TOAST_DURATION = 3000;
 const SEARCH_DELAY = 2000;
 const SKELETON_COUNT = 3;
@@ -44,21 +43,17 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
 
   const startRef = useRef(null);
   const endRef = useRef(null);
-
-  // ✅ ۲. اضافه کردن ref برای مدیریت toast timeout
   const toastTimeoutRef = useRef(null);
 
-  // ✅ ۳. اصلاح نشت حافظه در toast
   const showToastMessage = (msg) => {
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
     }
     setToast(msg);
     setShowToast(true);
-    toastTimeoutRef.current = setTimeout(() => setShowToast(false), 3000);
+    toastTimeoutRef.current = setTimeout(() => setShowToast(false), TOAST_DURATION);
   };
 
-  // ✅ cleanup برای toast
   useEffect(() => {
     return () => {
       if (toastTimeoutRef.current) {
@@ -68,9 +63,7 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
   }, []);
 
   useEffect(() => {
-    // ✅ ۴. URL رو از env variable بخون
     const apiUrl = process.env.NEXT_PUBLIC_BASE_URL;
-
     fetch(`${apiUrl}/tour`)
       .then((res) => res.json())
       .then((data) => {
@@ -115,7 +108,6 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ ۵. اصلاح منطق تاریخ - بررسی اینکه تور در بازه تاریخ انتخابی باشه
   const normalizeDate = (date) => {
     if (!date) return null;
     const d = new Date(date.toDate?.() || date);
@@ -125,31 +117,24 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
 
   const handleSearch = () => {
     const [startSelected, endSelected] = selectedDate;
-
     if (!startSelected || !endSelected) {
       showToastMessage("لطفاً تاریخ شروع و پایان را انتخاب کنید!");
       return;
     }
-
     if (startLoc === "مبدا" || endLoc === "مقصد") {
       showToastMessage("لطفاً مبدا و مقصد را انتخاب کنید!");
       setFoundTours(tours);
       setIsLoading(false);
       return;
     }
-
     setIsLoading(true);
     setShowSkeleton(true);
-
     setTimeout(() => {
       const userStartDate = normalizeDate(startSelected);
       const userEndDate = normalizeDate(endSelected);
-
       const results = tours.filter((t) => {
         const originMatch = t.origin.name === startLoc;
         const destMatch = t.destination.name === endLoc;
-
-        // ✅ منطق درست: تاریخ شروع تور باید بین تاریخ شروع و پایان کاربر باشه
         let dateMatch = true;
         if (userStartDate && userEndDate) {
           const tourStartDate = normalizeDate(t.startDate);
@@ -158,18 +143,15 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
               tourStartDate >= userStartDate && tourStartDate <= userEndDate;
           }
         }
-
         return originMatch && destMatch && dateMatch;
       });
-
       setFoundTours(results);
       setIsLoading(false);
       setShowSkeleton(false);
-
       if (results.length === 0) {
         showToastMessage("هیچ توری با این مشخصات یافت نشد");
       }
-    }, 2000);
+    }, SEARCH_DELAY);
   };
 
   return (
@@ -287,7 +269,7 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
       </div>
       {showSkeleton && (
         <div className={styles.skeletonGrid}>
-          {[1, 2, 3].map((i) => (
+          {Array.from({ length: SKELETON_COUNT }, (_, i) => (
             <div key={i} className={styles.skeletonCard}>
               <Skeleton
                 height={180}
