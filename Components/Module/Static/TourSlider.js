@@ -34,14 +34,6 @@ export default function TourSlider() {
               height={38}
               style={{ width: "auto", height: "auto" }}
             />
-            <Image
-              src="/SVG/static/questionsMark.svg"
-              alt="phone"
-              width={10}
-              height={20}
-              className={styles.question}
-              style={{ width: "auto", height: "auto" }}
-            />
           </div>
           <div className={styles.head}>
             <h1>

@@ -38,17 +38,18 @@ const Img = ({ src, alt, style, className, sizes = "24px" }) => (
   </div>
 );
 
-// ✅ کامپوننت لوگو (با کیفیت بالا)
 const Logo = () => (
   <Image
-    src="/image/Torino (4) 1.png"
+    src="/image/main/Torino 1.svg"
     alt="Torino Logo"
-    width={120}
-    height={60}
-    style={{ width: 120}}
+    width={100}
+    height={75}
+    style={{width : "auto"}}
+
+    // ✅ style را کاملاً حذف کنید.
+    // اگر نیاز دارید تصویر برش نخورد و کامل دیده شود، در CSS کلاس مربوطه object-fit: contain بگذارید.
   />
 );
-
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
