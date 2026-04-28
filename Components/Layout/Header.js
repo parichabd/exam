@@ -1,4 +1,3 @@
-// app/Header/Layout.jsx
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { IoHomeOutline } from "react-icons/io5";
@@ -7,25 +6,23 @@ import { PiUserSoundDuotone } from "react-icons/pi";
 import { IoMdNotifications } from "react-icons/io";
 import { toPersianNumber } from "@/utils/number";
 import { useRouter } from "next/navigation";
+import { getCookie, removeCookie } from "@/utils/cookie";
+
 import Link from "next/link";
 import AuthToast from "@/Components/Auth/AuthToast";
-import Image from "next/image";
 import Cookies from "js-cookie";
-import { getCookie, removeCookie } from "@/utils/cookie";
-import styles from "./Layout.module.css";
 
-// ✅ کامپوننت Badge زنگوله
+import styles from "./Layout.module.css";
+import Image from "next/image";
+
 const BellBadge = () => (
   <span className={styles.bellBadge}>
     <IoMdNotifications size={10} color="#fff" />
   </span>
 );
 
-// ✅ کامپوننت Badge عدد
 const NumberBadge = () => <span className={styles.numberBadge}>۱</span>;
 
-// ✅ کامپوننت کمکی Image با fill (اصلاح‌شده)
-// ✅ جدید
 const Img = ({ src, alt, style, className, sizes = "24px" }) => (
   <div style={{ position: "relative", ...style }} className={className}>
     <Image
@@ -44,12 +41,10 @@ const Logo = () => (
     alt="Torino Logo"
     width={100}
     height={75}
-    style={{width : "auto"}}
-
-    // ✅ style را کاملاً حذف کنید.
-    // اگر نیاز دارید تصویر برش نخورد و کامل دیده شود، در CSS کلاس مربوطه object-fit: contain بگذارید.
+    style={{ width: "auto" }}
   />
 );
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
@@ -57,7 +52,6 @@ export default function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [mobile, setMobile] = useState(null);
 
-  // ✅ وضعیت نوتیفیکیشن
   const [hasNotification, setHasNotification] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
 
@@ -81,7 +75,6 @@ export default function Header() {
     setIsUserMenuOpen((prev) => !prev);
   };
 
-  // ✅ بررسی نوتیفیکیشن‌ها از کوکی
   useEffect(() => {
     const checkNotifications = () => {
       const hasNew = getCookie("hasNewOrder");
@@ -96,7 +89,6 @@ export default function Header() {
     return () => clearInterval(interval);
   }, []);
 
-  // ✅ پاک کردن نوتیفیکیشن از کوکی
   const clearNotification = () => {
     removeCookie("hasNewOrder");
     removeCookie("newOrderCount");
@@ -247,7 +239,6 @@ export default function Header() {
               {mobile ? (
                 <div className={styles.userWrapper} ref={desktopRef}>
                   <div className={styles.userSection} onClick={toggleUserMenu}>
-                    {/* ✅ این خط رو اصلاح کنید */}
                     <Img
                       src="/icon/profile.png"
                       alt="profile"
@@ -272,7 +263,6 @@ export default function Header() {
               ) : (
                 <>
                   <div className={styles.login_icon}>
-                    {/* ✅ اینم اصلاح کنید */}
                     <Img
                       src="/icon/profile.png"
                       alt="profile"
