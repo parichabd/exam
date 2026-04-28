@@ -204,3 +204,14 @@ gap: 4px;
   justify-content: space-between;
   margin-top: 4px;
 }
+
+/* ShowTours.module.css */
+.emptyMessage {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.showMoreWrapper {
+  text-align: center;
+  margin-top: 20px;
+}
