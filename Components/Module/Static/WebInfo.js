@@ -1,7 +1,8 @@
 import React from "react";
+import Divider from "./Divider";
+
 import Image from "next/image";
 import styles from "./WebInfo.module.css";
-import Divider from "./Divider";
 
 function WebInfo() {
   return (

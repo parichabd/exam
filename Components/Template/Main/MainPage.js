@@ -19,7 +19,7 @@ export default function MainPage() {
 
   return (
     <div>
-      {/* ✅ فقط در صورت نداشتن ارور نمایش داده می‌شود */}
+
       {!hasError && <Header />}
       
       {hasError ? (
