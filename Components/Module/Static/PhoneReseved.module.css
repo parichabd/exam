@@ -256,6 +256,7 @@
   }
 
 .phoneNum {
+   margin-top: 50px !important;
   flex: 40%; 
   min-height: 210px;
   max-height: 210px;
@@ -305,7 +306,7 @@
   }
 
   .phoneNum {
-    margin-top: 50px;
+    margin-top: 50px !important;
     flex: 40%;
     height: 210px;            
     border-radius: 10px 0 0 10px;
