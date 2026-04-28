@@ -24,6 +24,13 @@ const BellBadge = () => (
 // ✅ کامپوننت Badge عدد
 const NumberBadge = () => <span className={styles.numberBadge}>۱</span>;
 
+// ✅ کامپوننت کمکی Image با fill (اصلاح‌شده)
+const Img = ({ src, alt, style, className }) => (
+  <div style={{ position: "relative", ...style }} className={className}>
+    <Image src={src} alt={alt} fill style={{ objectFit: "contain" }} />
+  </div>
+);
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
@@ -60,13 +67,11 @@ export default function Header() {
     const checkNotifications = () => {
       const hasNew = getCookie("hasNewOrder");
       const count = getCookie("newOrderCount");
-
       if (hasNew === "true") {
         setHasNotification(true);
         setNotificationCount(parseInt(count || "0", 10));
       }
     };
-
     checkNotifications();
     const interval = setInterval(checkNotifications, 3000);
     return () => clearInterval(interval);
@@ -108,7 +113,6 @@ export default function Header() {
         setIsUserMenuOpen(false);
       }
     };
-
     if (isUserMenuOpen)
       document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -117,30 +121,21 @@ export default function Header() {
   const router = useRouter();
 
   const handleLogout = () => {
-    // ✅ پاک کردن localStorage
     localStorage.removeItem("mobile");
     localStorage.removeItem("userName");
-
-    // ✅ پاک کردن کوکی‌های پرداخت
     removeCookie("lastUsedCard");
     removeCookie("fullCardNumber");
     removeCookie("hasNewOrder");
     removeCookie("newOrderCount");
-
-    // ✅ پاک کردن توکن‌ها
     Cookies.remove("accessToken", { path: "/" });
     Cookies.remove("refreshToken", { path: "/" });
-
-    // ✅ ریست وضعیت‌ها
     setMobile(null);
     setIsUserMenuOpen(false);
     setHasNotification(false);
     setNotificationCount(0);
-
     router.replace("/");
   };
 
-  // ✅ وقتی روی "اطلاعات حساب کاربری" کلیک می‌کنه
   const handleProfileClick = () => {
     clearNotification();
     setIsUserMenuOpen(false);
@@ -154,19 +149,17 @@ export default function Header() {
         >
           <div className={styles.DP_profile}>
             <div className={styles.DP_profile_base}>
-              <Image
+              <Img
                 src="/SVG/profile/DP/Ellipse 2.svg"
-                alt="Torino Logo"
-                width={22}
-                height={22}
+                alt="profile base"
+                style={{ width: 22, height: 22 }}
               />
             </div>
             <div className={styles.DP_profile_icon}>
-              <Image
+              <Img
                 src="/SVG/profile/DP/frame.svg"
-                alt="Torino Logo"
-                width={22}
-                height={22}
+                alt="profile frame"
+                style={{ width: 22, height: 22 }}
               />
             </div>
           </div>
@@ -174,31 +167,27 @@ export default function Header() {
         </div>
       )}
 
-      {/* ✅ لینک پروفایل با زنگوله */}
       <Link
         href="/ProfileInfo"
         className={`${styles.item} ${styles.noUnderline}`}
         onClick={handleProfileClick}
       >
-        <Image
+        <Img
           src="/SVG/profile/profile.svg"
-          alt="Torino Logo"
-          width={20}
-          height={20}
+          alt="profile"
+          style={{ width: 20, height: 20 }}
         />
         <h1>اطلاعات حساب کاربری</h1>
-        {/* ✅ زنگوله در کنار پروفایل */}
         {hasNotification && <NumberBadge />}
       </Link>
 
       <div className={styles.divider_profile}></div>
 
       <div className={`${styles.item} ${styles.exit}`} onClick={handleLogout}>
-        <Image
+        <Img
           src="/SVG/profile/logout.svg"
-          alt="Torino Logo"
-          width={20}
-          height={20}
+          alt="logout"
+          style={{ width: 20, height: 20 }}
         />
         <h1>خروج از حساب کاربری </h1>
       </div>
@@ -211,24 +200,23 @@ export default function Header() {
         {/* LEFT SIDE */}
         <div className={styles.left_side}>
           <div className={styles.desktop_menu}>
-            <Image
+            <Img
               src="/image/Torino (4) 1.png"
               alt="Torino Logo"
-              width={120}
-              height={40}
+              style={{ width: 120, height: 40 }}
             />
             <Link href="/">صفحه اصلی</Link>
             <Link href="/Guide/TourismServices">خدمات گردشگری</Link>
             <Link href="/Info/about-us">درباره ما</Link>
             <Link href="/Info/contact">تماس با ما</Link>
           </div>
+
           <div className={styles.mobile_menu}>
             <button className={styles.button} onClick={menuHandler}>
-              <Image
+              <Img
                 src="/icon/Group 46.png"
                 alt="menu"
-                width={30}
-                height={35}
+                style={{ width: 30, height: 35 }}
               />
             </button>
           </div>
@@ -244,25 +232,24 @@ export default function Header() {
               {mobile ? (
                 <div className={styles.userWrapper} ref={desktopRef}>
                   <div className={styles.userSection} onClick={toggleUserMenu}>
-                    <Image
+                    {/* ✅ این خط رو اصلاح کنید */}
+                    <Img
                       src="/icon/profile.png"
                       alt="profile"
-                      width={19}
-                      height={14}
+                      style={{ width: 24, height: 24 }}
                     />
-                    {/* ✅ شماره تلفن با Badge عدد */}
+
                     <div className={styles.phoneWrapper}>
                       <span className={styles.user_mobile}>
                         {toPersianNumber(mobile)}
                       </span>
-                      {/* ✅ عدد ۱ بالای شماره تلفن */}
                       {hasNotification && <BellBadge />}
                     </div>
-                    <Image
+
+                    <Img
                       src="/SVG/arrow-down.svg"
                       alt="arrow"
-                      width={18}
-                      height={18}
+                      style={{ width: 18, height: 18 }}
                       className={isUserMenuOpen ? styles.rotateArrow : ""}
                     />
                   </div>
@@ -271,11 +258,11 @@ export default function Header() {
               ) : (
                 <>
                   <div className={styles.login_icon}>
-                    <Image
+                    {/* ✅ اینم اصلاح کنید */}
+                    <Img
                       src="/icon/profile.png"
                       alt="profile"
-                      width={22}
-                      height={22}
+                      style={{ width: 24, height: 24 }}
                     />
                     <button onClick={openLogin}>ورود</button>
                     <span>|</span>
@@ -293,25 +280,23 @@ export default function Header() {
             {mobile ? (
               <div className={styles.userWrapper} ref={mobileRef}>
                 <div className={styles.userSection} onClick={toggleUserMenu}>
-                  <Image
+                  <Img
                     src="/icon/profile.png"
                     alt="profile"
-                    width={22}
-                    height={22}
+                    style={{ width: 22, height: 22 }}
                   />
-                  {/* ✅ شماره تلفن با Badge عدد */}
+
                   <div className={styles.phoneWrapper}>
                     <span className={styles.user_mobile}>
                       {toPersianNumber(mobile)}
                     </span>
-                    {/* ✅ عدد ۱ بالای شماره تلفن */}
                     {hasNotification && <BellBadge />}
                   </div>
-                  <Image
+
+                  <Img
                     src="/SVG/arrow-down.svg"
                     alt="arrow"
-                    width={24}
-                    height={24}
+                    style={{ width: 24, height: 24 }}
                     className={isUserMenuOpen ? styles.rotateArrow : ""}
                   />
                 </div>
@@ -319,11 +304,10 @@ export default function Header() {
               </div>
             ) : (
               <button onClick={openLogin}>
-                <Image
+                <Img
                   src="/icon/sign in buttom.png"
                   alt="sign in"
-                  width={47}
-                  height={47}
+                  style={{ width: 47, height: 47 }}
                 />
               </button>
             )}
@@ -335,6 +319,7 @@ export default function Header() {
       {isOpen && (
         <div className={styles.mobile_overlay} onClick={menuHandler} />
       )}
+
       <nav className={`${styles.mobile_drawer} ${isOpen ? styles.open : ""}`}>
         <Link href="/" onClick={menuHandler}>
           <IoHomeOutline /> صفحه اصلی
