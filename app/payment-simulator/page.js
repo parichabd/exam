@@ -2,7 +2,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import Image from "next/image";
 import { setCookie } from "@/utils/cookie";
 import { toPersianNumber } from "@/utils/number";
@@ -21,7 +21,6 @@ const toEnglishDigits = (str) => {
   });
 };
 
-// ✅ فرمت شماره کارت
 const formatCardNumber = (value) => {
   const englishValue = toEnglishDigits(value);
   const cleaned = englishValue.replace(/\s/g, "").replace(/\D/g, "");
@@ -29,7 +28,6 @@ const formatCardNumber = (value) => {
   return chunks.join(" ").substring(0, 19);
 };
 
-// ✅ فرمت تاریخ انقضا MM/YY
 const formatExpiry = (value) => {
   const englishValue = toEnglishDigits(value);
   const cleaned = englishValue.replace(/\D/g, "");
@@ -47,13 +45,18 @@ export default function PaymentSimulator() {
 
   const amount = searchParams.get("amount") || "0";
   const tourTitle = searchParams.get("tourTitle") || "تور";
-  const orderId = searchParams.get("orderId") || `ORD-${Date.now()}`;
+
+  // ✅ useState با lazy initializer - فقط یکبار اجرا میشه
+  const [orderId] = useState(() => {
+    const urlOrderId = searchParams.get("orderId");
+    return urlOrderId || `ORD-${Date.now()}`;
+  });
 
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -64,9 +67,8 @@ export default function PaymentSimulator() {
     },
   });
 
-  const cardNumber = watch("cardNumber");
+  const cardNumber = useWatch({ control, name: "cardNumber" });
 
-  // ✅ نمایش شماره کارت با اعداد فارسی
   const displayCardNumber = (value) => {
     const formatted = formatCardNumber(value || "");
     return toPersianNumber(formatted);
@@ -169,7 +171,6 @@ export default function PaymentSimulator() {
                   required: "شماره کارت الزامی است",
                   minLength: { value: 19, message: "شماره کارت نامعتبر است" },
                   onChange: (e) => {
-                    // ✅ اینجا باید formatCardNumber باشه نه formatExpiry
                     const formatted = formatCardNumber(e.target.value);
                     setValue("cardNumber", formatted);
                   },
@@ -186,14 +187,14 @@ export default function PaymentSimulator() {
                 <label>تاریخ انقضا</label>
                 <input
                   type="text"
-                  placeholder="ماه / سال"
+                  placeholder="MM/YY"
                   className={`${styles.cardInput} ${errors.expiry ? styles.inputError : ""}`}
                   dir="ltr"
                   {...register("expiry", {
                     required: "تاریخ انقضا الزامی است",
                     pattern: {
                       value: /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
-                      message: "تاریخ را به درستی وارد کنید ",
+                      message: "فرمت: MM/YY",
                     },
                     onChange: (e) => {
                       const formatted = formatExpiry(e.target.value);
