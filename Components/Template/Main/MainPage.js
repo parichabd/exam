@@ -1,30 +1,12 @@
 "use client";
 import { useState } from "react";
-import dynamic from "next/dynamic"; // ← اضافه کردن
-
 import Header from "@/Components/Module/HeaderDate/Header";
 import BookDate from "@/Components/Module/BookDate/BookDate";
 import ShowTours from "@/Components/Module/ShowTours/ShowTours";
 import PhoneReseved from "@/Components/Module/Static/PhoneReseved";
 import TourSlider from "@/Components/Module/Static/TourSlider";
 import WebInfo from "@/Components/Module/Static/WebInfo";
-
-// ✅ کامپوننت‌های خطا را داینامیک import کنید
-const ServerConectionError = dynamic(
-  () => import("@/Components/Errors/ServerConectionError"),
-  {
-    loading: () => <div>Loading...</div>,
-    ssr: false, // چون کامپوننت خطا نیازی به SSR ندارد
-  }
-);
-
-const PageNotfoundError = dynamic(
-  () => import("../../Errors/ServerConectionError"),
-  {
-    loading: () => <div>Loading...</div>,
-    ssr: false,
-  }
-);
+import ServerConectionError from "@/Components/Errors/ServerConectionError";
 
 export default function MainPage() {
   const [displayedTours, setDisplayedTours] = useState([]);
@@ -37,7 +19,8 @@ export default function MainPage() {
 
   return (
     <div>
-      <Header />
+      {/* ✅ فقط در صورت نداشتن ارور نمایش داده می‌شود */}
+      {!hasError && <Header />}
       
       {hasError ? (
         <ServerConectionError />
