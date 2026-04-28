@@ -13,9 +13,20 @@ export default function MainPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const handleError = () => {
+
+  const handleSetFoundTours = useCallback((tours) => {
+    setDisplayedTours(tours);
+  }, []);
+
+  const handleSetIsLoading = useCallback((loading) => {
+    setIsLoading(loading);
+  }, []);
+
+  const handleError = useCallback(() => {
     setHasError(true);
-  };
+  }, []);
+
+ 
 
   return (
     <div>

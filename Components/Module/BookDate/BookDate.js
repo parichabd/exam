@@ -8,6 +8,27 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./BookDate.module.css";
 
+
+const TOAST_DURATION = 3000;
+const SEARCH_DELAY = 2000;
+const SKELETON_COUNT = 3;
+
+const translateToFa = {
+  Tehran: "تهران",
+  Isfahan: "اصفهان",
+  Sanandaj: "سنندج",
+  Sananndaj: "سنندج",
+  Madrid: "مادرید",
+  Hewler: "هولر",
+  Mazandaran: "مازندران",
+  Gilan: "گیلان",
+  Sulaymaniyah: "سلیمانیه",
+  Italy: "ایتالیا",
+  Offroad: "آفرود",
+  "offRoad Center": "آفرود",
+  sulaymaniyahTour: "سلیمانیه",
+};
+
 function BookDate({ setFoundTours, setIsLoading, setHasError }) {
   const [tours, setTours] = useState([]);
   const [origins, setOrigins] = useState([]);
@@ -20,35 +41,37 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
   const [toast, setToast] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
+
   const startRef = useRef(null);
   const endRef = useRef(null);
-  const dateRef = useRef(null);
 
+  // ✅ ۲. اضافه کردن ref برای مدیریت toast timeout
+  const toastTimeoutRef = useRef(null);
+
+  // ✅ ۳. اصلاح نشت حافظه در toast
   const showToastMessage = (msg) => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
     setToast(msg);
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    toastTimeoutRef.current = setTimeout(() => setShowToast(false), 3000);
   };
 
-  // ✅ اصلاح: useEffect بدون dependencies مشکل‌دار
+  // ✅ cleanup برای toast
   useEffect(() => {
-    const translateToFa = {
-      Tehran: "تهران",
-      Isfahan: "اصفهان",
-      Sanandaj: "سنندج",
-      Sananndaj: "سنندج",
-      Madrid: "مادرید",
-      Hewler: "هولر",
-      Mazandaran: "مازندران",
-      Gilan: "گیلان",
-      Sulaymaniyah: "سلیمانیه",
-      Italy: "ایتالیا",
-      Offroad: "آفرود",
-      "offRoad Center": "آفرود",
-      "sulaymaniyahTour": "سلیمانیه",
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
     };
+  }, []);
 
-    fetch("http://localhost:6500/tour")
+  useEffect(() => {
+    // ✅ ۴. URL رو از env variable بخون
+    const apiUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+    fetch(`${apiUrl}/tour`)
       .then((res) => res.json())
       .then((data) => {
         const normalizedTours = data.map((tour) => ({
@@ -59,12 +82,18 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
           },
           destination: {
             ...tour.destination,
-            name: translateToFa[tour.destination.name.trim()] || tour.destination.name,
+            name:
+              translateToFa[tour.destination.name.trim()] ||
+              tour.destination.name,
           },
         }));
         setTours(normalizedTours);
-        const uniqueOrigins = [...new Set(normalizedTours.map((t) => t.origin.name))].sort();
-        const uniqueDestinations = [...new Set(normalizedTours.map((t) => t.destination.name))].sort();
+        const uniqueOrigins = [
+          ...new Set(normalizedTours.map((t) => t.origin.name)),
+        ].sort();
+        const uniqueDestinations = [
+          ...new Set(normalizedTours.map((t) => t.destination.name)),
+        ].sort();
         setOrigins(uniqueOrigins);
         setDestinations(uniqueDestinations);
         setFoundTours(normalizedTours);
@@ -73,8 +102,7 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
         showToastMessage("مشکل در اتصال به سرور!");
         setHasError(true);
       });
-  }, []); // ✅ خالی - فقط یکبار اجرا می‌شود
-
+  }, [setFoundTours, setHasError]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -87,17 +115,12 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const shamsiToGregorian = (shamsiDate) => {
-    if (!shamsiDate) return null;
-    const date = new Date(shamsiDate.toDate?.() || shamsiDate);
-    if (isNaN(date.getTime())) return null;
-    return date;
-  };
-
-  const parseTourDate = (dateStr) => {
-    if (!dateStr) return null;
-    const date = new Date(dateStr);
-    return isNaN(date.getTime()) ? null : date;
+  // ✅ ۵. اصلاح منطق تاریخ - بررسی اینکه تور در بازه تاریخ انتخابی باشه
+  const normalizeDate = (date) => {
+    if (!date) return null;
+    const d = new Date(date.toDate?.() || date);
+    if (isNaN(d.getTime())) return null;
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   };
 
   const handleSearch = () => {
@@ -115,33 +138,25 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
       return;
     }
 
-    const originFa = startLoc;
-    const destFa = endLoc;
-
     setIsLoading(true);
     setShowSkeleton(true);
 
     setTimeout(() => {
+      const userStartDate = normalizeDate(startSelected);
+      const userEndDate = normalizeDate(endSelected);
+
       const results = tours.filter((t) => {
-        const originMatch = t.origin.name === originFa;
-        const destMatch = t.destination.name === destFa;
+        const originMatch = t.origin.name === startLoc;
+        const destMatch = t.destination.name === endLoc;
 
-        const userStartDate = shamsiToGregorian(startSelected);
-        const tourStartDate = parseTourDate(t.startDate);
-
+        // ✅ منطق درست: تاریخ شروع تور باید بین تاریخ شروع و پایان کاربر باشه
         let dateMatch = true;
-        if (userStartDate && tourStartDate) {
-          const userStartNormalized = new Date(
-            userStartDate.getFullYear(),
-            userStartDate.getMonth(),
-            userStartDate.getDate(),
-          );
-          const tourStartNormalized = new Date(
-            tourStartDate.getFullYear(),
-            tourStartDate.getMonth(),
-            tourStartDate.getDate(),
-          );
-          dateMatch = userStartNormalized >= tourStartNormalized;
+        if (userStartDate && userEndDate) {
+          const tourStartDate = normalizeDate(t.startDate);
+          if (tourStartDate) {
+            dateMatch =
+              tourStartDate >= userStartDate && tourStartDate <= userEndDate;
+          }
         }
 
         return originMatch && destMatch && dateMatch;
@@ -184,9 +199,9 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
             {startOpen && (
               <ul className={styles.dropdownMenu}>
                 <li className={styles.frequentHeader}>پرتردد</li>
-                {origins.map((loc, i) => (
+                {origins.map((loc) => (
                   <li
-                    key={i}
+                    key={loc}
                     onClick={() => {
                       setStartLoc(loc);
                       setStartOpen(false);
@@ -223,9 +238,9 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
             </button>
             {endOpen && (
               <ul className={styles.dropdownMenu}>
-                {destinations.map((loc, i) => (
+                {destinations.map((loc) => (
                   <li
-                    key={i}
+                    key={loc}
                     onClick={() => {
                       setEndLoc(loc);
                       setEndOpen(false);
@@ -245,7 +260,7 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
           </div>
           <div className={styles.divider} />
         </div>
-        <div className={styles.dateBox} ref={dateRef}>
+        <div className={styles.dateBox}>
           <DatePicker
             calendar={persian}
             locale={persian_fa}
@@ -270,7 +285,6 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
           جست‌وجو
         </button>
       </div>
-
       {showSkeleton && (
         <div className={styles.skeletonGrid}>
           {[1, 2, 3].map((i) => (
@@ -293,7 +307,6 @@ function BookDate({ setFoundTours, setIsLoading, setHasError }) {
           ))}
         </div>
       )}
-
       <div className={`${styles.toast} ${showToast ? styles.show : ""}`}>
         {toast}
       </div>
