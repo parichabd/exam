@@ -25,10 +25,28 @@ const BellBadge = () => (
 const NumberBadge = () => <span className={styles.numberBadge}>۱</span>;
 
 // ✅ کامپوننت کمکی Image با fill (اصلاح‌شده)
-const Img = ({ src, alt, style, className }) => (
+// ✅ جدید
+const Img = ({ src, alt, style, className, sizes = "24px" }) => (
   <div style={{ position: "relative", ...style }} className={className}>
-    <Image src={src} alt={alt} fill style={{ objectFit: "contain" }} />
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes={sizes}
+      style={{ objectFit: "contain" }}
+    />
   </div>
+);
+
+// ✅ کامپوننت لوگو (با کیفیت بالا)
+const Logo = () => (
+  <Image
+    src="/image/Torino (4) 1.png"
+    alt="Torino Logo"
+    width={120}
+    height={60}
+    style={{ width: 120}}
+  />
 );
 
 export default function Header() {
@@ -200,11 +218,7 @@ export default function Header() {
         {/* LEFT SIDE */}
         <div className={styles.left_side}>
           <div className={styles.desktop_menu}>
-            <Img
-              src="/image/Torino (4) 1.png"
-              alt="Torino Logo"
-              style={{ width: 120, height: 40 }}
-            />
+            <Logo />
             <Link href="/">صفحه اصلی</Link>
             <Link href="/Guide/TourismServices">خدمات گردشگری</Link>
             <Link href="/Info/about-us">درباره ما</Link>
@@ -238,7 +252,6 @@ export default function Header() {
                       alt="profile"
                       style={{ width: 24, height: 24 }}
                     />
-
                     <div className={styles.phoneWrapper}>
                       <span className={styles.user_mobile}>
                         {toPersianNumber(mobile)}
