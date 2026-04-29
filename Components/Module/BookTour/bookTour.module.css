@@ -1,4 +1,3 @@
-/* ✅ کانتینر اصلی */
 .mainContainer {
   max-width: 900px;
   margin: 0 auto;
@@ -8,7 +7,6 @@
 }
 
 
-/* ✅ بخش‌های فرم و خلاصه تور */
 .formSection,
 .summarySection {
   border: 1px solid #ddd;
@@ -23,7 +21,6 @@
   margin-bottom: 0;
 }
 
-/* ✅ هدر فرم */
 .formInfo {
   display: flex;
   align-items: center;
@@ -37,7 +34,6 @@
   color: #333;
 }
 
-/* ✅ اینپوت‌های فرم */
 .formInput {
   display: block;
   width: 100%;
@@ -66,7 +62,6 @@
   margin-bottom: 8px;
 }
 
-/* ✅ سلکت جنسیت */
 .secoundInput {
   appearance: none;
   -webkit-appearance: none;
@@ -77,7 +72,6 @@
   background-size: 15px;
 }
 
-/* ✅ DatePicker */
 .datePickerContainer {
   width: 100%;
   margin: 20px 0;
@@ -103,7 +97,6 @@
   outline: none;
 }
 
-/* ✅ تقویم */
 .rmdp-wrapper {
   direction: rtl;
 }
@@ -125,7 +118,6 @@
   color: #fff;
 }
 
-/* ✅ خلاصه تور */
 .tourTitle {
   font-size: 22px;
   color: #000;
@@ -149,7 +141,6 @@
   margin: 20px 0;
 }
 
-/* ✅ باکس قیمت */
 .priceBoxFooter {
   display: flex;
   flex-direction: column;
@@ -215,13 +206,11 @@
   transform: translateY(0);
 }
 
-/* ✅ فوتر فرم */
 .formFooterInfo {
   display: flex;
   justify-content: space-between;
 }
 
-/* ✅ پیام خطا */
 .errorMessage {
   color: #dc3545;
   font-size: 11px;
@@ -231,7 +220,6 @@
   animation: shake 0.5s ease-in-out;
 }
 
-/* ✅ انیمیشن لرزش */
 @keyframes shake {
   0%, 100% {
     transform: translateX(0);
@@ -244,17 +232,13 @@
   }
 }
 
-/* ============================================
-   ✅ گرید دسکتاپ (1024px - 1500px)
-   ============================================ */
+
 @media (min-width: 1024px) and (max-width: 1500px) {
-  /* ✅ کانتینر اصلی - تمام عرض */
   .mainContainer {
     max-width: 100% !important;
     padding: 30px 40px !important;
   }
 
-  /* ✅ فرم به صورت گرید دو ستونه */
   .deskfORM {
     display: grid !important;
     grid-template-columns: 1fr 240px !important; /* ✅ ستون دوم 240px */
@@ -263,29 +247,25 @@
     width: 100% !important;
   }
 
-  /* ✅ بخش مشخصات مسافر */
   .formSection {
     margin-bottom: 0 !important;
     padding: 24px !important;
   }
 
-  /* ✅ گرید داخلی برای فیلدها - ۳ ستونه */
   .formDesign {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 16px !important;
   }
 
-  /* ✅ هر فیلد با wrapper */
   .formDesign > div {
     display: flex;
     flex-direction: column;
   }
 
-  /* ✅ حذف margin اضافی از فیلدها */
   .formDesign .formInput {
     margin: 0 !important;
-    width: 100% !important; /* ✅ اصلاح شد */
+    width: 100% !important; 
     height: 48px !important;
   }
 
@@ -299,7 +279,6 @@
     width: 100% !important;
   }
 
-  /* ✅ بخش خلاصه تور - دقیقاً 240px عرض */
   .summarySection {
     width: 307px !important;
     min-height: 213px !important;
@@ -325,7 +304,6 @@
     box-sizing: border-box !important;
   }
 
-  /* ✅ اطلاعات تور */
   .formFooterInfo {
     display: flex;
     justify-content: space-between;
@@ -343,12 +321,10 @@
     color: #666;
   }
 
-  /* ✅ divider */
  .divider_two {
     margin:  0 !important;
   } 
 
-  /* ✅ قیمت و دکمه */
   .priceBoxFooter {
     display: flex !important;
     gap: 10px !important;
