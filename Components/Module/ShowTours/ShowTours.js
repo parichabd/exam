@@ -219,3 +219,4 @@ export default function ShowTours({ tours, isLoading, hasError }) {
     </div>
   );
 }
+

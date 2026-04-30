@@ -80,19 +80,12 @@ export default function PaymentSimulator() {
           debitCard_code: cleanCard,
         },
       });
-      console.log("✅ کارت با موفقیت در پروفایل ذخیره شد");
-    } catch (error) {
-      console.error("❌ خطا در ذخیره کارت:", error);
-    }
+    } catch (error) {}
   };
 
-
   const setOrderNotification = () => {
-
-    setCookie("hasNewOrder", "true", 1); 
-    setCookie("newOrderCount", "1", 1); 
-
-    console.log("✅ کوکی‌های نوتیفیکیشن ست شدند");
+    setCookie("hasNewOrder", "true", 1);
+    setCookie("newOrderCount", "1", 1);
   };
 
   const onSubmit = async (data) => {
