@@ -45,7 +45,8 @@ const getCookie = (name) => {
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
     while (c.charAt(0) === " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    if (c.indexOf(nameEQ) === 0)
+      return decodeURIComponent(c.substring(nameEQ.length, c.length));
   }
   return null;
 };
@@ -147,7 +148,8 @@ export default function Profile() {
         });
 
         // اطلاعات شخصی
-        const fullName = `${data.firstName || ""} ${data.lastName || ""}`.trim();
+        const fullName =
+          `${data.firstName || ""} ${data.lastName || ""}`.trim();
         const gender = data.gender || "";
         const nationalId = data.nationalCode ? String(data.nationalCode) : "";
 
@@ -190,10 +192,9 @@ export default function Profile() {
             accountNumber: "",
           });
         }
-
       } catch (error) {
         console.error("خطا در دریافت پروفایل:", error);
-        
+
         // ✅ Fallback به Cookie
         setAccountData({
           mobile: getCookie("mobile") || "",
@@ -258,7 +259,9 @@ export default function Profile() {
       return;
     }
 
-    const cleaned = toEnglishDigits(watchedSheba).toUpperCase().replace(/\s/g, "");
+    const cleaned = toEnglishDigits(watchedSheba)
+      .toUpperCase()
+      .replace(/\s/g, "");
 
     if (cleaned.length > 0 && !cleaned.startsWith("IR")) {
       setShebaValidation({ valid: false, message: "با IR شروع شود" });
@@ -397,7 +400,6 @@ export default function Profile() {
         await profileApi.updateProfile({ email: sanitizedData.email });
         setAccountData((prev) => ({ ...prev, email: sanitizedData.email }));
         toast.success("ایمیل با موفقیت ذخیره شد");
-
       } else if (editingSection === "personal") {
         const nameParts = sanitizedData.fullName.trim().split(" ");
         const firstName = nameParts[0] || "";
@@ -427,7 +429,6 @@ export default function Profile() {
           birthDate: sanitizedData.birthDate,
         });
         toast.success("مشخصات مسافر با موفقیت ذخیره شد");
-
       } else if (editingSection === "bank") {
         const cleanedCard = sanitizedData.cardNumber.replace(/\s/g, "");
 
@@ -466,7 +467,6 @@ export default function Profile() {
 
       setEditingSection(null);
       reset();
-
     } catch (error) {
       console.error("❌ Error saving profile:", error);
       const errorMessage = error?.message || "خطا در ذخیره اطلاعات";
@@ -520,15 +520,23 @@ export default function Profile() {
     <div className={styles.container}>
       <Toaster position="top-center" />
       <form onSubmit={handleSubmit(onSubmit)}>
-
         {/* ۱. اطلاعات حساب کاربری */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
             <h3>{getSectionTitle("account", "اطلاعات حساب کاربری")}</h3>
             {editingSection !== "account" && (
               <div className={styles.headerActions}>
-                <Image width={14} height={14} alt="icon" src="/SVG/profile/edit-2.svg" />
-                <button type="button" className={styles.editBtn} onClick={() => handleEditClick("account")}>
+                <Image
+                  width={14}
+                  height={14}
+                  alt="icon"
+                  src="/SVG/profile/edit-2.svg"
+                />
+                <button
+                  type="button"
+                  className={styles.editBtn}
+                  onClick={() => handleEditClick("account")}
+                >
                   {accountData.email ? " ویرایش" : " افزودن"}
                 </button>
               </div>
@@ -540,19 +548,42 @@ export default function Profile() {
                 <div className={styles.accountFields}>
                   <div className={styles.accountField}>
                     <label>شماره موبایل</label>
-                    <input type="tel" value={toPersianNumber(accountData.mobile)} disabled className={styles.disabledInput} />
+                    <input
+                      type="tel"
+                      value={toPersianNumber(accountData.mobile)}
+                      disabled
+                      className={styles.disabledInput}
+                    />
                   </div>
                   <div className={styles.accountField}>
                     <label>ایمیل (اختیاری)</label>
-                    <input placeholder="آدرس ایمیل" type="email" {...register("email")} className={errors.email ? styles.errorInput : ""} />
-                    {errors.email && <span className={styles.errorText}>{errors.email.message}</span>}
+                    <input
+                      placeholder="آدرس ایمیل"
+                      type="email"
+                      {...register("email")}
+                      className={errors.email ? styles.errorInput : ""}
+                    />
+                    {errors.email && (
+                      <span className={styles.errorText}>
+                        {errors.email.message}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className={styles.accountActions}>
-                  <button type="submit" className={styles.saveBtnOne} disabled={saving}>
+                  <button
+                    type="submit"
+                    className={styles.saveBtnOne}
+                    disabled={saving}
+                  >
                     {saving ? "در حال ذخیره..." : "تایید"}
                   </button>
-                  <button type="button" className={styles.saveBtnTwo} onClick={handleCancel} disabled={saving}>
+                  <button
+                    type="button"
+                    className={styles.saveBtnTwo}
+                    onClick={handleCancel}
+                    disabled={saving}
+                  >
                     انصراف
                   </button>
                 </div>
@@ -561,11 +592,17 @@ export default function Profile() {
               <>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>شماره موبایل:</span>
-                  <span className={styles.value} dir="ltr">{toPersianNumber(accountData.mobile)}</span>
+                  <span className={styles.value} dir="ltr">
+                    {toPersianNumber(accountData.mobile)}
+                  </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>ایمیل:</span>
-                  <span className={styles.value} dir="ltr" title={accountData.email}>
+                  <span
+                    className={styles.value}
+                    dir="ltr"
+                    title={accountData.email}
+                  >
                     {accountData.email ? truncateEmail(accountData.email) : "-"}
                   </span>
                 </div>
@@ -582,8 +619,17 @@ export default function Profile() {
             <h3>{getSectionTitle("personal", "اطلاعات شخصی")}</h3>
             {editingSection !== "personal" && (
               <div className={styles.headerActions}>
-                <Image width={14} height={14} alt="icon" src="/SVG/profile/edit-2.svg" />
-                <button type="button" className={styles.editBtn} onClick={() => handleEditClick("personal")}>
+                <Image
+                  width={14}
+                  height={14}
+                  alt="icon"
+                  src="/SVG/profile/edit-2.svg"
+                />
+                <button
+                  type="button"
+                  className={styles.editBtn}
+                  onClick={() => handleEditClick("personal")}
+                >
                   ویرایش اطلاعات
                 </button>
               </div>
@@ -594,17 +640,46 @@ export default function Profile() {
               <div className={styles.formGroup}>
                 <div className={styles.twoCols}>
                   <div>
-                    <input placeholder="نام و نام خانوادگی" type="text" {...register("fullName", { required: "الزامی است" })} className={errors.fullName ? styles.errorInput : ""} />
-                    {errors.fullName && <span className={styles.errorText}>{errors.fullName.message}</span>}
+                    <input
+                      placeholder="نام و نام خانوادگی"
+                      type="text"
+                      {...register("fullName", { required: "الزامی است" })}
+                      className={errors.fullName ? styles.errorInput : ""}
+                    />
+                    {errors.fullName && (
+                      <span className={styles.errorText}>
+                        {errors.fullName.message}
+                      </span>
+                    )}
                   </div>
                   <div>
-                    <input type="text" placeholder="کد ملی" {...register("nationalId", { required: "الزامی است", pattern: { value: /^[۰-۹0-9]{10}$/, message: "۱۰ رقم باشد" } })} maxLength={10} className={errors.nationalId ? styles.errorInput : ""} onChange={(e) => handlePersianInput(e, "nationalId")} />
-                    {errors.nationalId && <span className={styles.errorText}>{errors.nationalId.message}</span>}
+                    <input
+                      type="text"
+                      placeholder="کد ملی"
+                      {...register("nationalId", {
+                        required: "الزامی است",
+                        pattern: {
+                          value: /^[۰-۹0-9]{10}$/,
+                          message: "۱۰ رقم باشد",
+                        },
+                      })}
+                      maxLength={10}
+                      className={errors.nationalId ? styles.errorInput : ""}
+                      onChange={(e) => handlePersianInput(e, "nationalId")}
+                    />
+                    {errors.nationalId && (
+                      <span className={styles.errorText}>
+                        {errors.nationalId.message}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className={styles.twoCols}>
                   <div>
-                    <select {...register("gender", { required: "الزامی است" })} className={errors.gender ? styles.errorInput : ""}>
+                    <select
+                      {...register("gender", { required: "الزامی است" })}
+                      className={errors.gender ? styles.errorInput : ""}
+                    >
                       <option value="">انتخاب کنید</option>
                       <option value="male">مرد</option>
                       <option value="female">زن</option>
@@ -612,15 +687,34 @@ export default function Profile() {
                     </select>
                   </div>
                   <div>
-                    <input type="text" {...register("birthDate", { required: "الزامی است" })} placeholder="تاریخ تولد (مثال: 1375/03/15)" className={errors.birthDate ? styles.errorInput : ""} onChange={(e) => handlePersianInput(e, "birthDate")} />
-                    {errors.birthDate && <span className={styles.errorText}>{errors.birthDate.message}</span>}
+                    <input
+                      type="text"
+                      {...register("birthDate", { required: "الزامی است" })}
+                      placeholder="تاریخ تولد (مثال: 1375/03/15)"
+                      className={errors.birthDate ? styles.errorInput : ""}
+                      onChange={(e) => handlePersianInput(e, "birthDate")}
+                    />
+                    {errors.birthDate && (
+                      <span className={styles.errorText}>
+                        {errors.birthDate.message}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className={styles.saveBtn}>
-                  <button type="submit" className={styles.saveBtnOne} disabled={saving}>
+                  <button
+                    type="submit"
+                    className={styles.saveBtnOne}
+                    disabled={saving}
+                  >
                     {saving ? "در حال ذخیره..." : "تایید"}
                   </button>
-                  <button type="button" className={styles.saveBtnTwo} onClick={handleCancel} disabled={saving}>
+                  <button
+                    type="button"
+                    className={styles.saveBtnTwo}
+                    onClick={handleCancel}
+                    disabled={saving}
+                  >
                     انصراف
                   </button>
                 </div>
@@ -629,21 +723,33 @@ export default function Profile() {
               <div className={styles.infoGrid}>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>نام و نام خانوادگی:</span>
-                  <span className={styles.value}>{personalData.fullName || "-"}</span>
+                  <span className={styles.value}>
+                    {personalData.fullName || "-"}
+                  </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>کد ملی:</span>
-                  <span className={styles.value} dir="ltr">{toPersianNumber(personalData.nationalId) || "-"}</span>
+                  <span className={styles.value} dir="ltr">
+                    {toPersianNumber(personalData.nationalId) || "-"}
+                  </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>جنسیت:</span>
                   <span className={styles.value}>
-                    {personalData.gender === "male" ? "مرد" : personalData.gender === "female" ? "زن" : personalData.gender === "other" ? "سایر" : "-"}
+                    {personalData.gender === "male"
+                      ? "مرد"
+                      : personalData.gender === "female"
+                        ? "زن"
+                        : personalData.gender === "other"
+                          ? "سایر"
+                          : "-"}
                   </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>تاریخ تولد:</span>
-                  <span className={styles.value}>{personalData.birthDate || "-"}</span>
+                  <span className={styles.value}>
+                    {toPersianNumber(personalData.birthDate) || "-"}
+                  </span>
                 </div>
               </div>
             )}
@@ -658,8 +764,17 @@ export default function Profile() {
             <h3>{getSectionTitle("bank", "اطلاعات حساب بانکی")}</h3>
             {editingSection !== "bank" && (
               <div className={styles.headerActions}>
-                <Image width={14} height={14} alt="icon" src="/SVG/profile/edit-2.svg" />
-                <button type="button" className={styles.editBtn} onClick={() => handleEditClick("bank")}>
+                <Image
+                  width={14}
+                  height={14}
+                  alt="icon"
+                  src="/SVG/profile/edit-2.svg"
+                />
+                <button
+                  type="button"
+                  className={styles.editBtn}
+                  onClick={() => handleEditClick("bank")}
+                >
                   ویرایش اطلاعات
                 </button>
               </div>
@@ -680,9 +795,10 @@ export default function Profile() {
                         required: "الزامی است",
                         validate: (value) => {
                           const cleaned = value.replace(/\s/g, "");
-                          if (cleaned.length !== 16) return "شماره کارت باید ۱۶ رقم باشد";
+                          if (cleaned.length !== 16)
+                            return "شماره کارت باید ۱۶ رقم باشد";
                           return true;
-                        }
+                        },
                       })}
                       placeholder="شماره کارت (الزامی)"
                       dir="ltr"
@@ -690,15 +806,24 @@ export default function Profile() {
                       className={`${styles.bankInput} ${cardValidation.valid === false ? styles.inputError : ""} ${cardValidation.valid === true ? styles.inputValid : ""}`}
                       onChange={handleCardInput}
                     />
-                    <ValidationBadge valid={cardValidation.valid} message={cardValidation.message} />
+                    <ValidationBadge
+                      valid={cardValidation.valid}
+                      message={cardValidation.message}
+                    />
                   </div>
-                  {errors.cardNumber && <span className={styles.errorText}>{errors.cardNumber.message}</span>}
+                  {errors.cardNumber && (
+                    <span className={styles.errorText}>
+                      {errors.cardNumber.message}
+                    </span>
+                  )}
                 </div>
 
                 {/* شماره شبا */}
                 <div className={styles.bankFieldWrapper}>
                   <div className={styles.bankFieldHeader}>
-                    {shebaValidation.valid === true && <span className={styles.validBadge}>✓ معتبر</span>}
+                    {shebaValidation.valid === true && (
+                      <span className={styles.validBadge}>✓ معتبر</span>
+                    )}
                     <span className={styles.optionalBadge}>(اختیاری)</span>
                   </div>
                   <div className={styles.bankInputWrapper}>
@@ -711,14 +836,19 @@ export default function Profile() {
                       className={`${styles.bankInput} ${shebaValidation.valid === false ? styles.inputError : ""} ${shebaValidation.valid === true ? styles.inputValid : ""}`}
                       onChange={(e) => handlePersianInput(e, "sheba")}
                     />
-                    <ValidationBadge valid={shebaValidation.valid} message={shebaValidation.message} />
+                    <ValidationBadge
+                      valid={shebaValidation.valid}
+                      message={shebaValidation.message}
+                    />
                   </div>
                 </div>
 
                 {/* شماره حساب */}
                 <div className={styles.bankFieldWrapper}>
                   <div className={styles.bankFieldHeader}>
-                    {accountValidation.valid === true && <span className={styles.validBadge}>✓ معتبر</span>}
+                    {accountValidation.valid === true && (
+                      <span className={styles.validBadge}>✓ معتبر</span>
+                    )}
                     <span className={styles.optionalBadge}>(اختیاری)</span>
                   </div>
                   <div className={styles.bankInputWrapper}>
@@ -731,7 +861,10 @@ export default function Profile() {
                       className={`${styles.bankInput} ${accountValidation.valid === false ? styles.inputError : ""} ${accountValidation.valid === true ? styles.inputValid : ""}`}
                       onChange={(e) => handlePersianInput(e, "accountNumber")}
                     />
-                    <ValidationBadge valid={accountValidation.valid} message={accountValidation.message} />
+                    <ValidationBadge
+                      valid={accountValidation.valid}
+                      message={accountValidation.message}
+                    />
                   </div>
                 </div>
 
@@ -739,8 +872,12 @@ export default function Profile() {
                 <div className={styles.validationGuide}>
                   <p>💡 نکات مهم:</p>
                   <ul>
-                    <li>شماره کارت <strong>الزامی</strong> است و باید ۱۶ رقم باشد</li>
-                    <li>شماره شبا و شماره حساب <strong>اختیاری</strong> هستند</li>
+                    <li>
+                      شماره کارت <strong>الزامی</strong> است و باید ۱۶ رقم باشد
+                    </li>
+                    <li>
+                      شماره شبا و شماره حساب <strong>اختیاری</strong> هستند
+                    </li>
                   </ul>
                 </div>
 
@@ -752,7 +889,12 @@ export default function Profile() {
                   >
                     {saving ? "در حال ذخیره..." : "تایید"}
                   </button>
-                  <button type="button" className={styles.saveBtnTwo} onClick={handleCancel} disabled={saving}>
+                  <button
+                    type="button"
+                    className={styles.saveBtnTwo}
+                    onClick={handleCancel}
+                    disabled={saving}
+                  >
                     انصراف
                   </button>
                 </div>
@@ -761,21 +903,26 @@ export default function Profile() {
               <div className={styles.infoGrid}>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>شماره شبا:</span>
-                  <span className={styles.value} dir="ltr">{bankData.sheba ? formatSheba(bankData.sheba) : "-"}</span>
+                  <span className={styles.value} dir="ltr">
+                    {bankData.sheba ? formatSheba(bankData.sheba) : "-"}
+                  </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>شماره حساب:</span>
-                  <span className={styles.value} dir="ltr">{toPersianNumber(bankData.accountNumber) || "-"}</span>
+                  <span className={styles.value} dir="ltr">
+                    {toPersianNumber(bankData.accountNumber) || "-"}
+                  </span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>شماره کارت:</span>
-                  <span className={styles.value} dir="ltr">{toPersianNumber(bankData.cardNumber) || "-"}</span>
+                  <span className={styles.value} dir="ltr">
+                    {toPersianNumber(bankData.cardNumber) || "-"}
+                  </span>
                 </div>
               </div>
             )}
           </div>
         </div>
-
       </form>
     </div>
   );
