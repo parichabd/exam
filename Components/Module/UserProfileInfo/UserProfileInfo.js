@@ -42,10 +42,7 @@ function UserProfileInfo() {
     setActivePage(page);
   };
 
-  // تابع اصلاح شده: مسیر را به public/ تغییر دادیم
   const getIconSrc = (activeName, inactiveName) => {
-    // اگر صفحه فعال با activeName برابر بود، آیکون سبز را نشان بده، وگرنه سیاه
-    // مسیر از /public شروع می‌شود پس با / شروع می‌شود
     return activePage === activeName
       ? `/SVG/profile/icons/${activeName}-green.svg`
       : `/SVG/profile/icons/${inactiveName}-black.svg`;
@@ -63,7 +60,6 @@ function UserProfileInfo() {
             onClick={() => navigateTo("profile")}
           >
             <Image
-              // اصلاح غلط املایی: psrofile -> profile
               src={getIconSrc("profile", "profile")}
               width={16}
               height={16}

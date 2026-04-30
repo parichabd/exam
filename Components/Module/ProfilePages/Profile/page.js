@@ -149,14 +149,13 @@ export default function Profile() {
       setCardValidation({
         valid: result.valid,
         message: result.message,
-        cardType: getCardType(cleaned), // ✅ تشخیص نوع بانک
+        cardType: getCardType(cleaned),
       });
     } else if (cleaned.length === 0) {
       setCardValidation({ valid: null, message: "", cardType: null });
     }
   }, [watchedCard, editingSection]);
 
-  // ... (useEffect های Sheba و Account unchanged) ...
   useEffect(() => {
     if (editingSection !== "bank" || !watchedSheba) {
       setShebaValidation({ valid: null, message: "" });
@@ -210,7 +209,6 @@ export default function Profile() {
     [setValue],
   );
 
-  // ... (handleEditClick, handleCancel, convertShamsiToGregorian, onSubmit unchanged) ...
   const handleEditClick = (section) => {
     setEditingSection(section);
     if (section === "account") {
@@ -368,7 +366,6 @@ export default function Profile() {
     <div className={styles.container}>
       <Toaster position="top-center" />
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* ... (Sections Account and Personal unchanged) ... */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
             <h3>{getSectionTitle("account", "اطلاعات حساب کاربری")}</h3>
@@ -461,7 +458,6 @@ export default function Profile() {
 
         <div className={styles.divider}></div>
 
-        {/* ... (Section Personal unchanged) ... */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
             <h3>{getSectionTitle("personal", "اطلاعات شخصی")}</h3>
@@ -679,7 +675,6 @@ export default function Profile() {
                   )}
                 </div>
 
-                {/* ... (Sheba and Account sections unchanged) ... */}
                 {/* شماره شبا */}
                 <div className={styles.bankFieldWrapper}>
                   <div className={styles.bankFieldHeader}>

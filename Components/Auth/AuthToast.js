@@ -1,4 +1,3 @@
-// app/Components/Auth/AuthToast.jsx
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -25,7 +24,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
   const [otpShake, setOtpShake] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  // ✅ ریف برای ردیابی اولین تغییر isRegister
   const hasShownRegisterToast = useRef(false);
 
   const {
@@ -44,7 +42,6 @@ export default function AuthToast({ onClose, mode = "login" }) {
     return () => window.removeEventListener("storage", syncMobile);
   }, []);
 
-  // ✅ اصلاح شده: فقط یک بار هنگام mount با isRegister=true اجرا میشه
   useEffect(() => {
     if (isRegister && !hasShownRegisterToast.current) {
       hasShownRegisterToast.current = true;
@@ -175,7 +172,7 @@ export default function AuthToast({ onClose, mode = "login" }) {
                 className={styles.back_btn}
                 onClick={() => {
                   setIsRegister(false);
-                  hasShownRegisterToast.current = false; // ✅ ریست ریف
+                  hasShownRegisterToast.current = false;  
                   reset();
                 }}
               >
@@ -192,7 +189,7 @@ export default function AuthToast({ onClose, mode = "login" }) {
               onClick={() => {
                 setStep("PHONE");
                 setIsRegister(false);
-                hasShownRegisterToast.current = false; // ✅ ریست ریف
+                hasShownRegisterToast.current = false;  
                 setOtp("");
                 setOtpError("");
                 setTimeLeft(120);
