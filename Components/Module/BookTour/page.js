@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import styles from "./bookTour.module.css";
+
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-multi-date-picker";
@@ -9,12 +8,13 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import toast, { Toaster } from "react-hot-toast";
 import PaymentLoadingModal from "@/Components/Spinner/PaymentLoadingModal";
-import api from "@/lib/api";
 import { profileApi } from "@/lib/api";
 
-// ============================================
-// 🍪 توابع Cookie
-// ============================================
+import api from "@/lib/api";
+import Image from "next/image";
+import styles from "./bookTour.module.css";
+
+
 const setCookie = (name, value, days = 30) => {
   if (typeof document === "undefined") return;
   const expires = new Date();
@@ -152,7 +152,6 @@ export default function BookingForm({ initialTourId }) {
         return;
       }
       setBirthDateError("");
-      // ✅ تاریخ شمسی ذخیره می‌شود: 1375/03/15
       const shamsiDate = `${year}/${String(month).padStart(2, "0")}/${String(day).padStart(2, "0")}`;
       onChange(shamsiDate);
     } else {
@@ -192,11 +191,9 @@ export default function BookingForm({ initialTourId }) {
 
       const response = await api.post("/order", orderData);
 
-      // ✅ ذخیره در Cookie (تاریخ شمسی)
 
-      setCookie("passengerBirthDate", data.birthDate, 30); // ✅ تاریخ شمسی ذخیره می‌شود
+      setCookie("passengerBirthDate", data.birthDate, 30);  
 
-      // ذخیره در پروفایل (از طریق API)
       try {
         const nameParts = data.fullName.trim().split(" ");
         const firstName = nameParts[0] || "";
@@ -209,7 +206,6 @@ export default function BookingForm({ initialTourId }) {
           birthDate: gregorianBirthDate,
         });
       } catch (profileError) {
-        // ادامه بده حتی اگه ذخیره پروفایل خطا داد
       }
 
       setShowLoadingModal(true);
