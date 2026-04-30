@@ -193,9 +193,7 @@ export default function BookingForm({ initialTourId }) {
       const response = await api.post("/order", orderData);
 
       // ✅ ذخیره در Cookie (تاریخ شمسی)
-      setCookie("passengerFullName", data.fullName, 30);
-      setCookie("passengerGender", data.gender, 30);
-      setCookie("passengerNationalId", persianToEnglish(data.nationalId), 30);
+
       setCookie("passengerBirthDate", data.birthDate, 30); // ✅ تاریخ شمسی ذخیره می‌شود
 
       // ذخیره در پروفایل (از طریق API)
