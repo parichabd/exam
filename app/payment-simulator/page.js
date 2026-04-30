@@ -4,12 +4,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { setCookie } from "@/utils/cookie";
 import { toPersianNumber } from "@/utils/number";
-import { profileApi } from "@/lib/api"; // ✅ اضافه شد
+import { profileApi } from "@/lib/api";
 import Image from "next/image";
 import styles from "./paymentSimulator.module.css";
 
 const PROCESSING_DELAY = 2000;
-const COOKIE_EXPIRY_DAYS = 30;
 
 const toEnglishDigits = (str) => {
   const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -90,6 +89,17 @@ export default function PaymentSimulator() {
     }
   };
 
+  // ============================================
+  // ✅ ست کردن کوکی برای نمایش زنگوله
+  // ============================================
+  const setOrderNotification = () => {
+    // ست کردن کوکی برای نمایش زنگوله در هدر
+    setCookie("hasNewOrder", "true", 1); // 1 روز اعتبار
+    setCookie("newOrderCount", "1", 1);   // 1 سفارش جدید
+    
+    console.log("✅ کوکی‌های نوتیفیکیشن ست شدند");
+  };
+
   const onSubmit = async (data) => {
     const englishCard = toEnglishDigits(data.cardNumber);
     if (englishCard.replace(/\s/g, "").length < 16) {
@@ -97,11 +107,13 @@ export default function PaymentSimulator() {
     }
 
     setIsProcessing(true);
-
     await new Promise((resolve) => setTimeout(resolve, PROCESSING_DELAY));
 
-    // ✅ ذخیره کارت در پروفایل بعد از پرداخت موفق
+    // ✅ ذخیره کارت در پروفایل
     await saveCardToProfile(data.cardNumber);
+
+    // ✅ ست کردن کوکی برای نمایش زنگوله
+    setOrderNotification();
 
     setIsProcessing(false);
     setShowResult(true);

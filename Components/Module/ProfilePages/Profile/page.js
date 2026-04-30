@@ -16,6 +16,7 @@ import {
 } from "@/utils/bankValidation";
 import styles from "./Profile.module.css";
 import Image from "next/image";
+
 // ============================================
 // 🔐 توابع امنیتی
 // ============================================
@@ -27,6 +28,25 @@ const sanitizeInput = (input) => {
     .replace(/on\w+=/gi, "")
     .trim();
 };
+
+// ============================================
+// تبدیل تاریخ شمسی به میلادی (✅ این تابع اضافه شد)
+// ============================================
+const convertShamsiToGregorian = (shamsiDate) => {
+  if (!shamsiDate) return null;
+  const parts = shamsiDate.split("/");
+  if (parts.length !== 3) return null;
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  const day = parseInt(parts[2], 10);
+  const d = new Date();
+  d.setFullYear(year + 621);
+  d.setMonth(month - 1);
+  d.setDate(day);
+  const gregorianDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  return gregorianDate;
+};
+
 // ============================================
 // کمکی‌ها
 // ============================================
@@ -35,6 +55,7 @@ const truncateEmail = (email, maxLength = 25) => {
   if (email.length <= maxLength) return email;
   return email.substring(0, maxLength) + "...";
 };
+
 // ============================================
 // کامپوننت اصلی
 // ============================================
@@ -42,6 +63,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editingSection, setEditingSection] = useState(null);
+
   // داده‌های فرم
   const [accountData, setAccountData] = useState({ mobile: "", email: "" });
   const [personalData, setPersonalData] = useState({
@@ -55,6 +77,7 @@ export default function Profile() {
     sheba: "",
     accountNumber: "",
   });
+
   // اعتبارسنجی real-time برای بانک
   const [cardValidation, setCardValidation] = useState({
     valid: null,
@@ -69,6 +92,7 @@ export default function Profile() {
     valid: null,
     message: "",
   });
+
   // ============================================
   // useForm با custom validation
   // ============================================
@@ -80,10 +104,12 @@ export default function Profile() {
     watch,
     formState: { errors },
   } = useForm({ mode: "onChange" });
+
   // Watch برای فیلدهای بانکی
   const watchedCard = watch("cardNumber", "");
   const watchedSheba = watch("sheba", "");
   const watchedAccount = watch("accountNumber", "");
+
   // ============================================
   // 📦 بارگذاری اولیه داده‌ها از API
   // ============================================
@@ -91,13 +117,13 @@ export default function Profile() {
     const loadProfile = async () => {
       try {
         const data = await profileApi.getProfile();
-        console.log("🔍 Full Profile Data:", JSON.stringify(data, null, 2));
-        
+
         // اطلاعات حساب
         setAccountData({
           mobile: data.mobile || "",
           email: data.email || "",
         });
+
         // اطلاعات شخصی
         setPersonalData({
           fullName: `${data.firstName || ""} ${data.lastName || ""}`.trim(),
@@ -105,6 +131,7 @@ export default function Profile() {
           nationalId: data.nationalCode ? String(data.nationalCode) : "",
           birthDate: data.birthDate || "",
         });
+
         // اطلاعات بانکی
         if (data.payment) {
           const cardCode = data.payment.debitCard_code;
@@ -129,6 +156,7 @@ export default function Profile() {
     };
     loadProfile();
   }, []);
+
   // ============================================
   // اعتبارسنجی real-time شماره کارت
   // ============================================
@@ -153,6 +181,7 @@ export default function Profile() {
       setCardValidation({ valid: null, message: "", cardType: null });
     }
   }, [watchedCard, editingSection]);
+
   // ============================================
   // اعتبارسنجی real-time شبا
   // ============================================
@@ -180,6 +209,7 @@ export default function Profile() {
       setShebaValidation({ valid: null, message: "" });
     }
   }, [watchedSheba, editingSection]);
+
   // ============================================
   // اعتبارسنجی real-time شماره حساب
   // ============================================
@@ -200,6 +230,7 @@ export default function Profile() {
       setAccountValidation({ valid: null, message: "" });
     }
   }, [watchedAccount, editingSection]);
+
   // ============================================
   // تبدیل اعداد فارسی به انگلیسی
   // ============================================
@@ -217,6 +248,7 @@ export default function Profile() {
     }
     setValue(fieldName, persianValue);
   };
+
   // ============================================
   // مدیریت ورودی شماره کارت
   // ============================================
@@ -227,6 +259,7 @@ export default function Profile() {
     },
     [setValue],
   );
+
   // ============================================
   // ورود به حالت ویرایش
   // ============================================
@@ -252,6 +285,7 @@ export default function Profile() {
       setAccountValidation({ valid: null, message: "" });
     }
   };
+
   // ============================================
   // انصراف از ویرایش
   // ============================================
@@ -262,6 +296,7 @@ export default function Profile() {
     setAccountValidation({ valid: null, message: "" });
     reset();
   };
+
   // ============================================
   // ارسال فرم
   // ============================================
@@ -279,31 +314,39 @@ export default function Profile() {
         sheba: sanitizeInput(data.sheba || ""),
         accountNumber: sanitizeInput(data.accountNumber || ""),
       };
+
       if (editingSection === "account") {
         await profileApi.updateProfile({ email: sanitizedData.email });
         setAccountData((prev) => ({ ...prev, email: sanitizedData.email }));
         toast.success("ایمیل با موفقیت ذخیره شد");
+
       } else if (editingSection === "personal") {
         const nameParts = sanitizedData.fullName.trim().split(" ");
         const firstName = nameParts[0] || "";
         const lastName = nameParts.slice(1).join(" ") || "";
+
+        // ✅ تبدیل تاریخ شمسی به میلادی قبل از ارسال
+        const gregorianBirthDate = convertShamsiToGregorian(sanitizedData.birthDate);
+
         await profileApi.updateProfile({
           firstName,
           lastName,
           gender: sanitizedData.gender,
           nationalCode: toEnglishDigits(sanitizedData.nationalId),
-          birthDate: toEnglishDigits(sanitizedData.birthDate),
+          birthDate: gregorianBirthDate,  // ✅ این باید میلادی باشد
         });
+
         setPersonalData({
           fullName: sanitizedData.fullName,
           gender: sanitizedData.gender,
           nationalId: sanitizedData.nationalId,
-          birthDate: sanitizedData.birthDate,
+          birthDate: gregorianBirthDate,  // ✅ ذخیره میلادی در state
         });
         toast.success("مشخصات مسافر با موفقیت ذخیره شد");
+
       } else if (editingSection === "bank") {
         const cleanedCard = sanitizedData.cardNumber.replace(/\s/g, "");
-        
+
         if (!cleanedCard) {
           toast.error("شماره کارت الزامی است");
           setSaving(false);
@@ -314,6 +357,7 @@ export default function Profile() {
           setSaving(false);
           return;
         }
+
         const updateData = {
           payment: {
             shaba_code: sanitizedData.sheba || null,
@@ -321,6 +365,7 @@ export default function Profile() {
             accountIdentifier: sanitizedData.accountNumber || null,
           },
         };
+
         await profileApi.updateProfile(updateData);
         setBankData({
           cardNumber: `**** **** **** ${cleanedCard.slice(-4)}`,
@@ -329,6 +374,7 @@ export default function Profile() {
         });
         toast.success("اطلاعات بانکی با موفقیت ذخیره شد");
       }
+
       setEditingSection(null);
       reset();
     } catch (error) {
@@ -339,6 +385,7 @@ export default function Profile() {
       setSaving(false);
     }
   };
+
   // ============================================
   // عنوان بخش
   // ============================================
@@ -350,6 +397,7 @@ export default function Profile() {
     }
     return defaultTitle;
   };
+
   // ============================================
   // کامپوننت‌های کمکی
   // ============================================
@@ -363,6 +411,7 @@ export default function Profile() {
       </span>
     );
   };
+
   const CardTypeBadge = ({ cardType }) => {
     if (!cardType) return null;
     return (
@@ -374,7 +423,9 @@ export default function Profile() {
       </span>
     );
   };
+
   if (loading) return <div className={styles.loading}>در حال بارگذاری...</div>;
+
   return (
     <div className={styles.container}>
       <Toaster position="top-center" />
@@ -431,7 +482,9 @@ export default function Profile() {
             )}
           </div>
         </div>
+
         <div className={styles.divider}></div>
+
         {/* ۲. اطلاعات شخصی */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -505,7 +558,9 @@ export default function Profile() {
             )}
           </div>
         </div>
+
         <div className={styles.divider}></div>
+
         {/* ۳. اطلاعات حساب بانکی */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -528,26 +583,27 @@ export default function Profile() {
                     <CardTypeBadge cardType={cardValidation.cardType} />
                   </div>
                   <div className={styles.bankInputWrapper}>
-                    <input 
-                      type="text" 
-                      {...register("cardNumber", { 
-                        required: "الزامی است", 
-                        validate: (value) => { 
+                    <input
+                      type="text"
+                      {...register("cardNumber", {
+                        required: "الزامی است",
+                        validate: (value) => {
                           const cleaned = value.replace(/\s/g, "");
                           if (cleaned.length !== 16) return "شماره کارت باید ۱۶ رقم باشد";
                           return true;
-                        } 
-                      })} 
-                      placeholder="شماره کارت (الزامی)" 
-                      dir="ltr" 
-                      maxLength={19} 
-                      className={`${styles.bankInput} ${cardValidation.valid === false ? styles.inputError : ""} ${cardValidation.valid === true ? styles.inputValid : ""}`} 
-                      onChange={handleCardInput} 
+                        }
+                      })}
+                      placeholder="شماره کارت (الزامی)"
+                      dir="ltr"
+                      maxLength={19}
+                      className={`${styles.bankInput} ${cardValidation.valid === false ? styles.inputError : ""} ${cardValidation.valid === true ? styles.inputValid : ""}`}
+                      onChange={handleCardInput}
                     />
                     <ValidationBadge valid={cardValidation.valid} message={cardValidation.message} />
                   </div>
                   {errors.cardNumber && <span className={styles.errorText}>{errors.cardNumber.message}</span>}
                 </div>
+
                 {/* شماره شبا */}
                 <div className={styles.bankFieldWrapper}>
                   <div className={styles.bankFieldHeader}>
@@ -555,18 +611,19 @@ export default function Profile() {
                     <span className={styles.optionalBadge}>(اختیاری)</span>
                   </div>
                   <div className={styles.bankInputWrapper}>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       {...register("sheba")}
-                      placeholder="شماره شبا (اختیاری)" 
-                      dir="ltr" 
-                      maxLength={26} 
-                      className={`${styles.bankInput} ${shebaValidation.valid === false ? styles.inputError : ""} ${shebaValidation.valid === true ? styles.inputValid : ""}`} 
-                      onChange={(e) => handlePersianInput(e, "sheba")} 
+                      placeholder="شماره شبا (اختیاری)"
+                      dir="ltr"
+                      maxLength={26}
+                      className={`${styles.bankInput} ${shebaValidation.valid === false ? styles.inputError : ""} ${shebaValidation.valid === true ? styles.inputValid : ""}`}
+                      onChange={(e) => handlePersianInput(e, "sheba")}
                     />
                     <ValidationBadge valid={shebaValidation.valid} message={shebaValidation.message} />
                   </div>
                 </div>
+
                 {/* شماره حساب */}
                 <div className={styles.bankFieldWrapper}>
                   <div className={styles.bankFieldHeader}>
@@ -574,18 +631,19 @@ export default function Profile() {
                     <span className={styles.optionalBadge}>(اختیاری)</span>
                   </div>
                   <div className={styles.bankInputWrapper}>
-                    <input 
-                      placeholder="شماره حساب (اختیاری)" 
-                      type="text" 
+                    <input
+                      placeholder="شماره حساب (اختیاری)"
+                      type="text"
                       {...register("accountNumber")}
-                      dir="ltr" 
-                      maxLength={13} 
-                      className={`${styles.bankInput} ${accountValidation.valid === false ? styles.inputError : ""} ${accountValidation.valid === true ? styles.inputValid : ""}`} 
-                      onChange={(e) => handlePersianInput(e, "accountNumber")} 
+                      dir="ltr"
+                      maxLength={13}
+                      className={`${styles.bankInput} ${accountValidation.valid === false ? styles.inputError : ""} ${accountValidation.valid === true ? styles.inputValid : ""}`}
+                      onChange={(e) => handlePersianInput(e, "accountNumber")}
                     />
                     <ValidationBadge valid={accountValidation.valid} message={accountValidation.message} />
                   </div>
                 </div>
+
                 {/* راهنما */}
                 <div className={styles.validationGuide}>
                   <p>💡 نکات مهم:</p>
@@ -594,10 +652,11 @@ export default function Profile() {
                     <li>شماره شبا و شماره حساب <strong>اختیاری</strong> هستند</li>
                   </ul>
                 </div>
+
                 <div className={styles.saveBtn}>
-                  <button 
-                    type="submit" 
-                    className={styles.saveBtnOne} 
+                  <button
+                    type="submit"
+                    className={styles.saveBtnOne}
                     disabled={saving || cardValidation.valid === false}
                   >
                     {saving ? "در حال ذخیره..." : "تایید"}

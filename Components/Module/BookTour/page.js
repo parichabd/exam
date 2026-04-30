@@ -149,21 +149,24 @@ export default function BookingForm({ initialTourId }) {
       onChange("");
     }
   };
-
-  const convertShamsiToGregorian = (shamsiDate) => {
-    if (!shamsiDate) return null;
-    const parts = shamsiDate.split("/");
-    if (parts.length !== 3) return null;
-    const year = parseInt(parts[0], 10);
-    const month = parseInt(parts[1], 10);
-    const day = parseInt(parts[2], 10);
-    const d = new Date();
-    d.setFullYear(year + 621);
-    d.setMonth(month - 1);
-    d.setDate(day);
-    const gregorianDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-    return gregorianDate;
-  };
+// این تابع را پیدا کنید و جایگزین کنید
+const convertShamsiToGregorian = (shamsiDate) => {
+  if (!shamsiDate) return null;
+  const parts = shamsiDate.split("/");
+  if (parts.length !== 3) return null;
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  const day = parseInt(parts[2], 10);
+  
+  // ✅ ترتیب صحیح: اول سال، بعد ماه، بعد روز
+  const d = new Date();
+  d.setFullYear(year + 621);  // اول سال
+  d.setMonth(month - 1);      // بعد ماه
+  d.setDate(day);             // آخر روز
+  
+  const gregorianDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  return gregorianDate;
+};
 
   const onSubmit = async (data) => {
     try {
